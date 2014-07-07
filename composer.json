@@ -1,0 +1,15 @@
+{
+    "name": "konduto/sdk",
+    "require-dev": {
+        "phpunit/phpunit": "4.1.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Konduto\\": "src/"
+        }
+    },
+    "support": {
+        "email": "support@konduto.com"
+    }
+
+}
