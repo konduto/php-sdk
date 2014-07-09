@@ -1,6 +1,4 @@
-<?php
-namespace konduto\exceptions;
-require_once "KondutoException.php";
+<?php namespace Konduto\exceptions;
 
 /**
  * This exception is thrown when the provided key is not a base64,

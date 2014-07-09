@@ -1,6 +1,4 @@
-<?php
-namespace konduto\models;
-require_once "validation.php";
+<?php namespace Konduto\Models;
 
 class Item implements Entity {
 

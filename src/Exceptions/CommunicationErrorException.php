@@ -1,6 +1,4 @@
-<?php
-namespace konduto\exceptions;
-require_once "KondutoException.php";
+<?php namespace Konduto\Exceptions;
 
 class CommunicationErrorException extends KondutoException {
 

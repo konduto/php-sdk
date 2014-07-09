@@ -1,5 +1,4 @@
-<?php
-namespace konduto\exceptions;
+<?php namespace Konduto\exceptions;
 
 class KondutoException extends \Exception {
 

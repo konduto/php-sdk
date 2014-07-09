@@ -1,13 +1,4 @@
-<?php
-namespace konduto\models;
-require_once "Model.php";
-require_once "Customer.php";
-require_once "Geolocation.php";
-require_once "Address.php";
-require_once "Device.php";
-require_once "Payment.php";
-require_once "CreditCard.php";
-require_once "Item.php";
+<?php namespace Konduto\Models;
 
 const STATUS_PENDING  = 'pending';
 const STATUS_APPROVED = 'approved';
@@ -214,7 +205,7 @@ class Order extends Model {
         }
         else {
             foreach ($payment_array as $key => $payment) {
-                if (!is_a($payment, 'konduto\models\Payment')) {
+                if (!is_a($payment, 'Konduto\Models\Payment')) {
                     return null;
                 }
             }
@@ -223,7 +214,7 @@ class Order extends Model {
         }
     }
 
-    public function customer(\konduto\models\Customer $customer = null) {
+    public function customer(\Konduto\Models\Customer $customer = null) {
         if (!isset($customer)) {
             return $this->customer_;
         }
@@ -233,7 +224,7 @@ class Order extends Model {
         }
     }
 
-    public function billing_address(\konduto\models\Address $address = null) {
+    public function billing_address(\Konduto\Models\Address $address = null) {
         if (!isset($address)) {
             return $this->billing_address_;
         }
@@ -243,7 +234,7 @@ class Order extends Model {
         }
     }
 
-    public function shipping_address(\konduto\models\Address $address = null) {
+    public function shipping_address(\Konduto\Models\Address $address = null) {
         if (!isset($address)) {
             return $this->shipping_address_;
         }
@@ -259,7 +250,7 @@ class Order extends Model {
         }
         else {
             foreach ($item_array as $key => $item) {
-                if (!is_a($item, 'konduto\models\Item')) {
+                if (!is_a($item, 'Konduto\Models\Item')) {
                     return null;
                 }
             }
@@ -268,12 +259,12 @@ class Order extends Model {
         }
     }
 
-    public function add_item(\konduto\models\Item $item) {
+    public function add_item(\Konduto\Models\Item $item) {
         $this->shopping_cart_[] = $item;
         return true;
     }
 
-    public function add_payment(\konduto\models\CreditCard $cc) {
+    public function add_payment(\Konduto\Models\CreditCard $cc) {
         $this->payment_array_[] = $cc;
         return true;
     }

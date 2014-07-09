@@ -1,7 +1,4 @@
-<?php
-namespace konduto\models;
-require_once "Entity.php";
-require_once "validation.php";
+<?php namespace Konduto\Models;
 
 const FIELD_NOT_VALID = 'NOT_VALID';
 

@@ -1,8 +1,7 @@
-<?php
-namespace konduto\core;
-require_once "api_control.php";
-use \konduto\models as models;
-use \konduto\exceptions as exceptions;
+<?php namespace Konduto\Core;
+
+use \Konduto\Models as Models;
+use \Konduto\Exceptions as Exceptions;
 
 /*
  * The abstract class api is what the user uses as 'Konduto'. All its methods and variables are static.
@@ -14,7 +13,7 @@ use \konduto\exceptions as exceptions;
  * - updateOrderStatus
  * - getOrder
  */
-abstract class Konduto extends api_control {
+abstract class Konduto extends ApiControl {
 
     /**
      * Choose a version of Konduto API to be used for performing transactions.
@@ -32,15 +31,15 @@ abstract class Konduto extends api_control {
             self::$key = $key;
             return true;
         }
-        throw new exceptions\InvalidAPIKeyException($key);
+        throw new Exceptions\InvalidAPIKeyException($key);
     }
 
     /**
      * Retrieves an order given its id.
      */
     public function getOrder($id) {
-        if (!models\ValidationSchema::validateOrderField('id', $id)) {
-            throw new exceptions\InvalidOrderException("id");
+        if (!Models\ValidationSchema::validateOrderField('id', $id)) {
+            throw new Exceptions\InvalidOrderException("id");
         }
 
         $order_array = self::sendRequest(null, METHOD_GET, "/orders/{$id}");
@@ -48,26 +47,26 @@ abstract class Konduto extends api_control {
         // Do a check in the response for an error 404.
         self::was_order_found($order_array, $id);
 
-        $order = new models\Order();
+        $order = new Models\Order();
 
         if (isset($order_array['customer'])) {
-            $order->customer(new models\Customer($order_array['customer']));
+            $order->customer(new Models\Customer($order_array['customer']));
             unset($order_array['customer']);
         }
         if (isset($order_array['billing'])) {
-            $order->billing_address(new models\Address($order_array['billing']));
+            $order->billing_address(new Models\Address($order_array['billing']));
             unset($order_array['billing']);
         }
         if (isset($order_array['shipping'])) {
-            $order->shipping_address(new models\Address($order_array['shipping']));
+            $order->shipping_address(new Models\Address($order_array['shipping']));
             unset($order_array['shipping']);
         }
         if (isset($order_array['payment'])) {
-            $order->payment_array(array_map(function ($e) {return new models\CreditCard($e); }, $order_array['payment']));
+            $order->payment_array(array_map(function ($e) {return new Models\CreditCard($e); }, $order_array['payment']));
             unset($order_array['payment']);
         }
         if (isset($order_array['shopping_cart'])) {
-            $order->shopping_cart(array_map(function ($e) {return new models\Item($e); }, $order_array['shopping_cart']));
+            $order->shopping_cart(array_map(function ($e) {return new Models\Item($e); }, $order_array['shopping_cart']));
             unset($order_array['shopping_cart']);
         }
 
@@ -79,10 +78,10 @@ abstract class Konduto extends api_control {
     /**
      * Sends an order for analyzis using Konduto API.
      */
-    public function analyze(models\Order &$order, $analyze = true) {
+    public function analyze(Models\Order &$order, $analyze = true) {
 
         if (!$order->is_valid()) {
-            throw new exceptions\InvalidOrderException($order->get_errors());
+            throw new Exceptions\InvalidOrderException($order->get_errors());
             return;
         }
 
@@ -110,7 +109,7 @@ abstract class Konduto extends api_control {
     /**
      * Persists an order without analyzing it. 
      */ 
-    public function sendOrder(models\Order &$order) {
+    public function sendOrder(Models\Order &$order) {
         return self::analyze($order, false);
     }
 
@@ -119,8 +118,12 @@ abstract class Konduto extends api_control {
      */
     public function updateOrderStatus($order_id, $status, $comments = "") {
 
-        if (!in_array($status, [models\STATUS_APPROVED, models\STATUS_DECLINED, models\STATUS_FRAUD])) {
-            throw new exceptions\InvalidOrderException("status");
+        if (!in_array($status, [Models\STATUS_APPROVED, Models\STATUS_DECLINED, Models\STATUS_FRAUD])) {
+            throw new Exceptions\InvalidOrderException("status");
+        }
+
+        if (!Models\ValidationSchema::validateOrderField('id', $order_id)) {
+            throw new Exceptions\InvalidOrderException("id");
         }
 
         $json_msg = [

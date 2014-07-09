@@ -1,6 +1,4 @@
-<?php
-namespace konduto\models;
-require_once "validation.php";
+<?php namespace Konduto\Models;
 
 interface Entity {
     public function set();

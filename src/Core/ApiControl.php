@@ -1,21 +1,10 @@
-<?php
-namespace konduto\core;
-require_once "src/models/Order.php";
-require_once "src/models/validation.php";
-require_once "src/exceptions/KondutoException.php";
-require_once "src/exceptions/InvalidVersionException.php";
-require_once "src/exceptions/InvalidAPIKeyException.php";
-require_once "src/exceptions/InvalidOrderException.php";
-require_once "src/exceptions/TimeoutException.php";
-require_once "src/exceptions/CommunicationErrorException.php";
-require_once "src/exceptions/DuplicateOrderException.php";
-require_once "src/exceptions/OrderNotFoundException.php";
-require_once "src/exceptions/KondutoAPIErrorException.php";
-use \konduto\models as models;
-use \konduto\exceptions as exceptions;
+<?php namespace Konduto\Core;
+
+use \Konduto\Models as Models;
+use \Konduto\Exceptions as Exceptions;
 
 // Constants used to define API specific configuration (they should change only with versions of the sdk).
-// const ENDPOINT        = "https://api.konduto.com/";
+// const ENDPOINT        = "https://api.Konduto.com/";
 const ENDPOINT        = "http://127.0.0.1:8080/";
 const CURRENT_VERSION = "v1";
 const API_TIMEOUT     = 30;      // In seconds.
@@ -31,6 +20,7 @@ const MSG_DUPLICATE_ORDER  = "record already exists";
 // HTTP status codes
 const HTTP_OK             = 200;
 const HTTP_UNAUTHORIZED   = 401;
+const HTTP_FORBIDDEN      = 403;
 const HTTP_NOT_FOUND      = 404;
 const HTTP_INTERNAL_ERROR = 500;
 
@@ -39,7 +29,7 @@ const HTTP_INTERNAL_ERROR = 500;
  * It provides auxiliary methods to be used by the public methods.
  * All its methods are protected.
  */ 
-abstract class api_control {
+abstract class ApiControl {
 
     protected static $version = CURRENT_VERSION;  // Version of Konduto API to be used
     protected static $key;                        // Secret key used for Konduto API
@@ -55,7 +45,7 @@ abstract class api_control {
     protected function sendRequest($data, $method, $relative_url) {
 
         if (!isset(self::$key)) {
-            throw new exceptions\InvalidAPIKeyException(self::$key);
+            throw new Exceptions\InvalidAPIKeyException(self::$key);
         }
 
         // Builds URL
@@ -116,20 +106,27 @@ abstract class api_control {
                 // No errors.
                 break;
             case CURLE_OPERATION_TIMEDOUT:
-                throw new exceptions\TimeoutException();
+                throw new Exceptions\TimeoutException();
                 break;
             case CURLE_COULDNT_CONNECT:
             default:
-                throw new exceptions\CommunicationErrorException($errno);
+                throw new Exceptions\CommunicationErrorException($errno);
         }
 
         self::$lastResponse = $response;
 
-        if ($http_status == HTTP_INTERNAL_ERROR) {
-            throw new exceptions\KondutoAPIErrorException();
-        }
-        else if ($http_status == HTTP_UNAUTHORIZED) {
-            throw new exceptions\InvalidAPIKeyException(self::$key);            
+        switch ($http_status) {
+            case HTTP_INTERNAL_ERROR:           
+                throw new Exceptions\KondutoAPIErrorException();
+                break;
+            case HTTP_UNAUTHORIZED:
+                throw new Exceptions\InvalidAPIKeyException(self::$key);
+                break;
+            case HTTP_FORBIDDEN:
+                throw new Exceptions\OperationNotAllowedException();
+                break;
+            default:
+                // Do nothing.
         }
 
         $response_array = json_decode($response, true, 8);
@@ -144,7 +141,7 @@ abstract class api_control {
      */
     protected function validate_version($version) { 
         if ($version != CURRENT_VERSION) {
-            throw new exceptions\InvalidVersionException($version);
+            throw new Exceptions\InvalidVersionException($version);
         }
         return true;
     }
@@ -154,19 +151,19 @@ abstract class api_control {
      */
     protected function get_status($recommendation) {
         switch (strtolower($recommendation)) {
-            case models\RECOMMENDATION_REVIEW:
-                return models\STATUS_PENDING;
-            case models\RECOMMENDATION_APPROVE:
-                return models\STATUS_APPROVED;
-            case models\RECOMMENDATION_DECLINE:
-                return models\STATUS_DECLINED;
+            case Models\RECOMMENDATION_REVIEW:
+                return Models\STATUS_PENDING;
+            case Models\RECOMMENDATION_APPROVE:
+                return Models\STATUS_APPROVED;
+            case Models\RECOMMENDATION_DECLINE:
+                return Models\STATUS_DECLINED;
             default:
                 return null;
         }
     }
 
     /**
-     * Check if the response was successful, throw exceptions in case of errors.
+     * Check if the response was successful, throw Exceptions in case of errors.
      */
     protected function check_post_response($response, $order_id = null) {
         if ($response["http_status"] == HTTP_OK) {
@@ -175,10 +172,10 @@ abstract class api_control {
         else if (isset($response["status"]) and $response["status"] == "error" and isset($response["message"])
             and isset($response["message"]["why"]) and isset($response["message"]["why"]["found"])
             and $response["message"]["why"]["found"] == MSG_DUPLICATE_ORDER) {
-            throw new exceptions\DuplicateOrderException($order_id);
+            throw new Exceptions\DuplicateOrderException($order_id);
         }
         else {
-            throw new exceptions\KondutoAPIErrorException();
+            throw new Exceptions\KondutoAPIErrorException();
         }
     }
 
@@ -190,7 +187,7 @@ abstract class api_control {
             return true;
         }
         else if ($response["http_status"] == HTTP_NOT_FOUND) {
-            throw new exceptions\OrderNotFoundException($order_id);
+            throw new Exceptions\OrderNotFoundException($order_id);
         }
         else {
             return false;

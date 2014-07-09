@@ -1,5 +1,4 @@
-<?php
-namespace konduto\models;
+<?php namespace Konduto\Models;
 
 const BOOL   = 'boolean';
 const INT    = 'integer';

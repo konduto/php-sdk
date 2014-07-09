@@ -1,6 +1,4 @@
-<?php
-namespace konduto\models;
-require_once "Payment.php";
+<?php namespace Konduto\Models;
 
 class CreditCard extends Payment {
 

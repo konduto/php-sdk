@@ -1,8 +1,4 @@
-<?php
-namespace konduto\models;
-require_once "Model.php";
-require_once "validation.php";
-
+<?php namespace Konduto\Models;
 
 abstract class Payment extends Model {
 

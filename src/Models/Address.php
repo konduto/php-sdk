@@ -1,6 +1,4 @@
-<?php
-namespace konduto\models;
-require_once "Geolocation.php";
+<?php namespace Konduto\Models;
 
 class Address extends Geolocation {
 

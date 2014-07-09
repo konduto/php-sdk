@@ -1,7 +1,4 @@
-<?php
-namespace konduto\models;
-require_once "Model.php";
-require_once "validation.php";
+<?php namespace Konduto\Models;
 
 class Customer extends Model {
 

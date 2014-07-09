@@ -1,8 +1,8 @@
 <?php
 require_once "konduto.php";
 require_once "vendor/autoload.php";
-use konduto\models as KondutoModels;
-use konduto\exceptions as KondutoExceptions;
+use Konduto\Models as KondutoModels;
+use Konduto\Exceptions as KondutoExceptions;
 
 // const curr = "T01234567890123456789";
 

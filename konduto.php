@@ -1,4 +1,25 @@
 <?php
-require_once "src/core/Konduto.php";
-require_once "src/exceptions/KondutoException.php";
-abstract class Konduto extends konduto\core\Konduto {}
+require_once "src/Exceptions/KondutoException.php";
+require_once "src/Exceptions/CommunicationErrorException.php";
+require_once "src/Exceptions/DuplicateOrderException.php";
+require_once "src/Exceptions/InvalidAPIKeyException.php";
+require_once "src/Exceptions/InvalidOrderException.php";
+require_once "src/Exceptions/InvalidVersionException.php";
+require_once "src/Exceptions/KondutoAPIErrorException.php";
+require_once "src/Exceptions/OperationNotAllowedException.php";
+require_once "src/Exceptions/OrderNotFoundException.php";
+require_once "src/Exceptions/TimeoutException.php";
+require_once "src/Exceptions/TransactionLimitExceededException.php";
+require_once "src/Models/ValidationSchema.php";
+require_once "src/Models/Entity.php";
+require_once "src/Models/Model.php";
+require_once "src/Models/Customer.php";
+require_once "src/Models/Device.php";
+require_once "src/Models/Geolocation.php";
+require_once "src/Models/Address.php";
+require_once "src/Models/Payment.php";
+require_once "src/Models/CreditCard.php";
+require_once "src/Models/Item.php";
+require_once "src/Models/Order.php";
+require_once "src/Core/ApiControl.php";
+require_once "src/Core/Konduto.php";
