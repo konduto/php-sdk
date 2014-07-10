@@ -38,7 +38,8 @@ abstract class Model implements Entity {
      */
     public function is_valid() {
         // Check if there are errors
-        return empty($this->get_errors());
+        $isEmpty = empty($this->get_errors());
+        return $isEmpty;
     }
 
     abstract public function set();
