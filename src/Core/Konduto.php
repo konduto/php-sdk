@@ -80,12 +80,12 @@ abstract class Konduto extends ApiControl {
      */
     public static function analyze(Models\Order &$order, $analyze = true) {
 
-        if (!$order->is_valid()) {
-            throw new Exceptions\InvalidOrderException($order->get_errors());
+        if (!$order->isValid()) {
+            throw new Exceptions\InvalidOrderException($order->getErrors());
             return;
         }
 
-        $order_array = $order->as_array();
+        $order_array = $order->asArray();
 
         if ($analyze === false) {
             $order_array["analyze"] = false;

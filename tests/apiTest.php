@@ -62,7 +62,7 @@ class ApiTest extends PHPUnit_Framework_TestCase
 
         $o = new KondutoModels\Order([
             "id"           => self::generateUniqueID(),
-            "total_amount" => 100.50,
+            "totalAmount" => 100.50,
             "customer"     => $c
         ]);
 
@@ -82,6 +82,7 @@ class ApiTest extends PHPUnit_Framework_TestCase
         }
         catch (Exception $e) {
             echo "\n-- Exception message: " . $e->getMessage();
+            echo "\n-- Last response: " . Konduto::getLastResponse();
             $this->fail("No exception should be thrown.");
         }
     }

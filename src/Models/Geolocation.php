@@ -15,7 +15,7 @@ class Geolocation extends Model {
     // Methods
 
     public function __construct() {
-        parent::set_mandatory_fields(self::$MANDATORY_FIELDS);
+        parent::setMandatoryFields(self::$MANDATORY_FIELDS);
         $this->set(func_num_args() == 1 ? func_get_arg(0) : func_get_args());
     }
 

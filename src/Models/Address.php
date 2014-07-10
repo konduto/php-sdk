@@ -79,7 +79,7 @@ class Address extends Geolocation {
             : $this->zip_;
     }
 
-    public function as_array() {
+    public function asArray() {
         $array = [
             'name'     => $this->name_,
             'address1' => $this->address1_,

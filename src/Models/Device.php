@@ -30,7 +30,8 @@ class Device implements Entity {
             switch ((string) $key) {
                 case '0':
                 case 'user_id':
-                    $this->user_id($arg);
+                case 'userId':
+                    $this->userId($arg);
                     break;
                 case '1':
                 case 'fingerprint':
@@ -74,6 +75,13 @@ class Device implements Entity {
             $this->set_property($this->user_id_, $user_id)
             // Get
             : $this->user_id_;
+    }
+
+    /**
+     * Alias for user_id()
+     */
+    public function userId($user_id = null) {
+        return $this->user_id($user_id);
     }
 
     public function fingerprint($fingerprint = null) {
@@ -129,6 +137,6 @@ class Device implements Entity {
     }
 
 
-    public function get_errors() {}
-    public function is_valid() { return true; }
+    public function getErrors() {}
+    public function isValid() { return true; }
 }

@@ -19,7 +19,7 @@ class Customer extends Model {
     // Methods
 
     public function __construct() {
-        parent::set_mandatory_fields(self::$MANDATORY_FIELDS);
+        parent::setMandatoryFields(self::$MANDATORY_FIELDS);
         $this->set(func_num_args() == 1 ? func_get_arg(0) : func_get_args());
     }
 
@@ -43,13 +43,14 @@ class Customer extends Model {
                     break;
                 case '2':
                 case 'tax_id':
-                    $this->tax_id($arg);
+                case 'taxId':
+                    $this->taxId($arg);
                     break;
                 case '3':
                 case '4':
                 case 'phone1':
                 case 'phone2':
-                    $this->add_phone($arg);
+                    $this->addPhone($arg);
                     break;
                 case '5':
                 case 'email':
@@ -57,11 +58,13 @@ class Customer extends Model {
                     break;
                 case '6':
                 case 'new':
-                    $this->is_new($arg);
+                case 'isNew':
+                    $this->isNew($arg);
                     break;
                 case '7':
                 case 'vip':
-                    $this->is_vip($arg);
+                case 'isVip':
+                    $this->isVip($arg);
                     break;
             }
         }    
@@ -87,6 +90,13 @@ class Customer extends Model {
             : $this->tax_id_;
     }
 
+    /**
+     * Alias for tax_id()
+     */
+    public function taxId($tax_id = null) {
+        return $this->tax_id($tax_id);
+    }
+
     public function phones($phone_array = null) {
         if (isset($phone_array)) {
             if (!is_array($phone_array)) {
@@ -107,7 +117,7 @@ class Customer extends Model {
         }
     }
 
-    public function add_phone($phone = null) {
+    public function addPhone($phone = null) {
         if (ValidationSchema::validateCustomerField('phone1', $phone)) {
             array_push($this->phone_array_, $phone);
         }
@@ -119,13 +129,13 @@ class Customer extends Model {
             : $this->email_;
     }
 
-    public function is_new($new = null) {
+    public function isNew($new = null) {
         return isset($new) ?
             $this->set_property($this->new_, 'new', $new)
             : $this->new_;
     }
 
-    public function is_vip($vip = null) {
+    public function isVip($vip = null) {
         return isset($vip) ?
             $this->set_property($this->vip_, 'vip', $vip)
             : $this->vip_;
@@ -148,7 +158,7 @@ class Customer extends Model {
         return false;
     }
 
-    public function as_array() {
+    public function asArray() {
         $array = [
             'id'     => $this->id_,
             'name'   => $this->name_,

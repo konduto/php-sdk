@@ -18,12 +18,12 @@ class ModelsTest extends PHPUnit_Framework_TestCase
         $o = new KondutoModels\Order();
         // Set an ID that don't respect pattern (contains space);
         $o->id("Pedido 00001");
-        $errors = $o->get_errors();
+        $errors = $o->getErrors();
         $this->assertTrue(array_key_exists('id', $errors), "The 'id' key should be present in errors.");
 
         // Now set an ID that respect pattern, and check if the error's gone.
         $o->id("Pedido00001");
-        $errors = $o->get_errors();
+        $errors = $o->getErrors();
         $this->assertFalse(array_key_exists('id', $errors), "Now the 'id' key shouldn't be present.");
     }
 
@@ -36,12 +36,12 @@ class ModelsTest extends PHPUnit_Framework_TestCase
         $o = new KondutoModels\Order();
         // Invalid IP.
         $o->ip("192.168.0.256");
-        $errors = $o->get_errors();
+        $errors = $o->getErrors();
         $this->assertTrue(array_key_exists('ip', $errors), "The 'ip' key should be present in errors.");
 
         // Now there should be no error.
         $o->ip("192.168.0.255");
-        $errors = $o->get_errors();
+        $errors = $o->getErrors();
         $this->assertFalse(array_key_exists('ip', $errors), "Now the 'id' key shouldn't be present.");
     }
 
@@ -55,17 +55,17 @@ class ModelsTest extends PHPUnit_Framework_TestCase
             'new'    => true,
             'phone1' => '(11) 98756789',
             'phone2' => '(11) 98756710',
-            'tax_id' => '192.102.021-12'
+            'taxId' => '192.102.021-12'
 ]       );
-        $this->assertTrue($c->is_valid(), "There should be no errors.");
+        $this->assertTrue($c->isValid(), "There should be no errors.");
         // All the fields should be not null.
         $this->assertNotNull($c->id());
         $this->assertNotNull($c->name());
         $this->assertNotNull($c->email());
-        $this->assertNotNull($c->is_new());
-        $this->assertNotNull($c->is_vip());
+        $this->assertNotNull($c->isNew());
+        $this->assertNotNull($c->isVip());
         $this->assertNotNull($c->email());
-        $this->assertNotNull($c->tax_id());
+        $this->assertNotNull($c->taxId());
         // Two phones were set
         $this->assertCount(2, $c->phones());
     }  
@@ -80,7 +80,7 @@ class ModelsTest extends PHPUnit_Framework_TestCase
         $addr->country("IT");
         $addr->zip("10141");
 
-        $this->assertTrue($addr->is_valid(), "There should be no errors.");
+        $this->assertTrue($addr->isValid(), "There should be no errors.");
         // All the fields should be not null.
         $this->assertNotNull($addr->address1());
         $this->assertNotNull($addr->address2());
@@ -94,11 +94,11 @@ class ModelsTest extends PHPUnit_Framework_TestCase
     {
         $item = new KondutoModels\Item([
             "sku"           => "9919023",
-            "product_code"  => "123456789999",
+            "productCode"   => "123456789999",
             "category"      => 201,
             "name"          => "Green T-Shirt",
             "description"   => "Male Green T-Shirt V Neck",
-            "unit_cost"     => 199.99,
+            "unitCost"      => 199.99,
             "quantity"      => 1
         ]);
 
@@ -113,8 +113,8 @@ class ModelsTest extends PHPUnit_Framework_TestCase
         ]);
 
         $o = new KondutoModels\Order();
-        $o->add_item($item);
-        $o->add_item($item2);
+        $o->addItem($item);
+        $o->addItem($item2);
         
         // All the fields should be not null.
         $this->assertNotNull($item->sku());

@@ -45,7 +45,7 @@ class Order extends Model {
 
     public function __construct() {
         // Sets mandatory fields in the parent class, so parent's static methods can access properties.
-        parent::set_mandatory_fields(self::$MANDATORY_FIELDS);
+        parent::setMandatoryFields(self::$MANDATORY_FIELDS);
         // Sets properties according to arguments passed to the constructor.
         $this->set(func_num_args() == 1 ? func_get_arg(0) : func_get_args());
     }
@@ -71,17 +71,20 @@ class Order extends Model {
                 case 'visitor':
                     $this->visitor($arg);
                     break;
+                case "totalAmount":
                 case "total_amount":
                 case '2':
-                    $this->total_amount($arg);
+                    $this->totalAmount($arg);
                     break;
                 case '3':
                 case 'shipping_amount':
-                    $this->shipping_amount($arg);
+                case 'shippingAmount':
+                    $this->shippingAmount($arg);
                     break;
                 case '4':
                 case 'tax_amount':
-                    $this->tax_amount($arg);
+                case 'taxAmount':
+                    $this->taxAmount($arg);
                     break;
                 case '5':
                 case 'currency':
@@ -96,8 +99,9 @@ class Order extends Model {
                     $this->ip($arg);
                     break;
                 case '8':
+                case 'paymentArray':
                 case 'payment_array':
-                    $this->payment_array($arg);
+                    $this->paymentArray($arg);
                     break;
                 case '9':
                 case 'customer':
@@ -105,15 +109,18 @@ class Order extends Model {
                     break;
                 case '10':
                 case 'billing_address':
-                    $this->billing_address($arg);
+                case 'billingAddress':
+                    $this->billingAddress($arg);
                     break;
                 case '11':
                 case 'shipping_address':
-                    $this->shipping_address($arg);
+                case 'shippingAddress':
+                    $this->shippingAddress($arg);
                     break;
                 case '12':
                 case 'shopping_cart':
-                    $this->shopping_cart($arg);
+                case 'shoppingCart':
+                    $this->shoppingCart($arg);
                     break;
                 ## properties below are not settable by other way.
                 case 'device':
@@ -163,16 +170,38 @@ class Order extends Model {
             : $this->total_amount_;
     }
 
+    /**
+     * alias for total_amount()
+     */
+    public function totalAmount($total_amount = null) {
+        return $this->total_amount($total_amount);
+    }
+
+
     public function tax_amount($tax_amount = null) {
         return isset($tax_amount) ?
             $this->set_property($this->tax_amount_, 'tax_amount', $tax_amount)
             : $this->tax_amount_;
     }
 
+    /**
+     * alias for tax_amount()
+     */
+    public function taxAmount($tax_amount = null) {
+        return $this->tax_amount($tax_amount);
+    }
+
     public function shipping_amount($shipping_amount = null) {
         return isset($shipping_amount) ?
             $this->set_property($this->shipping_amount_, 'shipping_amount', $shipping_amount)
             : $this->shipping_amount_;
+    }
+
+    /**
+     * alias for shipping_amount()
+     */
+    public function shippingAmount($shipping_amount = null) {
+        return $this->shipping_amount($shipping_amount);
     }
 
     public function installments($installments = null) {
@@ -214,6 +243,13 @@ class Order extends Model {
         }
     }
 
+    /**
+     * alias for payment_array()
+     */
+    public function paymentArray($payment_array = null) {
+        return $this->payment_array($payment_array);
+    }
+
     public function customer(\Konduto\Models\Customer $customer = null) {
         if (!isset($customer)) {
             return $this->customer_;
@@ -234,6 +270,13 @@ class Order extends Model {
         }
     }
 
+    /**
+     * alias for billing_address()
+     */
+    public function billingAddress($billing_address = null) {
+        return $this->billing_address($billing_address);
+    }
+
     public function shipping_address(\Konduto\Models\Address $address = null) {
         if (!isset($address)) {
             return $this->shipping_address_;
@@ -242,6 +285,13 @@ class Order extends Model {
             $this->shipping_address_ = $address;
             return true;
         }
+    }
+
+    /**
+     * alias for shipping_address()
+     */
+    public function shippingAddress($shipping_address = null) {
+        return $this->shipping_address($shipping_address);
     }
 
     public function shopping_cart(array $item_array = null) {
@@ -259,12 +309,19 @@ class Order extends Model {
         }
     }
 
-    public function add_item(\Konduto\Models\Item $item) {
+    /**
+     * alias for shopping_cart()
+     */
+    public function shoppingCart($shopping_cart = null) {
+        return $this->shopping_cart($shopping_cart);
+    }
+
+    public function addItem(\Konduto\Models\Item $item) {
         $this->shopping_cart_[] = $item;
         return true;
     }
 
-    public function add_payment(\Konduto\Models\CreditCard $cc) {
+    public function addPayment(\Konduto\Models\CreditCard $cc) {
         $this->payment_array_[] = $cc;
         return true;
     }
@@ -310,7 +367,7 @@ class Order extends Model {
      * Builds an array representation of this model. Includes only the fields that are needed for persisting
      * order (building json message in POST operation).
      */
-    public function as_array() {
+    public function asArray() {
         $array = [
             'id'              => $this->id_,
             'visitor'         => $this->visitor_,
@@ -323,8 +380,8 @@ class Order extends Model {
         ];
 
         if (isset($this->customer_)) {
-            if ($this->customer_->is_valid()) {
-                $array['customer'] = $this->customer_->as_array();
+            if ($this->customer_->isValid()) {
+                $array['customer'] = $this->customer_->asArray();
                 unset($this->errors['customer']);
             }
             else {
@@ -333,8 +390,8 @@ class Order extends Model {
         }
 
         if (isset($this->billing_address_)) {
-            if ($this->billing_address_->is_valid()) {
-                $array['billing'] = $this->billing_address_->as_array();
+            if ($this->billing_address_->isValid()) {
+                $array['billing'] = $this->billing_address_->asArray();
                 unset($this->errors['billing_address']);
             }
             else {
@@ -343,8 +400,8 @@ class Order extends Model {
         }
 
         if (isset($this->shipping_address_)) {
-            if ($this->shipping_address_->is_valid()) {
-                $array['shipping'] = $this->shipping_address_->as_array();
+            if ($this->shipping_address_->isValid()) {
+                $array['shipping'] = $this->shipping_address_->asArray();
                 unset($this->errors['shipping_address']);
             }
             else {
@@ -353,8 +410,8 @@ class Order extends Model {
         }
 
         foreach ($this->payment_array_ as $payment) {
-            if ($payment->is_valid()) {
-                $array['payment'][] = $payment->as_array();
+            if ($payment->isValid()) {
+                $array['payment'][] = $payment->asArray();
                 unset($this->errors['payment_array']);
             }
             else {
@@ -363,8 +420,8 @@ class Order extends Model {
         }
 
         foreach ($this->shopping_cart_ as $item) {
-            if ($item->is_valid()) {
-                $array['shopping_cart'][] = $item->as_array();
+            if ($item->isValid()) {
+                $array['shopping_cart'][] = $item->asArray();
                 unset($this->errors['shopping_cart']);
             }
             else {

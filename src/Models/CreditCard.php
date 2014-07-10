@@ -17,7 +17,7 @@ class CreditCard extends Payment {
     // Methods
 
     public function __construct() {
-        parent::set_mandatory_fields(self::$MANDATORY_FIELDS);
+        parent::setMandatoryFields(self::$MANDATORY_FIELDS);
         $this->type_ = Payment::TYPE_CARD;
         $this->set(func_num_args() == 1 ? func_get_arg(0) : func_get_args());
     }
@@ -46,6 +46,7 @@ class CreditCard extends Payment {
                     break;
                 case '5':
                 case 'expiration_date':
+                case 'expirationDate':
                     $this->expiration_date($arg);
                     break;
             }
@@ -85,6 +86,14 @@ class CreditCard extends Payment {
     }
 
     /**
+     * Alias for expiration_date()
+     */
+    public function expirationDate($expiration_date = null) {
+        return $this->expiration_date($expiration_date);
+    }
+    
+
+    /**
      * Does the validation according to ValidationSchema rules. If the parameter passed is valid,
      * sets the property and returns true. Returns false otherwise.
      * @param field: the property to be set.
@@ -101,7 +110,7 @@ class CreditCard extends Payment {
         return false;
     }
 
-    public function as_array() {
+    public function asArray() {
         $array = [
             'type'            => $this->type_,
             'status'          => $this->status_,

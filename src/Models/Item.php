@@ -31,7 +31,8 @@ class Item implements Entity {
                     break;
                 case '1':
                 case 'product_code':
-                    $this->product_code($arg);
+                case 'productCode':
+                    $this->productCode($arg);
                     break;
                 case '2':
                 case 'category':
@@ -47,7 +48,8 @@ class Item implements Entity {
                     break;
                 case '5':
                 case 'unit_cost':
-                    $this->unit_cost($arg);
+                case 'unitCost':
+                    $this->unitCost($arg);
                     break;
                 case '6':
                 case 'quantity':
@@ -75,6 +77,13 @@ class Item implements Entity {
             : $this->product_code_;
     }
 
+    /**
+     * Alias for product_code()
+     */
+    public function productCode($product_code = null) {
+        return $this->product_code($product_code);
+    }
+
     public function category($category = null) {
         return isset($category) ? 
             $this->set_property($this->category_, 'category', $category)
@@ -97,6 +106,13 @@ class Item implements Entity {
         return isset($unit_cost) ? 
             $this->set_property($this->unit_cost_, 'unit_cost', $unit_cost)
             : $this->unit_cost_;
+    }
+
+    /**
+     * Alias for unit_cos()
+     */
+    public function unitCost($unit_cost = null) {
+        return $this->unit_cost($unit_cost);
     }
 
     public function quantity($quantity = null) {
@@ -126,12 +142,12 @@ class Item implements Entity {
         return false;
     }
 
-    public function get_errors() {}
-    public function is_valid() {
+    public function getErrors() {}
+    public function isValid() {
         return true;
     }
 
-    public function as_array() {
+    public function asArray() {
         $array = [
             'sku'          => $this->sku_,
             'product_code' => $this->product_code_,

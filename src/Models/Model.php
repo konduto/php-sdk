@@ -8,21 +8,21 @@ abstract class Model implements Entity {
     protected $errors = [];
 
     // Method called in the constructor of child classes
-    protected function set_mandatory_fields($field_array) {
+    protected function setMandatoryFields($field_array) {
         $this->mandatory = $field_array;
     }
 
     // Reset errors
-    public function clean_errors() {
+    public function cleanErrors() {
         $this->errors = null;
     }
 
     /**
      * Look for unpopulated mandatory fields and add them to errors property.
      */
-    public function get_errors() {
+    public function getErrors() {
         // Check if all mandatory fields are present
-        $properties = $this->as_array();
+        $properties = $this->asArray();
 
         foreach ($this->mandatory as $field) {
             if ((!array_key_exists($field, $properties) or $properties[$field] === null) and (!isset($this->errors[$field]))) {
@@ -36,12 +36,15 @@ abstract class Model implements Entity {
     /**
      * Return true no validation error occurred and all mandatory fields are populated.
      */
-    public function is_valid() {
+    public function isValid() {
         // Check if there are errors
-        $isEmpty = empty($this->get_errors());
-        return $isEmpty;
+        return empty($this->getErrors());
     }
 
+    /**
+     * Set one or more properties using an array or multiple params.
+     * Look at Order model to more details.
+     */
     abstract public function set();
 
     /**
