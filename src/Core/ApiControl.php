@@ -4,8 +4,7 @@ use \Konduto\Models as Models;
 use \Konduto\Exceptions as Exceptions;
 
 // Constants used to define API specific configuration (they should change only with versions of the sdk).
-// const ENDPOINT        = "https://api.Konduto.com/";
-const ENDPOINT        = "http://127.0.0.1:8080/";
+const ENDPOINT        = "https://api.konduto.com/";
 const CURRENT_VERSION = "v1";
 const API_TIMEOUT     = 30;      // In seconds.
 
@@ -42,7 +41,7 @@ abstract class ApiControl {
      * @param $method accepts one of the numerical constants METHOD_* defined above.
      * @param $relative_url the url to be constructed using ENDPOINT and the set version.
      */
-    protected function sendRequest($data, $method, $relative_url) {
+    protected static function sendRequest($data, $method, $relative_url) {
 
         if (!isset(self::$key)) {
             throw new Exceptions\InvalidAPIKeyException(self::$key);
@@ -139,7 +138,7 @@ abstract class ApiControl {
      * Checks whether the version provided is valid or not. If it is not valid, throws and exception.
      * TODO: This function needs to be updated when new versions of the API get available.
      */
-    protected function validate_version($version) { 
+    protected static function validate_version($version) { 
         if ($version != CURRENT_VERSION) {
             throw new Exceptions\InvalidVersionException($version);
         }
@@ -149,7 +148,7 @@ abstract class ApiControl {
     /**
      * Returns the status of an order given a recommendation.
      */
-    protected function get_status($recommendation) {
+    protected static function get_status($recommendation) {
         switch (strtolower($recommendation)) {
             case Models\RECOMMENDATION_REVIEW:
                 return Models\STATUS_PENDING;
@@ -165,7 +164,7 @@ abstract class ApiControl {
     /**
      * Check if the response was successful, throw Exceptions in case of errors.
      */
-    protected function check_post_response($response, $order_id = null) {
+    protected static function check_post_response($response, $order_id = null) {
         if ($response["http_status"] == HTTP_OK) {
             return true;
         }
@@ -182,7 +181,7 @@ abstract class ApiControl {
     /**
      * Check if the order exists.
      */
-    protected function was_order_found($response, $order_id = null) {
+    protected static function was_order_found($response, $order_id = null) {
         if ($response["http_status"] == HTTP_OK) {
             return true;
         }
@@ -197,14 +196,14 @@ abstract class ApiControl {
     /**
      * Check whether the provided key is a production key.
      */
-    protected function is_production_key($key) {
+    protected static function is_production_key($key) {
         return is_string($key) && $key[0] == 'P';
     }
 
     /**
      * Returns the last response from Konduto API.
      */
-    public function getLastResponse() {
+    public static function getLastResponse() {
         return self::$lastResponse;
     }
 }

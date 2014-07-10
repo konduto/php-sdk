@@ -1,4 +1,4 @@
-<?php namespace Konduto\exceptions;
+<?php namespace Konduto\Exceptions;
 
 class KondutoAPIErrorException extends KondutoException {
 

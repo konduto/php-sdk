@@ -18,7 +18,7 @@ abstract class Konduto extends ApiControl {
     /**
      * Choose a version of Konduto API to be used for performing transactions.
      */
-    public function setVersion($ver = CURRENT_VERSION) {
+    public static function setVersion($ver = CURRENT_VERSION) {
         self::validate_version($ver);
         self::$version = $ver;
     }
@@ -26,7 +26,7 @@ abstract class Konduto extends ApiControl {
     /**
      * Receives a string and validates it as a base64. If it is not a base64 string, raises an exception.
      */
-    public function setApiKey($key) {
+    public static function setApiKey($key) {
         if (is_string($key) and strlen($key) == 21 and ($key[0] == 'T' or $key[0] == 'P')) {
             self::$key = $key;
             return true;
@@ -37,7 +37,7 @@ abstract class Konduto extends ApiControl {
     /**
      * Retrieves an order given its id.
      */
-    public function getOrder($id) {
+    public static function getOrder($id) {
         if (!Models\ValidationSchema::validateOrderField('id', $id)) {
             throw new Exceptions\InvalidOrderException("id");
         }
@@ -78,7 +78,7 @@ abstract class Konduto extends ApiControl {
     /**
      * Sends an order for analyzis using Konduto API.
      */
-    public function analyze(Models\Order &$order, $analyze = true) {
+    public static function analyze(Models\Order &$order, $analyze = true) {
 
         if (!$order->is_valid()) {
             throw new Exceptions\InvalidOrderException($order->get_errors());
@@ -109,14 +109,14 @@ abstract class Konduto extends ApiControl {
     /**
      * Persists an order without analyzing it. 
      */ 
-    public function sendOrder(Models\Order &$order) {
+    public static function sendOrder(Models\Order &$order) {
         return self::analyze($order, false);
     }
 
     /**
      * Updates the status of an existing order.
      */
-    public function updateOrderStatus($order_id, $status, $comments = "") {
+    public static function updateOrderStatus($order_id, $status, $comments = "") {
 
         if (!in_array($status, [Models\STATUS_APPROVED, Models\STATUS_DECLINED, Models\STATUS_FRAUD])) {
             throw new Exceptions\InvalidOrderException("status");

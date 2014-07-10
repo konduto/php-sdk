@@ -1,4 +1,4 @@
-<?php namespace Konduto\exceptions;
+<?php namespace Konduto\Exceptions;
 
 /**
  * Response not implemented.
