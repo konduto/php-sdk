@@ -30,10 +30,10 @@ require_once "konduto/sdk/konduto.php";
 ```
 /
 |- konduto/
-|  |- sdk/
-|  |  |- src/
-|  |  |- tests/
-|  |  |- konduto.php
+|--|- sdk/
+|--|--|- src/
+|--|--|- tests/
+|--|--|- konduto.php
 ```
 
 ## Getting started
@@ -85,21 +85,22 @@ $order = new KondutoModels\Order(array(
 ));
 ```
 
+
 Parameter | Description 
 --- | ---
-id | _**(required)**_ Unique identifier for each order.
-visitor | _**(required)**_ Visitor identifier obtained from our JavaScript snippet.
-total_amount | _**(required)**_ Total order amount.
-shipping_amount | _**(optional)**_ Shipping and handling amount.
-tax_amount | _**(optional)**_ Taxes amount.
-currency | _**(optional)**_ Currency code with 3 letters (ISO-4712).
-installments | _**(optional)**_ Number of installments in the payment plan.
-ip | _**(optional)**_ Customer's IPv4 address.
-customer | _**(required)**_ Object containing the customer details.
-payment | _**(optional)**_ Array containing the payment methods.
-billing | _**(optional)**_ Object containing the billing information.
-shipping | _**(optional)**_ Object containing the shipping information.
-shopping_cart | _**(optional)**_ Array containing the items purchased.
+id | _(required)_ Unique identifier for each order.
+visitor | _(required)_ Visitor identifier obtained from our JavaScript snippet.
+total_amount | _(required)_ Total order amount.
+shipping_amount | _(optional)_ Shipping and handling amount.
+tax_amount | _(optional)_ Taxes amount.
+currency | _(optional)_ Currency code with 3 letters (ISO-4712).
+installments | _(optional)_ Number of installments in the payment plan.
+ip | _(optional)_ Customer's IPv4 address.
+customer | _(required)_ Object containing the customer details.
+payment | _(optional)_ Array containing the payment methods.
+billing | _(optional)_ Object containing the billing information.
+shipping | _(optional)_ Object containing the shipping information.
+shopping_cart | _(optional)_ Array containing the items purchased.
 
 
 ### Customer information
@@ -117,16 +118,17 @@ $customer = new KondutoModels\Customer(array(
 ));
 ```
 
+
 Parameter | Description 
 --- | ---
-id | _**(required)**_ **Unique** identifier for each customer. Can be anything you like (counter, id, e-mail address) as long as it's consistent in future orders.
-name | _**(required)**_ Customer's full name.
-email | _**(required)**_ Customer's e-mail address
-tax_id | _**(optional)**_ Customer's tax id.
-phone1 | _**(optional)**_ Customer's primary phone number
-phone 2 | _**(optional)**_ Customer's secondary phone number
-new | _**(optional)**_ Boolean indicating if the customer is using a newly created account for this purchase.
-vip | _**(optional)**_ Boolean indicating if the customer is a VIP or frequent buyer.
+id | _(required)_ **Unique** identifier for each customer. Can be anything you like (counter, id, e-mail address) as long as it's consistent in future orders.
+name | _(required)_ Customer's full name.
+email | _(required)_ Customer's e-mail address
+tax_id | _(optional)_ Customer's tax id.
+phone1 | _(optional)_ Customer's primary phone number
+phone 2 | _(optional)_ Customer's secondary phone number
+new | _(optional)_ Boolean indicating if the customer is using a newly created account for this purchase.
+vip | _(optional)_ Boolean indicating if the customer is a VIP or frequent buyer.
 
 
 ### Payment information
@@ -141,13 +143,14 @@ $creditCard = new KondutoModels\CreditCard(array(
 ));
 ```
 
+
 Parameter | Description 
 --- | ---
-status | _**(required)**_ The status of the transaction returned by the payment processor. Accepts `approved`, `declined` or `pending` if the payment wasn't been processed yet.
-sha1 | _**(optional)**_ Hash (SHA1) of the customer's full credit card number.
-bin | _**(optional)**_ First six digits of the customer's credit card. Used to identify the type of card being sent.
-last4 | _**(optional)**_ Four last digits of the customer's credit card number.
-expiration_date | _**(optional)**_ Card's expiration date under MMYYYY format.
+status | _(required)_ The status of the transaction returned by the payment processor. Accepts `approved`, `declined` or `pending` if the payment wasn't been processed yet.
+sha1 | _(optional)_ Hash (SHA1) of the customer's full credit card number.
+bin | _(optional)_ First six digits of the customer's credit card. Used to identify the type of card being sent.
+last4 | _(optional)_ Four last digits of the customer's credit card number.
+expiration_date | _(optional)_ Card's expiration date under MMYYYY format.
 
 
 ### Billing address
@@ -164,15 +167,16 @@ $billing = new KondutoModels\Address(array(
 ));
 ```
 
+
 Parameter | Description 
 --- | ---
-name | _**(optional)**_ Cardholder's full name.
-address1 | _**(optional)**_ Cardholder's billing address on file with the bank.
-address2 | _**(optional)**_ Additional cardholder address information.
-city | _**(optional)**_ Cardholder's city.
-state | _**(optional)**_ Cardholder's state.
-zip | _**(optional)**_ Cardholder's ZIP code.
-country | _**(optional)**_ Cardholder's country code (ISO 3166-2)
+name | _(optional)_ Cardholder's full name.
+address1 | _(optional)_ Cardholder's billing address on file with the bank.
+address2 | _(optional)_ Additional cardholder address information.
+city | _(optional)_ Cardholder's city.
+state | _(optional)_ Cardholder's state.
+zip | _(optional)_ Cardholder's ZIP code.
+country | _(optional)_ Cardholder's country code (ISO 3166-2)
 
 
 ### Shipping address
@@ -187,16 +191,17 @@ $billing = new KondutoModels\Address(array(
   "zip"       => "10460",
   "country"   => "US"
 ));
+```
 
 Parameter | Description 
 --- | ---
-name | _**(optional)**_ Recipient's full name.
-address1 | _**(optional)**_ Recipient's shipping address.
-address2 | _**(optional)**_ Additional recipient address information.
-city | _**(optional)**_ Recipient's city.
-state | _**(optional)**_ Recipient's state.
-zip | _**(optional)**_ Recipient's ZIP code.
-country | _**(optional)**_ Recipient's country code (ISO 3166-2)
+name | _(optional)_ Recipient's full name.
+address1 | _(optional)_ Recipient's shipping address.
+address2 | _(optional)_ Additional recipient address information.
+city | _(optional)_ Recipient's city.
+state | _(optional)_ Recipient's state.
+zip | _(optional)_ Recipient's ZIP code.
+country | _(optional)_ Recipient's country code (ISO 3166-2)
 
 
 ### Shopping cart
@@ -223,16 +228,17 @@ $item2 = new KondutoModels\Item(array(
 );
 ```
 
+
 Parameter | Description 
 --- | ---
-sku | _**(optional)**_ Product or service's SKU or inventory id.
-product_code | _**(optional)**_ Product or service's UPC, barcode or secondary id.
-category | _**(optional)**_ Category code for the item purchased. [See here](http://docs.konduto.com/#n-tables) for the list.
-name | _**(optional)**_ Name of the product or service.
-description | _**(optional)**_ Detailed description of the item.
-unit_cost | _**(optional)**_ Cost of a single unit of this item.
-quantity | _**(optional)**_ Number of units purchased.
-discount | _**(optional)**_ Discounted amount for this item.
+sku | _(optional)_ Product or service's SKU or inventory id.
+product_code | _(optional)_ Product or service's UPC, barcode or secondary id.
+category | _(optional)_ Category code for the item purchased. [See here](http://docs.konduto.com/#n-tables) for the list.
+name | _(optional)_ Name of the product or service.
+description | _(optional)_ Detailed description of the item.
+unit_cost | _(optional)_ Cost of a single unit of this item.
+quantity | _(optional)_ Number of units purchased.
+discount | _(optional)_ Discounted amount for this item.
 
 
 ## Update an order
@@ -243,10 +249,11 @@ This method returns `true` if the update was successful. Otherwise it throws an 
 $update = Konduto::updateOrderStatus("ORD1237163", "approved", "Comments about this order");
 ```
 
+
 Parameter | Description 
 --- | ---
-status | _**(required)**_ New status for this transaction. Either `approved`, `declined` or `fraud`, when you have identified a fraud or chargeback.
-comments | _**(required)**_ Reason or comments about the status update.
+status | _(required)_ New status for this transaction. Either `approved`, `declined` or `fraud`, when you have identified a fraud or chargeback.
+comments | _(required)_ Reason or comments about the status update.
 
 ## Query an order
 
