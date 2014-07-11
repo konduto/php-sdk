@@ -5,9 +5,10 @@ use Konduto\Core\Konduto as Konduto;
 use Konduto\Models as KondutoModels;
 use Konduto\Exceptions as KondutoExceptions;
 
-const LOCAL_EXISTING_KEY = "T01234567890123456789";
+// Testing key from the docs.konduto.com
+const LOCAL_EXISTING_KEY = "T738D516F09CAB3A2C1EE";
 
-class ApiTest extends PHPUnit_Framework_TestCase
+class ApiTest extends \PHPUnit_Framework_TestCase
 {
     public static $testOrder_1 = null;
     public static $testOrder_2 = null;

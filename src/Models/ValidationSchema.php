@@ -12,8 +12,8 @@ const IDX_PATTERN = 3;
 
 const REGEX_LETTERS_DIGITS = '/^[a-zA-Z0-9-_]+\z/';
 const REGEX_LETTERS        = '/^[a-zA-Z]+\z/';
-const REGEX_DIGITS         = '/^[a-fA-F0-9]+\z/';
-const REGEX_HEXA_DIGITS    = '/^[0-9]+\z/';
+const REGEX_DIGITS         = '/^[0-9]+\z/';
+const REGEX_HEXA_DIGITS    = '/^[a-fA-F0-9]+\z/';
 
 abstract class ValidationSchema {
     
