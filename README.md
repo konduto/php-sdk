@@ -63,6 +63,20 @@ Konduto::setApiKey("T738D516F09CAB3A2C1EE");
 
 ## Send an order for analysis
 
+Sending an order for analysis is as easy as calling the `analyze` method from Konduto core class for an `Order` object, as the snippet below shows. The recommendention is returned inside the order object sent for analyzis.
+
+```php
+try {
+    Konduto::analyze($order);
+
+    // Let's check the recommendation returned by Konduto
+    echo "\n Konduto recommendation is to " . $order->recommendation() . " this order.";
+}
+catch (Exception $e) {
+    echo "\n Konduto wasn't able to return a recommendation: " . $e->getMessage();
+}
+```
+
 The request consists of a root object containing information related to the order as well as a `customer`, `billing` and `shipping` objects and the `payment` and `shopping_cart` arrays.
 
 ### Order information
@@ -83,17 +97,6 @@ $order = new KondutoModels\Order([
   "shipping_address"  => $shipping,
   "shopping_cart"     => array($item1, $item2)
 ]);
-
-// Analyze order using Konduto
-try {
-    Konduto::analyze($order);
-
-    // Let's check the recommendation returned by Konduto
-    echo "\n Konduto recommendation is to " . $order->recommendation() . " this order.";
-}
-catch (Exception $e) {
-    echo "\n Konduto wasn't able to return a recommendation: " . $e->getMessage();
-}
 ```
 
 
