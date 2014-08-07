@@ -4,11 +4,99 @@ require_once "vendor/autoload.php";
 use Konduto\Models as KondutoModels;
 use Konduto\Exceptions as KondutoExceptions;
 
-// const curr = "T01234567890123456789";
-
-class ModelsTest extends PHPUnit_Framework_TestCase
+class ModelsTest extends \PHPUnit_Framework_TestCase
 {
     public static $testOrder_2 = null;
+
+    /**
+     * Tests for the creation of an order object using a big array
+     */
+    public function testFullOrderWithArray()
+    {
+        $o = new KondutoModels\Order([
+            "id"           => "Order-90125",
+            "totalAmount"  => 312.71,
+            "ip"           => "221.102.39.19",
+            "customer"     => 
+            [
+                "id"    => "Customer n03",
+                "name"  => "Hiroyuki Endo",
+                "email" => "endo.hiroyuki@yahoo.jp"
+            ],
+            "payment"      => 
+            [
+                [
+                    "bin" =>   "490172",
+                    "last4"=> "0012",
+                    "expiration_date" => "072015",
+                    "status" => "approved"
+                ],
+                [
+                    "status" => "declined",
+                    "bin" =>   "490231",
+                    "last4"=> "0231",
+                    "expiration_date" => "082016"
+                ]
+            ],
+            "billing"      => 
+            [
+                "name" => "Mary Jane",
+                "address1" => "123 Main St.",
+                "address2" => "Apartment 4",
+                "city" => "New York City",
+                "state" => "NY",
+                "zip" => "10460",
+                "country" => "US"
+            ],
+            "shipping"     => 
+            [
+                "name" => "Mary Jane",
+                "address1" => "123 Main St.",
+                "address2" => "Apartment 4",
+                "city" => "New York City",
+                "state" => "NY",
+                "zip" => "10460",
+                "country" => "US"
+            ],
+            "shopping_cart" => 
+            [
+                [
+                    "sku" => "9919023",
+                    "product_code" => 1231,
+                    "category" => 201,
+                    "name" => "Green T-Shirt",
+                    "description" => "Male Green T-Shirt V Neck",
+                    "unit_cost" => 1999.99,
+                    "quantity" => 1
+                ],
+                [
+                    "sku" => "0017273",
+                    "category" => 1231,
+                    "name" => "Yellow Socks",
+                    "description" => "Pair of Yellow Socks",
+                    "unit_cost" => 29.90,
+                    "quantity" => 2,
+                    "discount" => 5.00
+                ]
+            ]
+        ]);
+
+        $isValid = $o->isValid();        
+
+
+        if (!$isValid) {
+            ob_start();
+            var_dump($o->getErrors());
+            $errors = ob_get_contents();
+            ob_end_clean();
+            $this->fail("The test failed because there were errors in the order: \n" . $errors);
+        }
+        else {
+            $this->assertTrue($isValid);
+        }
+        var_dump($o);
+    }
+
 
     /**
      * Tests for an Order containing an error for an illegal ID property.
@@ -18,13 +106,11 @@ class ModelsTest extends PHPUnit_Framework_TestCase
         $o = new KondutoModels\Order();
         // Set an ID that don't respect pattern (contains space);
         $o->id("Pedido 00001");
-        $errors = $o->getErrors();
-        $this->assertTrue(array_key_exists('id', $errors), "The 'id' key should be present in errors.");
+        $this->assertTrue(array_key_exists('id', $o->getErrors()), "The 'id' key should be present in errors.");
 
         // Now set an ID that respect pattern, and check if the error's gone.
         $o->id("Pedido00001");
-        $errors = $o->getErrors();
-        $this->assertFalse(array_key_exists('id', $errors), "Now the 'id' key shouldn't be present.");
+        $this->assertFalse(array_key_exists('id', $o->getErrors()), "Now the 'id' key shouldn't be present.");
     }
 
     /**
@@ -36,13 +122,11 @@ class ModelsTest extends PHPUnit_Framework_TestCase
         $o = new KondutoModels\Order();
         // Invalid IP.
         $o->ip("192.168.0.256");
-        $errors = $o->getErrors();
-        $this->assertTrue(array_key_exists('ip', $errors), "The 'ip' key should be present in errors.");
+        $this->assertTrue(array_key_exists('ip', $o->getErrors()), "The 'ip' key should be present in errors.");
 
         // Now there should be no error.
         $o->ip("192.168.0.255");
-        $errors = $o->getErrors();
-        $this->assertFalse(array_key_exists('ip', $errors), "Now the 'id' key shouldn't be present.");
+        $this->assertFalse(array_key_exists('ip', $o->getErrors()), "Now the 'ip' key shouldn't be present.");
     }
 
     public function testCustomer()

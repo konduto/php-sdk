@@ -85,7 +85,7 @@ abstract class ApiControl {
         $curlSession = curl_init($url);
 
         $headers = [
-            "Authorization: Basic " . base64_encode(self::$key),
+            "Authorization: Basic " . base64_encode(self::$key),            
             "X-Requested-With: Konduto SDK PHP " . self::$version
         ];
 

@@ -99,25 +99,29 @@ class Order extends Model {
                     $this->ip($arg);
                     break;
                 case '8':
+                case 'payment':
                 case 'paymentArray':
                 case 'payment_array':
                     $this->paymentArray($arg);
                     break;
                 case '9':
                 case 'customer':
-                    $this->customer($arg);
+                    $this->customer(is_array($arg) ? new Customer($arg) : $arg);
                     break;
                 case '10':
+                case 'billing':
                 case 'billing_address':
                 case 'billingAddress':
-                    $this->billingAddress($arg);
+                    $this->billingAddress(is_array($arg) ? new Address($arg) : $arg);
                     break;
                 case '11':
+                case 'shipping':
                 case 'shipping_address':
                 case 'shippingAddress':
-                    $this->shippingAddress($arg);
+                    $this->shippingAddress(is_array($arg) ? new Address($arg) : $arg);
                     break;
                 case '12':
+                case 'shopping_cart':
                 case 'shopping_cart':
                 case 'shoppingCart':
                     $this->shoppingCart($arg);
@@ -234,7 +238,11 @@ class Order extends Model {
         }
         else {
             foreach ($payment_array as $key => $payment) {
-                if (!is_a($payment, 'Konduto\Models\Payment')) {
+                if (is_array($payment) and (new CreditCard($payment))->isValid()) {
+                    $payment_array[$key] = new CreditCard($payment);
+                }
+                else if (!is_a($payment, 'Konduto\Models\CreditCard')) {                    
+                    $this->errors['payment'] = FIELD_NOT_VALID;
                     return null;
                 }
             }
@@ -294,13 +302,17 @@ class Order extends Model {
         return $this->shipping_address($shipping_address);
     }
 
-    public function shopping_cart(array $item_array = null) {
+    public function shopping_cart($item_array = null) {
         if (!isset($item_array)) {
             return $this->shopping_cart_;
         }
         else {
             foreach ($item_array as $key => $item) {
-                if (!is_a($item, 'Konduto\Models\Item')) {
+                if (is_array($item) and (new Item($item))->isValid()) {
+                    $item_array[$key] = new Item($item);
+                }
+                else if (!is_a($item, 'Konduto\Models\Item')) {
+                    $this->errors['shopping_cart'] = FIELD_NOT_VALID;
                     return null;
                 }
             }

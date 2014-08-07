@@ -1,6 +1,6 @@
 <?php namespace Konduto\Models;
 
-class Item implements Entity {
+class Item extends Model {
 
     // Settable/gettable properties
 
@@ -134,17 +134,14 @@ class Item implements Entity {
      * @param field_name: the name of the field as in ValidationSchema.
      * @param value: the value to be set in the property.
      */
-    private function set_property(&$field, $field_name, $value) {
+    protected function set_property(&$field, $field_name, $value) {
         if (ValidationSchema::validateItemField($field_name, $value)) {
             $field = $value;
+            unset($this->errors[$field_name]);
             return true;
-        }
+        }        
+        $this->errors[$field_name] = $value;
         return false;
-    }
-
-    public function getErrors() {}
-    public function isValid() {
-        return true;
     }
 
     public function asArray() {
