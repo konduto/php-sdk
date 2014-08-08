@@ -26,14 +26,14 @@ class ModelsTest extends \PHPUnit_Framework_TestCase
             "payment"      => 
             [
                 [
-                    "bin" =>   "490172",
+                    "bin" => "490172",
                     "last4"=> "0012",
                     "expiration_date" => "072015",
                     "status" => "approved"
                 ],
                 [
                     "status" => "declined",
-                    "bin" =>   "490231",
+                    "bin" => "490231",
                     "last4"=> "0231",
                     "expiration_date" => "082016"
                 ]
@@ -94,7 +94,7 @@ class ModelsTest extends \PHPUnit_Framework_TestCase
         else {
             $this->assertTrue($isValid);
         }
-        var_dump($o);
+        // var_dump($o);
     }
 
 
@@ -209,5 +209,43 @@ class ModelsTest extends \PHPUnit_Framework_TestCase
         $this->assertNotNull($item->quantity());
         $this->assertNotNull($item2->discount());
         $this->assertCount(2, $o->shopping_cart());
+    }
+
+    public function testNavigation()
+    {
+        $navInfo = [
+            "referrer"              => "http://www.google.com?q=buy+shirt",
+            "session_time"          => 12,
+            "time_site_1d"          => 13,
+            "new_accounts_1d"       => 0,
+            "password_resets_1d"    => 1,
+            "sales_declined_1d"     => 2,
+            "sessions_1d"           => 3,
+            "time_site_7d"          => 4,
+            "time_per_page_7d"      => 5,
+            "new_accounts_7d"       => 6,
+            "password_resets_7d"    => 7,
+            "checkout_count_7d"     => 8,
+            "sales_declined_7d"     => 9,
+            "sessions_7d"           => 10,
+            "time_since_last_sale"  => 11
+        ];
+
+        $navModel = new KondutoModels\Navigation($navInfo);
+        
+        $this->assertContains($navModel->sessionTime(), $navInfo);
+        $this->assertContains($navModel->referrer(), $navInfo);
+        $this->assertContains($navModel->timeSite1d(), $navInfo);
+        $this->assertContains($navModel->newAccounts1d(), $navInfo);
+        $this->assertContains($navModel->passwordResets1d(), $navInfo);
+        $this->assertContains($navModel->salesDeclined1d(), $navInfo);
+        $this->assertContains($navModel->timeSite7d(), $navInfo);
+        $this->assertContains($navModel->timePerPage7d(), $navInfo);
+        $this->assertContains($navModel->newAccounts7d(), $navInfo);
+        $this->assertContains($navModel->passwordResets7d(), $navInfo);
+        $this->assertContains($navModel->checkoutCount7d(), $navInfo);
+        $this->assertContains($navModel->salesDeclined7d(), $navInfo);
+        $this->assertContains($navModel->sessions7d(), $navInfo);
+        $this->assertContains($navModel->timeSinceLastSale(), $navInfo);
     }
 }

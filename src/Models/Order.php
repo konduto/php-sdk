@@ -35,6 +35,7 @@ class Order extends Model {
     private $geolocation_;
     private $recommendation_;
     private $score_;
+    private $navigation_;
     
     // Internal properties
 
@@ -144,6 +145,9 @@ class Order extends Model {
                     break;
                 case 'timestamp':
                     $this->timestamp_ = $arg;
+                    break;                    
+                case 'navigation':
+                    $this->navigation_ = new Navigation($arg);
                     break;
             }
         }
@@ -328,16 +332,26 @@ class Order extends Model {
         return $this->shopping_cart($shopping_cart);
     }
 
+    /**
+     * Adds an item that will be purchased in this order.
+     * @param a Konduto\Models\Item object
+     */
     public function addItem(\Konduto\Models\Item $item) {
         $this->shopping_cart_[] = $item;
-        return true;
     }
 
+    /**
+     * Adds a credit card used to pay for this order.
+     * @param a Konduto\Models\CreditCard object
+     */
     public function addPayment(\Konduto\Models\CreditCard $cc) {
         $this->payment_array_[] = $cc;
-        return true;
     }
 
+    /**
+     * The current status of the order.
+     * @return one of 4 possible status: 'approved', 'declined', 'pending', 'fraud'
+     */
     public function status() {
         return $this->status_;
     }
@@ -346,16 +360,39 @@ class Order extends Model {
         return $this->timestamp_;
     }
 
+    /**
+     * If this order was already subject to analysis by Konduto, returns information
+     * about the device used by the customer that submitted order.
+     * @return a Konduto\Models\Device object
+     */
     public function device() {
         return $this->device_;
     }
 
+    /**
+     * If this order was already subject to analysis by Konduto, returns information
+     * about the geolocation of the order.
+     * @return a Konduto\Models\Geolocation object
+     */
     public function geolocation() {
         return $this->geolocation_;
     }
 
+    /**
+     * If this order was already subject to analysis by Konduto, returns the recommendation
+     * @return one of three possible recommendations: 'approve', 'decline' or 'review'
+     */
     public function recommendation() {
         return $this->recommendation_;
+    }
+
+    /**
+     * If this order was already subject to analysis by Konduto, returns navigation 
+     * information regarding the customer who performer this order.
+     * @return a Konduto\Models\Navigation object
+     */
+    public function navigation() {
+        return $this->navigation_;
     }
 
     /**

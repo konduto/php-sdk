@@ -64,7 +64,8 @@ class ApiTest extends \PHPUnit_Framework_TestCase
             "id"           => self::generateUniqueID(),
             "totalAmount"  => 100.50,
             "customer"     => $c,
-            "ip"           => "95.31.110.43"
+            "ip"           => "95.31.110.43",   // We need to provide an IP for having a geolocation returned
+            "visitor"      => "1234567890123456789012345678901234567890" // We need to provide visitor for having navigation info returned
         ]);
 
         // Save this order for later...
@@ -78,7 +79,9 @@ class ApiTest extends \PHPUnit_Framework_TestCase
             // $this->assertNotNull($o->device(), 'Device');
             $this->assertNotNull($o->status(), 'Status');
             $this->assertNotNull($o->recommendation(), 'recommendation');
-            $this->assertInstanceOf('Konduto\models\Geolocation', $o->geolocation());
+            $this->assertNotNull($o->navigation(), 'navigation');
+            $this->assertInstanceOf('Konduto\Models\Geolocation', $o->geolocation());
+            $this->assertInstanceOf('Konduto\Models\Navigation', $o->navigation());
             // $this->assertInstanceOf('Konduto\models\device', $o->device());
         }
         catch (Exception $e) {

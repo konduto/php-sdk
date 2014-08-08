@@ -129,17 +129,8 @@ abstract class Konduto extends ApiControl {
         $response = self::sendRequest(json_encode($order_array), METHOD_POST, '/orders');
 
         if (self::check_post_response($response, $order->id()) and $analyze === true) {
-            $order->set([
-                "recommendation" => $response["order"]["recommendation"],
-                "score"          => $response["order"]["score"],
-                "status"         => self::get_status($response["order"]["recommendation"])
-            ]);
-            if (isset($response["order"]["device"])) {
-                $order->set(["device" => $response["order"]["device"]]);
-            }
-            if (isset($response["order"]["geolocation"])) {                
-                $order->set(["geolocation" => $response["order"]["geolocation"]]);
-            }
+            $order->set($response["order"]);
+            $order->set(["status" => self::get_status($response["order"]["recommendation"])]);
         }
 
         return true;
