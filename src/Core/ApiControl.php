@@ -6,7 +6,7 @@ use \Konduto\Exceptions as Exceptions;
 /*
  * Defines what URL to communicate with.
  */
-const ENDPOINT        = "https://api.konduto.com/";
+const ENDPOINT = "https://api.konduto.com/";
 
 /*
  * Current version of the SDK.
@@ -16,7 +16,7 @@ const CURRENT_VERSION = "v1";
 /*
  * Number of seconds before giving up of waiting for a response from Konduto API
  */
-const API_TIMEOUT     = 30;      // In seconds.
+const API_TIMEOUT = 30;      // In seconds.
 
 /*
  * Constants used for switching between HTTP methods use inside ApiControl class

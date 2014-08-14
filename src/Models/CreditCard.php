@@ -116,6 +116,7 @@ class CreditCard extends Payment {
             'status'          => $this->status_,
             'sha1'            => $this->sha1_,
             'bin'             => $this->bin_,
+            'last4'           => $this->last4_,
             'expiration_date' => $this->expiration_date_
         ];
 

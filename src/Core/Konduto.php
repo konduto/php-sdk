@@ -71,33 +71,8 @@ abstract class Konduto extends ApiControl {
         
         // Do a check in the response for an error 404.
         self::was_order_found($order_array, $id);
-
-        $order = new Models\Order();
-
-        if (isset($order_array['customer'])) {
-            $order->customer(new Models\Customer($order_array['customer']));
-            unset($order_array['customer']);
-        }
-        if (isset($order_array['billing'])) {
-            $order->billing_address(new Models\Address($order_array['billing']));
-            unset($order_array['billing']);
-        }
-        if (isset($order_array['shipping'])) {
-            $order->shipping_address(new Models\Address($order_array['shipping']));
-            unset($order_array['shipping']);
-        }
-        if (isset($order_array['payment'])) {
-            $order->payment_array(array_map(function ($e) {return new Models\CreditCard($e); }, $order_array['payment']));
-            unset($order_array['payment']);
-        }
-        if (isset($order_array['shopping_cart'])) {
-            $order->shopping_cart(array_map(function ($e) {return new Models\Item($e); }, $order_array['shopping_cart']));
-            unset($order_array['shopping_cart']);
-        }
-
-        $order->set($order_array);
-
-        return $order;
+        
+        return new Models\Order(array_key_exists("order", $order_array) ? $order_array["order"] : $order_array);
     }
 
     /**
@@ -129,8 +104,9 @@ abstract class Konduto extends ApiControl {
         $response = self::sendRequest(json_encode($order_array), METHOD_POST, '/orders');
 
         if (self::check_post_response($response, $order->id()) and $analyze === true) {
-            $order->set($response["order"]);
-            $order->set(["status" => self::get_status($response["order"]["recommendation"])]);
+            $orderAssoc = array_key_exists("order", $response) ? $response["order"] : $response;
+            $order->set($orderAssoc);
+            $order->set(["status" => self::get_status($orderAssoc["recommendation"])]);
         }
 
         return true;
