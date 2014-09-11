@@ -35,6 +35,7 @@ class Order extends Model {
     private $geolocation_;
     private $recommendation_;
     private $score_;
+    private $navigation_;
     
     // Internal properties
 
@@ -99,25 +100,29 @@ class Order extends Model {
                     $this->ip($arg);
                     break;
                 case '8':
+                case 'payment':
                 case 'paymentArray':
                 case 'payment_array':
                     $this->paymentArray($arg);
                     break;
                 case '9':
                 case 'customer':
-                    $this->customer($arg);
+                    $this->customer(is_array($arg) ? new Customer($arg) : $arg);
                     break;
                 case '10':
+                case 'billing':
                 case 'billing_address':
                 case 'billingAddress':
-                    $this->billingAddress($arg);
+                    $this->billingAddress(is_array($arg) ? new Address($arg) : $arg);
                     break;
                 case '11':
+                case 'shipping':
                 case 'shipping_address':
                 case 'shippingAddress':
-                    $this->shippingAddress($arg);
+                    $this->shippingAddress(is_array($arg) ? new Address($arg) : $arg);
                     break;
                 case '12':
+                case 'shopping_cart':
                 case 'shopping_cart':
                 case 'shoppingCart':
                     $this->shoppingCart($arg);
@@ -140,6 +145,9 @@ class Order extends Model {
                     break;
                 case 'timestamp':
                     $this->timestamp_ = $arg;
+                    break;                    
+                case 'navigation':
+                    $this->navigation_ = new Navigation($arg);
                     break;
             }
         }
@@ -234,7 +242,11 @@ class Order extends Model {
         }
         else {
             foreach ($payment_array as $key => $payment) {
-                if (!is_a($payment, 'Konduto\Models\Payment')) {
+                if (is_array($payment) and (new CreditCard($payment))->isValid()) {
+                    $payment_array[$key] = new CreditCard($payment);
+                }
+                else if (!is_a($payment, 'Konduto\Models\CreditCard')) {                    
+                    $this->errors['payment'] = FIELD_NOT_VALID;
                     return null;
                 }
             }
@@ -294,13 +306,17 @@ class Order extends Model {
         return $this->shipping_address($shipping_address);
     }
 
-    public function shopping_cart(array $item_array = null) {
+    public function shopping_cart($item_array = null) {
         if (!isset($item_array)) {
             return $this->shopping_cart_;
         }
         else {
             foreach ($item_array as $key => $item) {
-                if (!is_a($item, 'Konduto\Models\Item')) {
+                if (is_array($item) and (new Item($item))->isValid()) {
+                    $item_array[$key] = new Item($item);
+                }
+                else if (!is_a($item, 'Konduto\Models\Item')) {
+                    $this->errors['shopping_cart'] = FIELD_NOT_VALID;
                     return null;
                 }
             }
@@ -316,16 +332,26 @@ class Order extends Model {
         return $this->shopping_cart($shopping_cart);
     }
 
+    /**
+     * Adds an item that will be purchased in this order.
+     * @param a Konduto\Models\Item object
+     */
     public function addItem(\Konduto\Models\Item $item) {
         $this->shopping_cart_[] = $item;
-        return true;
     }
 
+    /**
+     * Adds a credit card used to pay for this order.
+     * @param a Konduto\Models\CreditCard object
+     */
     public function addPayment(\Konduto\Models\CreditCard $cc) {
         $this->payment_array_[] = $cc;
-        return true;
     }
 
+    /**
+     * The current status of the order.
+     * @return one of 4 possible status: 'approved', 'declined', 'pending', 'fraud'
+     */
     public function status() {
         return $this->status_;
     }
@@ -334,16 +360,39 @@ class Order extends Model {
         return $this->timestamp_;
     }
 
+    /**
+     * If this order was already subject to analysis by Konduto, returns information
+     * about the device used by the customer that submitted order.
+     * @return a Konduto\Models\Device object
+     */
     public function device() {
         return $this->device_;
     }
 
+    /**
+     * If this order was already subject to analysis by Konduto, returns information
+     * about the geolocation of the order.
+     * @return a Konduto\Models\Geolocation object
+     */
     public function geolocation() {
         return $this->geolocation_;
     }
 
+    /**
+     * If this order was already subject to analysis by Konduto, returns the recommendation
+     * @return one of three possible recommendations: 'approve', 'decline' or 'review'
+     */
     public function recommendation() {
         return $this->recommendation_;
+    }
+
+    /**
+     * If this order was already subject to analysis by Konduto, returns navigation 
+     * information regarding the customer who performer this order.
+     * @return a Konduto\Models\Navigation object
+     */
+    public function navigation() {
+        return $this->navigation_;
     }
 
     /**

@@ -105,7 +105,7 @@ class CreditCard extends Payment {
             $field = $value;
             unset($this->errors[$field_name]);
             return true;
-        }        
+        }
         $this->errors[$field_name] = $value;
         return false;
     }
@@ -116,6 +116,7 @@ class CreditCard extends Payment {
             'status'          => $this->status_,
             'sha1'            => $this->sha1_,
             'bin'             => $this->bin_,
+            'last4'           => $this->last4_,
             'expiration_date' => $this->expiration_date_
         ];
 

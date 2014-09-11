@@ -63,26 +63,40 @@ Konduto::setApiKey("T738D516F09CAB3A2C1EE");
 
 ## Send an order for analysis
 
+Sending an order for analysis is as easy as calling the `analyze` method from Konduto core class for an `Order` object, as the snippet below shows. The recommendention is returned inside the order object sent for analyzis.
+
+```php
+try {
+    Konduto::analyze($order);
+
+    // Let's check the recommendation returned by Konduto
+    echo "\n Konduto recommendation is to " . $order->recommendation() . " this order.";
+}
+catch (Exception $e) {
+    echo "\n Konduto wasn't able to return a recommendation: " . $e->getMessage();
+}
+```
+
 The request consists of a root object containing information related to the order as well as a `customer`, `billing` and `shipping` objects and the `payment` and `shopping_cart` arrays.
 
 ### Order information
 
 ```php
-$order = new KondutoModels\Order(array(
+$order = new KondutoModels\Order([
   "id"                => uniqid(),
   "visitor"           => "4738d516f09cab3a2c1ee973bec88a5a367a59e4",
   "total_amount"      => 100.00,
   "shipping_amount"   => 20.00,
   "tax_amount"        => 3.45,
   "currency"          => "USD",
-  "installments"      => 0,
+  "installments"      => 1,
   "ip"                => "170.149.100.10",
   "customer"          => $customer,
   "payment_array"     => array($creditCard),
   "billing_address"   => $billing,
   "shipping_address"  => $shipping,
   "shopping_cart"     => array($item1, $item2)
-));
+]);
 ```
 
 
@@ -106,7 +120,7 @@ shopping_cart | _(optional)_ Array containing the items purchased.
 ### Customer information
 
 ```php
-$customer = new KondutoModels\Customer(array(
+$customer = new KondutoModels\Customer([
   "id"      => "28372",
   "name"    => "Mary Jane",
   "tax_id"  => "6253407",
@@ -115,7 +129,7 @@ $customer = new KondutoModels\Customer(array(
   "email"   => "mary.jane@example.com",
   "new"     => true,
   "vip"     => false
-));
+]);
 ```
 
 
@@ -134,6 +148,7 @@ vip | _(optional)_ Boolean indicating if the customer is a VIP or frequent buyer
 ### Payment information
 
 ```php
+<<<<<<< HEAD
 $creditCard = new KondutoModels\CreditCard(array(
   "bin"             => "490172",
   "last4"           => "0012",
@@ -154,7 +169,7 @@ expiration_date | _(optional)_ Card's expiration date under MMYYYY format.
 ### Billing address
 
 ```php
-$billing = new KondutoModels\Address(array(
+$billing = new KondutoModels\Address([
   "name"      => "Mary Jane",
   "address1"  => "123 Main St.",
   "address2"  => "Apartment 4",
@@ -162,7 +177,7 @@ $billing = new KondutoModels\Address(array(
   "state"     => "NY",
   "zip"       => "10460",
   "country"   => "US"
-));
+]);
 ```
 
 
@@ -180,7 +195,7 @@ country | _(optional)_ Cardholder's country code (ISO 3166-2)
 ### Shipping address
 
 ```php
-$billing = new KondutoModels\Address(array(
+$shipping = new KondutoModels\Address([
   "name"      => "Mary Jane",
   "address1"  => "123 Main St.",
   "address2"  => "Apartment 4",
@@ -188,7 +203,7 @@ $billing = new KondutoModels\Address(array(
   "state"     => "NY",
   "zip"       => "10460",
   "country"   => "US"
-));
+]);
 ```
 
 Parameter | Description 
@@ -205,7 +220,7 @@ country | _(optional)_ Recipient's country code (ISO 3166-2)
 ### Shopping cart
 
 ```php
-$item1 = new KondutoModels\Item(array(
+$item1 = new KondutoModels\Item([
   "sku"           => "9919023",
   "product_code"  => "123456789999",
   "category"      => 201,
@@ -213,9 +228,9 @@ $item1 = new KondutoModels\Item(array(
   "description"   => "Male Green T-Shirt V Neck",
   "unit_cost"     => 1999.99,
   "quantity"      => 1
-);
+]);
 
-$item2 = new KondutoModels\Item(array(
+$item2 = new KondutoModels\Item([
   "sku"         => "0017273",
   "category"    => 202,
   "name"        => "Yellow Socks",
@@ -223,7 +238,7 @@ $item2 = new KondutoModels\Item(array(
   "unit_cost"   => 29.90,
   "quantity"    => 2,
   "discount"    => 5.00
-);
+]);
 ```
 
 
@@ -256,7 +271,8 @@ comments | _(required)_ Reason or comments about the status update.
 ## Query an order
 
 ```php
-$order = Konduto::getOrder("ORD1237163");
+$orderId = "ORD1237163";
+$order = Konduto::getOrder($orderId);
 ```
 
 ## Reference Tables
