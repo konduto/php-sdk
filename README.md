@@ -135,7 +135,6 @@ vip | _(optional)_ Boolean indicating if the customer is a VIP or frequent buyer
 
 ```php
 $creditCard = new KondutoModels\CreditCard(array(
-  "sha1"            => "68bfb396f35af3876fc509665b3dc23a0930aab1",
   "bin"             => "490172",
   "last4"           => "0012",
   "expiration_date" => "072015",
@@ -147,7 +146,6 @@ $creditCard = new KondutoModels\CreditCard(array(
 Parameter | Description 
 --- | ---
 status | _(required)_ The status of the transaction returned by the payment processor. Accepts `approved`, `declined` or `pending` if the payment wasn't been processed yet.
-sha1 | _(optional)_ Hash (SHA1) of the customer's full credit card number.
 bin | _(optional)_ First six digits of the customer's credit card. Used to identify the type of card being sent.
 last4 | _(optional)_ Four last digits of the customer's credit card number.
 expiration_date | _(optional)_ Card's expiration date under MMYYYY format.
