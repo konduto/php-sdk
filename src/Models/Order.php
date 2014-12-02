@@ -1,9 +1,10 @@
 <?php namespace Konduto\Models;
 
-const STATUS_PENDING  = 'pending';
-const STATUS_APPROVED = 'approved';
-const STATUS_DECLINED = 'declined';
-const STATUS_FRAUD    = 'fraud';
+const STATUS_PENDING         = 'pending';
+const STATUS_APPROVED        = 'approved';
+const STATUS_DECLINED        = 'declined';
+const STATUS_FRAUD           = 'fraud';
+const STATUS_NOT_AUTHORIZED  = 'not_authorized';
 
 const RECOMMENDATION_APPROVE = 'approve';
 const RECOMMENDATION_DECLINE = 'decline';
@@ -350,10 +351,11 @@ class Order extends Model {
 
     /**
      * The current status of the order.
-     * @return one of 4 possible status: 'approved', 'declined', 'pending', 'fraud'
+     * @return one of 5 possible status: 
+     * 'approved', 'declined', 'pending', 'fraud' or 'not_authorized'
      */
     public function status() {
-        return $this->status_;
+        return $this->get_status();
     }
 
     public function timestamp() {
@@ -361,7 +363,8 @@ class Order extends Model {
     }
 
     /**
-     * If this order was already subject to analysis by Konduto, returns information
+     * If this order was already subject to analysis by Konduto, 
+     * returns information
      * about the device used by the customer that submitted order.
      * @return a Konduto\Models\Device object
      */
@@ -370,7 +373,8 @@ class Order extends Model {
     }
 
     /**
-     * If this order was already subject to analysis by Konduto, returns information
+     * If this order was already subject to analysis by Konduto, 
+     * returns information
      * about the geolocation of the order.
      * @return a Konduto\Models\Geolocation object
      */
@@ -379,15 +383,18 @@ class Order extends Model {
     }
 
     /**
-     * If this order was already subject to analysis by Konduto, returns the recommendation
-     * @return one of three possible recommendations: 'approve', 'decline' or 'review'
+     * If this order was already subject to analysis by Konduto, 
+     * returns the recommendation
+     * @return one of three possible recommendations: 'approve', 
+     * 'decline' or 'review'
      */
     public function recommendation() {
         return $this->recommendation_;
     }
 
     /**
-     * If this order was already subject to analysis by Konduto, returns navigation 
+     * If this order was already subject to analysis by Konduto, 
+     * returns navigation 
      * information regarding the customer who performer this order.
      * @return a Konduto\Models\Navigation object
      */
@@ -396,7 +403,44 @@ class Order extends Model {
     }
 
     /**
-     * Does the validation according to ValidationSchema rules. If the parameter passed is valid,
+     * Returns the status of an order
+     * 
+     * @param recommendation string
+     *
+     * @return status string
+     */
+    protected function get_status() {
+        if (is_string($this->status_)) {
+            return $this->status_;
+        }
+
+        $this->status_ = null;
+
+        foreach ($this->payment_array() as $payment) {
+            if ($payment->status() == PAYMENT_DECLINED) {
+                $this->status_ = STATUS_NOT_AUTHORIZED;
+                return $this->status_;
+            }
+        }
+
+        switch ($this->recommendation()) {
+            case RECOMMENDATION_REVIEW:
+                $this->status_ = STATUS_PENDING;
+                break;
+            case RECOMMENDATION_APPROVE:
+                $this->status_ = STATUS_APPROVED;
+                break;
+            case RECOMMENDATION_DECLINE:
+                $this->status_ = STATUS_DECLINED;
+                break;
+        }
+
+        return $this->status_;
+    }
+
+    /**
+     * Does the validation according to ValidationSchema rules. If the parameter 
+     * passed is valid,
      * sets the property and returns true. Returns false otherwise.
      * @param field: the property to be set.
      * @param field_name: the name of the field as in ValidationSchema.

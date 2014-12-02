@@ -101,12 +101,14 @@ abstract class Konduto extends ApiControl {
             $order_array["analyze"] = false;
         }
 
-        $response = self::sendRequest(json_encode($order_array), METHOD_POST, '/orders');
+        $response = self::sendRequest(json_encode($order_array), 
+                        METHOD_POST, '/orders');
 
-        if (self::check_post_response($response, $order->id()) and $analyze === true) {
-            $orderAssoc = array_key_exists("order", $response) ? $response["order"] : $response;
+        if (self::check_post_response($response, $order->id()) 
+            and $analyze === true) {
+            $orderAssoc = array_key_exists("order", $response) 
+                            ? $response["order"] : $response;
             $order->set($orderAssoc);
-            $order->set(["status" => self::get_status($orderAssoc["recommendation"])]);
         }
 
         return true;

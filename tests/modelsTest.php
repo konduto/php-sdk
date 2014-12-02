@@ -101,8 +101,7 @@ class ModelsTest extends \PHPUnit_Framework_TestCase
     /**
      * Tests for an Order containing an error for an illegal ID property.
      */
-    public function testPatternValidationOrderID()
-    {
+    public function testPatternValidationOrderID() {
         $o = new KondutoModels\Order();
         // Set an ID that don't respect pattern (contains space);
         $o->id("Pedido 00001");
@@ -117,8 +116,7 @@ class ModelsTest extends \PHPUnit_Framework_TestCase
      * Test pattern for Order ip.
      * @depends         testPatternValidationOrderID
      */
-    public function testValidationOrderIP()
-    {
+    public function testValidationOrderIP() {
         $o = new KondutoModels\Order();
         // Invalid IP.
         $o->ip("192.168.0.256");
@@ -129,8 +127,7 @@ class ModelsTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse(array_key_exists('ip', $o->getErrors()), "Now the 'ip' key shouldn't be present.");
     }
 
-    public function testCustomer()
-    {
+    public function testCustomer() {
         $c = new KondutoModels\Customer([
             'id'     => 'cus123456',
             'name'   => 'Tyrion Lanister',
@@ -154,8 +151,7 @@ class ModelsTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(2, $c->phones());
     }  
 
-    public function testAddress()
-    {
+    public function testAddress() {
         $addr = new KondutoModels\Address();
         $addr->address1("Via Volvera, 14");
         $addr->address2("Appartamento 6");
@@ -174,8 +170,7 @@ class ModelsTest extends \PHPUnit_Framework_TestCase
         $this->assertNotNull($addr->zip());
     }
 
-    public function testShoppingCart()
-    {
+    public function testShoppingCart() {
         $item = new KondutoModels\Item([
             "sku"           => "9919023",
             "productCode"   => "123456789999",
@@ -211,8 +206,7 @@ class ModelsTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(2, $o->shopping_cart());
     }
 
-    public function testNavigation()
-    {
+    public function testNavigation() {
         $navInfo = [
             "referrer"              => "http://www.google.com?q=buy+shirt",
             "session_time"          => 12,
@@ -247,5 +241,67 @@ class ModelsTest extends \PHPUnit_Framework_TestCase
         $this->assertContains($navModel->salesDeclined7d(), $navInfo);
         $this->assertContains($navModel->sessions7d(), $navInfo);
         $this->assertContains($navModel->timeSinceLastSale(), $navInfo);
+    }
+
+    public function testGetStatus1() {
+        $order = [
+            "id"          => "Pedido100001834",
+            "visitor"     => "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+            "totalAmount" => 312.71,
+            "currency"    => "BRL",
+            "customer"    => [
+                "id"     => "Customer n03",
+                "name"   => "Hiroyuki Endo",
+                "email"  => "endo.hiroyuki@yahoo.jp"
+            ],
+            "recommendation" => KondutoModels\RECOMMENDATION_APPROVE
+        ];
+
+        $orderObj = new KondutoModels\Order($order);
+        
+        // 
+        $this->assertContains($orderObj->status(),
+                KondutoModels\STATUS_APPROVED, 
+                "Status should be 'approved': ".
+                " We have a recommendation 'approve' ".
+                "and no available payment.");
+    }
+
+    public function testGetStatus2() {
+        $order = [
+            "id"          => "Pedido100001834",
+            "visitor"     => "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+            "totalAmount" => 312.71,
+            "currency"    => "BRL",
+            "customer"    => [
+                "id"     => "Customer n03",
+                "name"   => "Hiroyuki Endo",
+                "email"  => "endo.hiroyuki@yahoo.jp"
+            ],
+            "payment" => [
+                [
+                    "bin" => "490172",
+                    "last4"=> "0012",
+                    "expiration_date" => "072015",
+                    "status" => "approved"
+                ],
+                [
+                    "status" => "approved",
+                    "bin" => "490231",
+                    "last4"=> "0231",
+                    "expiration_date" => "082016",
+                    "status" => "declined"
+                ]
+            ],
+            "recommendation" => KondutoModels\RECOMMENDATION_APPROVE
+        ];
+
+        $orderObj = new KondutoModels\Order($order);
+
+        $this->assertContains($orderObj->status(),
+                KondutoModels\STATUS_NOT_AUTHORIZED, 
+                "Here status should be 'not_authorized': ".
+                "We have a recommendation 'approve' and but a payment ".
+                "was declined.");
     }
 }

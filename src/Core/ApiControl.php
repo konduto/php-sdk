@@ -54,6 +54,7 @@ abstract class ApiControl {
     protected static $key;                        // Secret key used for Konduto API
     protected static $lastResponse;               // String containing last response from a request to Konduto API
 
+
     /**
      * Method for sending an HTTP request to Konduto API at the specified ENDPOINT
      *
@@ -167,6 +168,7 @@ abstract class ApiControl {
         return $response_array;
     }
 
+
     /**
      * Checks whether the version provided is valid or not. If it is not valid, throws and exception.
      *
@@ -182,25 +184,8 @@ abstract class ApiControl {
         }
     }
 
-    /**
-     * Returns the status of an order given a recommendation
-     * 
-     * @param recommendation string
-     *
-     * @return status string
-     */
-    protected static function get_status($recommendation) {
-        switch (strtolower($recommendation)) {
-            case Models\RECOMMENDATION_REVIEW:
-                return Models\STATUS_PENDING;
-            case Models\RECOMMENDATION_APPROVE:
-                return Models\STATUS_APPROVED;
-            case Models\RECOMMENDATION_DECLINE:
-                return Models\STATUS_DECLINED;
-            default:
-                return null;
-        }
-    }
+
+
 
     /**
      * Check if the response was successful, throw Exceptions in case of errors.
@@ -224,6 +209,7 @@ abstract class ApiControl {
         }
     }
 
+
     /**
      * Check an HTTP response to order found.
      * 
@@ -246,6 +232,7 @@ abstract class ApiControl {
         }
     }
 
+
     /**
      * Check whether the provided key is a production key.
      *
@@ -256,6 +243,7 @@ abstract class ApiControl {
     protected static function is_production_key($key) {
         return is_string($key) && $key[0] == 'P';
     }
+
 
     /**
      * Returns the last response from Konduto API.

@@ -1,8 +1,13 @@
 <?php namespace Konduto\Models;
 
+const PAYMENT_APPROVED = "approved";
+const PAYMENT_DECLINED = "declined";
+const PAYMENT_PENDING  = "pending";
+
 abstract class Payment extends Model {
 
-    const TYPE_CARD = 'credit';
+    const TYPE_CARD = "credit";
+    const TYPE_BOLETO = "boleto";
 
     protected $type_;
 

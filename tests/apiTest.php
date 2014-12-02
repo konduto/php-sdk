@@ -6,7 +6,6 @@ use Konduto\Models as KondutoModels;
 use Konduto\Exceptions as KondutoExceptions;
 
 const LOCAL_EXISTING_KEY = "T738D516F09CAB3A2C1EE";
-// const LOCAL_EXISTING_KEY = "T01234567890123456789";
 
 class ApiTest extends \PHPUnit_Framework_TestCase
 {
@@ -81,7 +80,7 @@ class ApiTest extends \PHPUnit_Framework_TestCase
             // $this->assertNotNull($o->device(), 'Device');
             $this->assertNotNull($o->status(), 'Status');
             $this->assertNotNull($o->recommendation(), 'recommendation');
-            $this->assertNotNull($o->navigation(), 'navigation');
+            // $this->assertNotNull($o->navigation(), 'navigation');
             $this->assertInstanceOf('Konduto\Models\Geolocation', $o->geolocation());
             $this->assertInstanceOf('Konduto\Models\Navigation', $o->navigation());
             // $this->assertInstanceOf('Konduto\models\device', $o->device());
@@ -231,8 +230,8 @@ class ApiTest extends \PHPUnit_Framework_TestCase
                 "name"   => "Hiroyuki Endo",
                 "email"  => "endo.hiroyuki@yahoo.jp",
                 "tax_id" => "XJ0000JX",
-                "phone1" => "15-15-20030",
-                "phone2" => "15-17-21295",
+                "phone1" => "151520030",
+                "phone2" => "151721295",
                 "new"    => true,
                 "vip"    => true
             ],
@@ -251,8 +250,8 @@ class ApiTest extends \PHPUnit_Framework_TestCase
                     "expiration_date" => "082016",
                     "status" => "declined"
                 ]
-            ],
-            "billing"      => 
+            ]
+,            "billing"      => 
             [
                 "name" => "Mary Jane",
                 "address1" => "123 Main St.",
