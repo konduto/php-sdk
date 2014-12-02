@@ -2,6 +2,8 @@
 
 class Geolocation extends Model {
 
+    protected $_schema_key = "address";
+
     // Settable/gettable properties
 
     protected $city_;
@@ -60,22 +62,5 @@ class Geolocation extends Model {
         return isset($state) ? 
             $this->set_property($this->state_, 'state', $state)
             : $this->state_;
-    }
-
-    /**
-     * Does the validation according to ValidationSchema rules. If the parameter passed is valid,
-     * sets the property and returns true. Returns false otherwise.
-     * @param field: the property to be set.
-     * @param field_name: the name of the field as in ValidationSchema.
-     * @param value: the value to be set in the property.
-     */
-    protected function set_property(&$field, $field_name, $value) {
-        if (ValidationSchema::validateAddressField($field_name, $value)) {
-            $field = $value;
-            unset($this->errors[$field_name]);
-            return true;
-        }        
-        $this->errors[$field_name] = $value;
-        return false;
     }
 }

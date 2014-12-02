@@ -2,6 +2,8 @@
 
 class Item extends Model {
 
+    protected $_schema_key = 'item';
+
     // Settable/gettable properties
 
     private $sku_;
@@ -125,23 +127,6 @@ class Item extends Model {
         return isset($discount) ? 
             $this->set_property($this->discount_, 'discount', $discount)
             : $this->discount_;
-    }
-
-    /**
-     * Does the validation according to ValidationSchema rules. If the parameter passed is valid,
-     * sets the property and returns true. Returns false otherwise.
-     * @param field: the property to be set.
-     * @param field_name: the name of the field as in ValidationSchema.
-     * @param value: the value to be set in the property.
-     */
-    protected function set_property(&$field, $field_name, $value) {
-        if (ValidationSchema::validateItemField($field_name, $value)) {
-            $field = $value;
-            unset($this->errors[$field_name]);
-            return true;
-        }        
-        $this->errors[$field_name] = $value;
-        return false;
     }
 
     public function asArray() {

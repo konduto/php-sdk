@@ -26,6 +26,7 @@ require_once "src/Models/Payment.php";
 require_once "src/Models/CreditCard.php";
 require_once "src/Models/Item.php";
 require_once "src/Models/Navigation.php";
+require_once "src/Models/Boleto.php";
 require_once "src/Models/Order.php";
 require_once "src/Core/ApiControl.php";
 require_once "src/Core/Konduto.php";

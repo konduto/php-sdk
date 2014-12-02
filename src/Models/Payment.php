@@ -11,7 +11,7 @@ abstract class Payment extends Model {
 
     protected $type_;
 
-    protected $AVAILABLE_TYPES = [self::TYPE_CARD];
+    protected $AVAILABLE_TYPES = [self::TYPE_CARD, self::TYPE_BOLETO];
 
     // Methods
 
@@ -19,10 +19,9 @@ abstract class Payment extends Model {
         return $this->type_;
     }
 
-    protected function set_property(&$field, $field_name, $value) {}
-    
-
-    public function set_type($type) {}
+    public function set_type($type) {
+        $this->type_ = $type;
+    }
 
     public function set() {}
 }

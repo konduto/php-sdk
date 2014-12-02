@@ -63,7 +63,7 @@ abstract class Konduto extends ApiControl {
      * @return order \Konduto\Models\Order object with order data
      */
     public static function getOrder($id) {
-        if (!Models\ValidationSchema::validateOrderField('id', $id)) {
+        if (!Models\ValidationSchema::validateField('order' ,'id', $id)) {
             throw new Exceptions\InvalidOrderException("id");
         }
 
@@ -143,7 +143,7 @@ abstract class Konduto extends ApiControl {
             throw new Exceptions\InvalidOrderException("status");
         }
 
-        if (!Models\ValidationSchema::validateOrderField('id', $order_id)) {
+        if (!Models\ValidationSchema::validateField("order", 'id', $order_id)) {
             throw new Exceptions\InvalidOrderException("id");
         }
 

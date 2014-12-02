@@ -2,6 +2,8 @@
 
 class CreditCard extends Payment {
 
+    protected $_schema_key = 'credit_card';
+
     // Settable/gettable properties
 
     private $status_;
@@ -92,23 +94,6 @@ class CreditCard extends Payment {
         return $this->expiration_date($expiration_date);
     }
     
-
-    /**
-     * Does the validation according to ValidationSchema rules. If the parameter passed is valid,
-     * sets the property and returns true. Returns false otherwise.
-     * @param field: the property to be set.
-     * @param field_name: the name of the field as in ValidationSchema.
-     * @param value: the value to be set in the property.
-     */
-    protected function set_property(&$field, $field_name, $value) {
-        if (ValidationSchema::validatePaymentField($field_name, $value)) {
-            $field = $value;
-            unset($this->errors[$field_name]);
-            return true;
-        }
-        $this->errors[$field_name] = $value;
-        return false;
-    }
 
     public function asArray() {
         $array = [

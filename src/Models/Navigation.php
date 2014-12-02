@@ -1,6 +1,6 @@
 <?php namespace Konduto\Models;
 
-class Navigation implements Entity {
+class Navigation extends Model {
 
     // Settable/gettable properties
 
@@ -123,7 +123,7 @@ class Navigation implements Entity {
     public function sessionTime($sessionTime = null) {
         return isset($sessionTime) ?
             // Set
-            $this->set_property($this->sessionTime_, $sessionTime)
+            $this->set_property($this->sessionTime_, "", $sessionTime)
             // Get
             : $this->sessionTime_;
     }
@@ -146,7 +146,7 @@ class Navigation implements Entity {
     public function referrer($referrer = null) {
         return isset($referrer) ?
             // Set
-            $this->set_property($this->referrer_, $referrer)
+            $this->set_property($this->referrer_, "", $referrer)
             // Get
             : $this->referrer_;
     }
@@ -162,7 +162,7 @@ class Navigation implements Entity {
     public function timeSite1d($timeSite1d = null) {
         return isset($timeSite1d) ?
             // Set
-            $this->set_property($this->timeSite1d_, $timeSite1d)
+            $this->set_property($this->timeSite1d_, "", $timeSite1d)
             // Get
             : $this->timeSite1d_;
     }
@@ -185,7 +185,7 @@ class Navigation implements Entity {
     public function newAccounts1d($newAccounts1d = null) {
         return isset($newAccounts1d) ?
             // Set
-            $this->set_property($this->newAccounts1d_, $newAccounts1d)
+            $this->set_property($this->newAccounts1d_, "", $newAccounts1d)
             // Get
             : $this->newAccounts1d_;
     }
@@ -208,7 +208,7 @@ class Navigation implements Entity {
     public function passwordResets1d($passwordResets1d = null) {
         return isset($passwordResets1d) ?
             // Set
-            $this->set_property($this->passwordResets1d_, $passwordResets1d)
+            $this->set_property($this->passwordResets1d_, "", $passwordResets1d)
             // Get
             : $this->passwordResets1d_;
     }
@@ -231,7 +231,7 @@ class Navigation implements Entity {
     public function salesDeclined1d($salesDeclined1d = null) {
         return isset($salesDeclined1d) ?
             // Set
-            $this->set_property($this->salesDeclined1d_, $salesDeclined1d)
+            $this->set_property($this->salesDeclined1d_, "", $salesDeclined1d)
             // Get
             : $this->salesDeclined1d_;
     }
@@ -254,7 +254,7 @@ class Navigation implements Entity {
     public function sessions1d($sessions1d = null) {
         return isset($sessions1d) ?
             // Set
-            $this->set_property($this->sessions1d_, $sessions1d)
+            $this->set_property($this->sessions1d_, "", $sessions1d)
             // Get
             : $this->sessions1d_;
     }
@@ -277,7 +277,7 @@ class Navigation implements Entity {
     public function timeSite7d($timeSite7d = null) {
         return isset($timeSite7d) ?
             // Set
-            $this->set_property($this->timeSite7d_, $timeSite7d)
+            $this->set_property($this->timeSite7d_, "", $timeSite7d)
             // Get
             : $this->timeSite7d_;
     }
@@ -300,7 +300,7 @@ class Navigation implements Entity {
     public function timePerPage7d($timePerPage7d = null) {
         return isset($timePerPage7d) ?
             // Set
-            $this->set_property($this->timePerPage7d_, $timePerPage7d)
+            $this->set_property($this->timePerPage7d_, "", $timePerPage7d)
             // Get
             : $this->timePerPage7d_;
     }
@@ -323,7 +323,7 @@ class Navigation implements Entity {
     public function newAccounts7d($newAccounts7d = null) {
         return isset($newAccounts7d) ?
             // Set
-            $this->set_property($this->newAccounts7d_, $newAccounts7d)
+            $this->set_property($this->newAccounts7d_, "", $newAccounts7d)
             // Get
             : $this->newAccounts7d_;
     }
@@ -346,7 +346,7 @@ class Navigation implements Entity {
     public function passwordResets7d($passwordResets7d = null) {
         return isset($passwordResets7d) ?
             // Set
-            $this->set_property($this->passwordResets7d_, $passwordResets7d)
+            $this->set_property($this->passwordResets7d_, "", $passwordResets7d)
             // Get
             : $this->passwordResets7d_;
     }
@@ -369,7 +369,7 @@ class Navigation implements Entity {
     public function checkoutCount7d($checkoutCount7d = null) {
         return isset($checkoutCount7d) ?
             // Set
-            $this->set_property($this->checkoutCount7d_, $checkoutCount7d)
+            $this->set_property($this->checkoutCount7d_, "", $checkoutCount7d)
             // Get
             : $this->checkoutCount7d_;
     }
@@ -392,7 +392,7 @@ class Navigation implements Entity {
     public function salesDeclined7d($salesDeclined7d = null) {
         return isset($salesDeclined7d) ?
             // Set
-            $this->set_property($this->salesDeclined7d_, $salesDeclined7d)
+            $this->set_property($this->salesDeclined7d_, "", $salesDeclined7d)
             // Get
             : $this->salesDeclined7d_;
     }
@@ -415,7 +415,7 @@ class Navigation implements Entity {
     public function sessions7d($sessions7d = null) {
         return isset($sessions7d) ?
             // Set
-            $this->set_property($this->sessions7d_, $sessions7d)
+            $this->set_property($this->sessions7d_, "", $sessions7d)
             // Get
             : $this->sessions7d_;
     }
@@ -438,7 +438,7 @@ class Navigation implements Entity {
     public function timeSinceLastSale($timeSinceLastSale = null) {
         return isset($timeSinceLastSale) ?
             // Set
-            $this->set_property($this->timeSinceLastSale_, $timeSinceLastSale)
+            $this->set_property($this->timeSinceLastSale_, "", $timeSinceLastSale)
             // Get
             : $this->timeSinceLastSale_;
     }
@@ -448,10 +448,6 @@ class Navigation implements Entity {
      */
     public function time_since_last_sale($timeSinceLastSale = null) {
         return $this->timeSinceLastSale($timeSinceLastSale);
-    }
-
-    protected function set_property(&$field, $value) {
-        $field = $value;
     }
 
     /**

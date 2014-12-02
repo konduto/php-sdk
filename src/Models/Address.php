@@ -2,6 +2,8 @@
 
 class Address extends Geolocation {
 
+    protected $_schema_key = 'address';
+
     // Settable/gettable properties
 
     private $name_;

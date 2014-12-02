@@ -1,6 +1,6 @@
 <?php namespace Konduto\Models;
 
-class Device implements Entity {
+class Device extends Model {
 
     // Settable/gettable properties
 
@@ -72,7 +72,7 @@ class Device implements Entity {
     public function user_id($user_id = null) {
         return isset($user_id) ?
             // Set
-            $this->set_property($this->user_id_, $user_id)
+            $this->set_property($this->user_id_, null, $user_id)
             // Get
             : $this->user_id_;
     }
@@ -86,56 +86,51 @@ class Device implements Entity {
 
     public function fingerprint($fingerprint = null) {
         return isset($fingerprint) ? 
-            $this->set_property($this->fingerprint_, $fingerprint)
+            $this->set_property($this->fingerprint_, null, $fingerprint)
             : $this->fingerprint_;
     }
 
     public function platform($platform = null) {
         return isset($platform) ? 
-            $this->set_property($this->platform_, $platform)
+            $this->set_property($this->platform_, null, $platform)
             : $this->platform_;
     }
 
     public function browser($browser = null) {
         return isset($browser) ? 
-            $this->set_property($this->browser_, $browser)
+            $this->set_property($this->browser_, null, $browser)
             : $this->browser_;
     }
 
     public function language($language = null) {
         return isset($language) ? 
-            $this->set_property($this->language_, $language)
+            $this->set_property($this->language_, null, $language)
             : $this->language_;
     }
 
     public function timezone($timezone = null) {
         return isset($timezone) ? 
-            $this->set_property($this->timezone_, $timezone)
+            $this->set_property($this->timezone_, null, $timezone)
             : $this->timezone_;
     }
 
     public function cookie($cookie = null) {
         return isset($cookie) ? 
-            $this->set_property($this->cookie_, $cookie)
+            $this->set_property($this->cookie_, null, $cookie)
             : $this->cookie_;
     }
 
     public function javascript($javascript = null) {
         return isset($javascript) ? 
-            $this->set_property($this->javascript_, $javascript)
+            $this->set_property($this->javascript_, null, $javascript)
             : $this->javascript_;
     }
 
     public function flash($flash = null) {
         return isset($flash) ? 
-            $this->set_property($this->flash_, $flash)
+            $this->set_property($this->flash_, null, $flash)
             : $this->flash_;
     }
-
-    protected function set_property(&$field, $value) {
-        $field = $value;
-    }
-
 
     public function getErrors() {}
     public function isValid() { return true; }

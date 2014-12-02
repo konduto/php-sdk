@@ -2,12 +2,15 @@
 
 class Customer extends Model {
 
+    protected $_schema_key = 'customer';
+
     // Settable/gettable properties
 
     private $id_;
     private $name_;
     private $tax_id_;
-    private $phone_array_ = [];
+    private $phone1_;
+    private $phone2_;
     private $email_;
     private $new_;
     private $vip_;
@@ -47,10 +50,12 @@ class Customer extends Model {
                     $this->taxId($arg);
                     break;
                 case '3':
-                case '4':
                 case 'phone1':
+                    $this->phone1($arg);
+                    break;
+                case '4':
                 case 'phone2':
-                    $this->addPhone($arg);
+                    $this->phone2($arg);
                     break;
                 case '5':
                 case 'email':
@@ -97,30 +102,16 @@ class Customer extends Model {
         return $this->tax_id($tax_id);
     }
 
-    public function phones($phone_array = null) {
-        if (isset($phone_array)) {
-            if (!is_array($phone_array)) {
-                return null;
-            }            
-            foreach ($phone_array as $ph) {
-                if (ValidationSchema::validateCustomerField('phone1', $ph)) {
-                    $this->phone_array_[] = $ph;
-                }
-                else {
-                    return null;
-                }
-            }
-            return true;
-        }
-        else {
-            return $this->phone_array_;
-        }
+    public function phone1($phone1 = null) {
+        return isset($phone1) ?
+            $this->set_property($this->phone1_, 'phone1', $phone1)
+            : $this->phone1_;
     }
 
-    public function addPhone($phone = null) {
-        if (ValidationSchema::validateCustomerField('phone1', $phone)) {
-            array_push($this->phone_array_, $phone);
-        }
+    public function phone2($phone2 = null) {
+        return isset($phone2) ?
+            $this->set_property($this->phone2_, 'phone2', $phone2)
+            : $this->phone2_;
     }
 
     public function email($email = null) {
@@ -141,30 +132,13 @@ class Customer extends Model {
             : $this->vip_;
     }
 
-    /**
-     * Does the validation according to ValidationSchema rules. If the parameter passed is valid,
-     * sets the property and returns true. Returns false otherwise.
-     * @param field: the property to be set.
-     * @param field_name: the name of the field as in ValidationSchema.
-     * @param value: the value to be set in the property.
-     */
-    protected function set_property(&$field, $field_name, $value) {
-        if (ValidationSchema::validateCustomerField($field_name, $value)) {
-            $field = $value;
-            unset($this->errors[$field_name]);
-            return true;
-        }        
-        $this->errors[$field_name] = $value;
-        return false;
-    }
-
     public function asArray() {
         $array = [
             'id'     => $this->id_,
             'name'   => $this->name_,
             'tax_id' => $this->tax_id_,
-            'phone1' => isset($this->phone_array_[0]) ? $this->phone_array_[0] : null, //Porquisse
-            'phone2' => isset($this->phone_array_[1]) ? $this->phone_array_[1] : null,
+            'phone1' => $this->phone1_,
+            'phone2' => $this->phone2_,
             'email'  => $this->email_,
             'new'    => $this->new_,
             'vip'    => $this->vip_,

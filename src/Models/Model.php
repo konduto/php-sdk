@@ -6,6 +6,7 @@ abstract class Model implements Entity {
 
     protected $mandatory = [];
     protected $errors = [];
+    protected $_schema_key;
 
     // Method called in the constructor of child classes
     protected function setMandatoryFields($field_array) {
@@ -54,5 +55,29 @@ abstract class Model implements Entity {
      * @param field_name: the name of the field as in ValidationSchema.
      * @param value: the value to be set in the property.
      */
-    abstract protected function set_property(&$field, $field_name, $value);
+    // abstract protected function set_property(&$field, $field_name, $value);
+
+        /**
+     * Does the validation according to ValidationSchema rules. If the parameter passed is valid,
+     * sets the property and returns true. Returns false otherwise.
+     * @param field: the property to be set.
+     * @param field_name: the name of the field as in ValidationSchema.
+     * @param value: the value to be set in the property.
+     */
+    protected function set_property(&$field, $field_name, $value) {
+        if (empty($this->_schema_key)) {
+            $field = $value;
+            return true;
+        }
+        else {
+            if (ValidationSchema::validateField($this->_schema_key, 
+                                    $field_name, $value)) {
+                $field = $value;
+                unset($this->errors[$field_name]);
+                return true;
+            }
+            $this->errors[$field_name] = $value;
+        }
+        return false;
+    }
 }

@@ -12,8 +12,9 @@ const IDX_PATTERN = 3;
 
 const REGEX_LETTERS_DIGITS = '/^[a-zA-Z0-9-_]+\z/';
 const REGEX_LETTERS        = '/^[a-zA-Z]+\z/';
-const REGEX_DIGITS         = '/^[a-fA-F0-9]+\z/';
-const REGEX_HEXA_DIGITS    = '/^[0-9]+\z/';
+const REGEX_DIGITS         = '/^[0-9]+\z/';
+const REGEX_HEXA_DIGITS    = '/^[a-fA-F0-9]+\z/';
+const REGEX_FULL_DATE      = '/^\d{4}-\d{2}-\d{2}\z/';
 
 abstract class ValidationSchema {
     
@@ -59,12 +60,16 @@ abstract class ValidationSchema {
             'zip'             => [STRING,  0,     100],
             'country'         => [STRING,  2,       2, REGEX_LETTERS]
         ],
-        'payment' => [
+        'credit_card' => [
             'status'          => [STRING,  0,       8],
             'sha1'            => [STRING, 40,      40, REGEX_HEXA_DIGITS],
             'bin'             => [STRING,  6,       6, REGEX_DIGITS],
             'last4'           => [STRING,  4,       4, REGEX_DIGITS],
             'expiration_date' => [STRING,  6,       6, REGEX_DIGITS]
+        ],
+        'boleto' => [
+            'status'          => [STRING,  0,       8],
+            'expiration_date' => [STRING,  6,       8, REGEX_FULL_DATE]
         ],
         'item' => [
             'sku'             => [STRING,  0,     100],
@@ -132,32 +137,6 @@ abstract class ValidationSchema {
 
         return $isValid;
     }
-
-
-    public static function validatePaymentField($field, &$var) {
-        return self::validateField('payment', $field, $var);
-    }
-
-
-    public static function validateItemField($field, &$var) {
-        return self::validateField('item', $field, $var);
-    }
-
-
-    public static function validateAddressField($field, &$var) {
-        return self::validateField('address', $field, $var);
-    }
-
-
-    public static function validateOrderField($field, &$var) {
-        return self::validateField('order', $field, $var);
-    }
-
-
-    public static function validateCustomerField($field, &$var) {
-        return self::validateField('customer', $field, $var);
-    }
-
 
     public static function validateNumberLength($object, $field, $number) {
         // Assumes $number is numeric!

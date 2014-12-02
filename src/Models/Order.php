@@ -12,6 +12,8 @@ const RECOMMENDATION_REVIEW  = 'review';
 
 class Order extends Model {
 
+    protected $_schema_key = 'order';
+
     // Settable/gettable properties
 
     private $id_;
@@ -43,6 +45,7 @@ class Order extends Model {
     protected static $MANDATORY_FIELDS = ['id', 'total_amount', 'customer'];
     protected static $AVAILABLE_STATUS = [STATUS_PENDING, STATUS_APPROVED, STATUS_DECLINED, STATUS_FRAUD];
     
+
     // Methods
 
     public function __construct() {
@@ -437,25 +440,7 @@ class Order extends Model {
 
         return $this->status_;
     }
-
-    /**
-     * Does the validation according to ValidationSchema rules. If the parameter 
-     * passed is valid,
-     * sets the property and returns true. Returns false otherwise.
-     * @param field: the property to be set.
-     * @param field_name: the name of the field as in ValidationSchema.
-     * @param value: the value to be set in the property.
-     */
-    protected function set_property(&$field, $field_name, $value) {
-        if (ValidationSchema::validateOrderField($field_name, $value)) {
-            $field = $value;
-            unset($this->errors[$field_name]);
-            return true;
-        }
-        $this->errors[$field_name] = $value;
-        return false;
-    }
-
+    
     /**
      * Builds an array representation of this model. Includes only the fields that are needed for persisting
      * order (building json message in POST operation).
