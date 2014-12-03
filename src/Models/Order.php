@@ -246,10 +246,20 @@ class Order extends Model {
         }
         else {
             foreach ($payment_array as $key => $payment) {
-                if (is_array($payment) and (new CreditCard($payment))->isValid()) {
-                    $payment_array[$key] = new CreditCard($payment);
+                if (is_array($payment) 
+                    && array_key_exists("type", $payment)) {
+                    switch ($payment["type"]) {
+                        case "credit":
+                            $payment_array[$key] = new CreditCard($payment);
+                            break;
+
+                        case "boleto":
+                            $payment_array[$key] = new Boleto($payment);
+                            break;
+                    }
                 }
-                else if (!is_a($payment, 'Konduto\Models\CreditCard')) {                    
+                else if (!is_a($payment, 'Konduto\Models\CreditCard')
+                         and !is_a($payment, 'Konduto\Models\Boleto')) {
                     $this->errors['payment'] = FIELD_NOT_VALID;
                     return null;
                 }

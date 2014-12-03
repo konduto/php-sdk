@@ -2,15 +2,16 @@
 
 class Boleto extends Payment {
 
-    protected $_schema_key = 'boleto';
+    protected $_schema_key = "boleto";
 
     // Settable/gettable properties
 
-    private $expiration_date_;
+    protected $expiration_date_;
+    protected $status_;
 
     // Internal properties
 
-    protected static $MANDATORY_FIELDS = ['type', 'boleto'];
+    protected static $MANDATORY_FIELDS = ["type"];
 
     // Methods
 
@@ -21,7 +22,8 @@ class Boleto extends Payment {
     }
 
     public function set() {
-        // For understanding how this constructor works, take a look in Order constructor.
+        // For understanding how this constructor works, 
+        // take a look in Order constructor.
         $args = (func_num_args() == 1 ? func_get_arg(0) : func_get_args());
 
         foreach ($args as $key => $arg) {
@@ -30,6 +32,10 @@ class Boleto extends Payment {
                 case 'expiration_date':
                 case 'expirationDate':
                     $this->expiration_date($arg);
+                    break;
+                case '1':
+                case 'status':
+                    $this->status($arg);
                     break;
             }
         }
@@ -42,6 +48,13 @@ class Boleto extends Payment {
             $this->set_property($this->expiration_date_, 'expiration_date', $expiration_date)
             : $this->expiration_date_;
     }
+
+    public function status($status = null) {
+        return isset($status) ?
+            $this->set_property($this->status_, 'status', $status)
+            : $this->status_;
+    }
+
 
     /**
      * Alias for expiration_date()

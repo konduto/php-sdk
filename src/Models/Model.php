@@ -65,7 +65,7 @@ abstract class Model implements Entity {
      * @param value: the value to be set in the property.
      */
     protected function set_property(&$field, $field_name, $value) {
-        if (empty($this->_schema_key)) {
+        if (empty($this->_schema_key) || empty($field_name)) {
             $field = $value;
             return true;
         }

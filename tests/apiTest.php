@@ -238,13 +238,14 @@ class ApiTest extends \PHPUnit_Framework_TestCase
             "payment"      => 
             [
                 [
+                    "type" => "credit",
                     "bin" => "490172",
                     "last4"=> "0012",
                     "expiration_date" => "072015",
                     "status" => "approved"
                 ],
                 [
-                    "status" => "approved",
+                    "type" => "credit",
                     "bin" => "490231",
                     "last4"=> "0231",
                     "expiration_date" => "082016",
@@ -294,7 +295,7 @@ class ApiTest extends \PHPUnit_Framework_TestCase
             ]
         ]);
 
-        $this->assertTrue($o->isValid());
+        $this->assertTrue($o->isValid(), "Order object is not valid order.");
 
         try {
             Konduto::analyze($o);
@@ -303,8 +304,10 @@ class ApiTest extends \PHPUnit_Framework_TestCase
             $this->assertNotNull($o->status(), 'status');
             $this->assertNotNull($o->recommendation(), 'recommendation');
             $this->assertNotNull($o->navigation(), 'navigation');
-            $this->assertInstanceOf('Konduto\Models\Geolocation', $o->geolocation());
-            $this->assertInstanceOf('Konduto\Models\Navigation', $o->navigation());
+            $this->assertInstanceOf('Konduto\Models\Geolocation', $o->geolocation(), 
+                    "Geolocation obj is not instance of Geolocation class");
+            $this->assertInstanceOf('Konduto\Models\Navigation', $o->navigation(), 
+                    "Navigation obj is not instance of Navigation class");
 
             self::$testOrder_3 = $o;
         }

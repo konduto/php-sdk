@@ -26,12 +26,14 @@ class ModelsTest extends \PHPUnit_Framework_TestCase
             "payment"      => 
             [
                 [
+                    "type" => "credit",
                     "bin" => "490172",
                     "last4"=> "0012",
                     "expiration_date" => "072015",
                     "status" => "approved"
                 ],
                 [
+                    "type" => "credit",
                     "status" => "declined",
                     "bin" => "490231",
                     "last4"=> "0231",
@@ -81,10 +83,7 @@ class ModelsTest extends \PHPUnit_Framework_TestCase
             ]
         ]);
 
-        $isValid = $o->isValid();        
-
-
-        if (!$isValid) {
+        if (!$o->isValid()) {
             ob_start();
             var_dump($o->getErrors());
             $errors = ob_get_contents();
@@ -92,7 +91,7 @@ class ModelsTest extends \PHPUnit_Framework_TestCase
             $this->fail("The test failed because there were errors in the order: \n" . $errors);
         }
         else {
-            $this->assertTrue($isValid);
+            $this->assertTrue(TRUE);
         }
         // var_dump($o);
     }
@@ -103,6 +102,7 @@ class ModelsTest extends \PHPUnit_Framework_TestCase
      */
     public function testPatternValidationOrderID() {
         $o = new KondutoModels\Order();
+
         // Set an ID that don't respect pattern (contains space);
         $o->id("Pedido 00001");
         $this->assertTrue(array_key_exists('id', $o->getErrors()), "The 'id' key should be present in errors.");
@@ -147,8 +147,9 @@ class ModelsTest extends \PHPUnit_Framework_TestCase
         $this->assertNotNull($c->isVip());
         $this->assertNotNull($c->email());
         $this->assertNotNull($c->taxId());
-        // Two phones were set
-        $this->assertCount(2, $c->phones());
+        $this->assertNotNull($c->phone1());
+        $this->assertNotNull($c->phone2());
+        $this->assertNotEquals($c->phone1(), $c->phone2());
     }  
 
     public function testAddress() {
@@ -280,12 +281,14 @@ class ModelsTest extends \PHPUnit_Framework_TestCase
             ],
             "payment" => [
                 [
+                    "type" => "credit",
                     "bin" => "490172",
                     "last4"=> "0012",
                     "expiration_date" => "072015",
                     "status" => "approved"
                 ],
                 [
+                    "type" => "credit",
                     "status" => "approved",
                     "bin" => "490231",
                     "last4"=> "0231",
@@ -301,7 +304,38 @@ class ModelsTest extends \PHPUnit_Framework_TestCase
         $this->assertContains($orderObj->status(),
                 KondutoModels\STATUS_NOT_AUTHORIZED, 
                 "Here status should be 'not_authorized': ".
-                "We have a recommendation 'approve' and but a payment ".
+                "We have a recommendation 'approve' but a payment ".
                 "was declined.");
+    }
+
+    public function testBoleto1() {
+        // Has a valid date
+        $boletoObj = new KondutoModels\Boleto(
+            ["expiration_date" => "2014-12-05"]
+        );
+        
+        $this->assertTrue($boletoObj->isValid(), "boleto->isValid should ".
+            "be true here because the expiration_date is okay.");
+
+        // Has an invalid date
+        $boletoObj = new KondutoModels\Boleto(
+            ["expiration_date" => "8917236"]
+        );
+        $this->assertFalse($boletoObj->isValid(), "boleto->isValid should ".
+            "be false here because the expiration_date is not okay.");
+    }
+
+    public function testBoleto2() {
+        // Has a valid date
+        $boletoObj = new KondutoModels\Boleto();
+        $boletoObj->expiration_date("2014-12-05");
+        
+        $boletoArray = [
+            "type" => "boleto",
+            "expiration_date" => "2014-12-05"
+        ];
+
+        $this->assertEquals($boletoArray, $boletoObj->asArray(),
+            "Both provided and generated arrays should be equal.");
     }
 }

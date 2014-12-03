@@ -10,6 +10,7 @@ abstract class Payment extends Model {
     const TYPE_BOLETO = "boleto";
 
     protected $type_;
+    protected $status_;
 
     protected $AVAILABLE_TYPES = [self::TYPE_CARD, self::TYPE_BOLETO];
 

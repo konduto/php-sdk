@@ -6,11 +6,11 @@ class CreditCard extends Payment {
 
     // Settable/gettable properties
 
-    private $status_;
-    private $sha1_;
-    private $bin_;
-    private $last4_;
-    private $expiration_date_;
+    protected $status_;
+    protected $sha1_;
+    protected $bin_;
+    protected $last4_;
+    protected $expiration_date_;
 
     // Internal properties
 

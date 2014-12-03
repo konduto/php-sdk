@@ -68,8 +68,7 @@ abstract class ValidationSchema {
             'expiration_date' => [STRING,  6,       6, REGEX_DIGITS]
         ],
         'boleto' => [
-            'status'          => [STRING,  0,       8],
-            'expiration_date' => [STRING,  6,       8, REGEX_FULL_DATE]
+            'expiration_date' => [STRING, 10,      10, REGEX_FULL_DATE]
         ],
         'item' => [
             'sku'             => [STRING,  0,     100],
