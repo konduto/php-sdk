@@ -92,9 +92,9 @@ $order = new KondutoModels\Order([
   "installments"      => 1,
   "ip"                => "170.149.100.10",
   "customer"          => $customer,
-  "payment_array"     => array($creditCard),
-  "billing_address"   => $billing,
-  "shipping_address"  => $shipping,
+  "payment"           => array($credit_card),
+  "billing"           => $billing,
+  "shipping"          => $shipping,
   "shopping_cart"     => array($item1, $item2)
 ]);
 ```
@@ -148,15 +148,13 @@ vip | _(optional)_ Boolean indicating if the customer is a VIP or frequent buyer
 ### Payment information
 
 ```php
-<<<<<<< HEAD
-$creditCard = new KondutoModels\CreditCard(array(
+$credit_card = new KondutoModels\CreditCard([
   "bin"             => "490172",
   "last4"           => "0012",
   "expiration_date" => "072015",
   "status"          => "approved"
-));
+]);
 ```
-
 
 Parameter | Description 
 --- | ---
@@ -238,6 +236,82 @@ $item2 = new KondutoModels\Item([
   "unit_cost"   => 29.90,
   "quantity"    => 2,
   "discount"    => 5.00
+]);
+```
+
+### Creating an order with all fields at once
+
+```php
+$order = new KondutoModels\Order([
+  "id"              => uniqid(),
+  "visitor"         => "4738d516f09cab3a2c1ee973bec88a5a367a59e4",
+  "total_amount"    => 100.00,
+  "shipping_amount" => 20.00,
+  "tax_amount"      => 3.45,
+  "currency"        => "USD",
+  "installments"    => 1,
+  "ip"              => "170.149.100.10",
+  "customer"        => [
+    "id"     => "28372",
+    "name"   => "Mary Jane",
+    "tax_id" => "6253407",
+    "phone1" => "212-555-1234",
+    "phone2" => "202-555-6789",
+    "email"  => "mary.jane@example.com",
+    "new"    => true,
+    "vip"    => false
+  ],
+  "payment" => [
+    [
+      "type"            => "credit",  // Add payment 'type'
+      "bin"             => "490172",
+      "last4"           => "0012",
+      "expiration_date" => "072015",
+      "status"          => "approved"
+    ],
+    [
+      "type"            => "boleto",  // Add payment 'type'
+      "expiration_date" => "2014-12-09"
+    ]
+  ],
+  "billing" => [
+    "name"     => "Mary Jane",
+    "address1" => "123 Main St.",
+    "address2" => "Apartment 4",
+    "city"     => "New York City",
+    "state"    => "NY",
+    "zip"      => "10460",
+    "country"  => "US"
+  ],
+  "shipping" => [
+    "name"     => "Mary Jane",
+    "address1" => "123 Main St.",
+    "address2" => "Apartment 4",
+    "city"     => "New York City",
+    "state"    => "NY",
+    "zip"      => "10460",
+    "country"  => "US"
+  ],
+  "shopping_cart" => [
+    [
+      "sku"          => "9919023",
+      "product_code" => "123456789999",
+      "category"     => 201,
+      "name"         => "Green T-Shirt",
+      "description"  => "Male Green T-Shirt V Neck",
+      "unit_cost"    => 1999.99,
+      "quantity"     => 1
+    ],
+    [
+      "sku"         => "0017273",
+      "category"    => 202,
+      "name"        => "Yellow Socks",
+      "description" => "Pair of Yellow Socks",
+      "unit_cost"   => 29.90,
+      "quantity"    => 2,
+      "discount"    => 5.00
+    ]
+  ]
 ]);
 ```
 
