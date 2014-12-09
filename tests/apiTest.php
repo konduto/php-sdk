@@ -7,8 +7,8 @@ use Konduto\Exceptions as KondutoExceptions;
 
 const LOCAL_EXISTING_KEY = "T738D516F09CAB3A2C1EE";
 
-class ApiTest extends \PHPUnit_Framework_TestCase
-{
+class ApiTest extends \PHPUnit_Framework_TestCase {
+
     public static $testOrder_1 = null;
     public static $testOrder_2 = null;
     public static $testOrder_3 = null;
@@ -17,8 +17,7 @@ class ApiTest extends \PHPUnit_Framework_TestCase
      * This test passes when the following exception is thrown.
      * @expectedException        Konduto\exceptions\InvalidAPIKeyException
      */
-    public function testOperationWithNoKeySet()
-    {
+    public function testOperationWithNoKeySet() {
         // No API key was set
         Konduto::getOrder("Pedido00001");
     }
@@ -27,13 +26,11 @@ class ApiTest extends \PHPUnit_Framework_TestCase
      * This test passes when the following exception is thrown.
      * @expectedException        Konduto\exceptions\InvalidAPIKeyException
      */
-    public function testInvalidAPIKey()
-    {
+    public function testInvalidAPIKey() {
         Konduto::setApiKey("for sure this is an invalid key");
     }
 
-    public function testValidAPIKey()
-    {
+    public function testValidAPIKey() {
         // Now it is a valid API key
         $is_valid = Konduto::setApiKey(LOCAL_EXISTING_KEY);
         $this->assertTrue($is_valid, "If the API key is valid, setApiKey returns true.");
@@ -43,16 +40,14 @@ class ApiTest extends \PHPUnit_Framework_TestCase
      * This test passes when the following exception is thrown.
      * @expectedException        Konduto\exceptions\InvalidVersionException
      */
-    public function testSetInvalidVersion()
-    {
+    public function testSetInvalidVersion() {
         $is_valid = Konduto::setVersion("v0.087");
     }
 
     /**
      * Uses a small number of fields to test Post.
      */
-    public function testSimplePost()
-    {
+    public function testSimplePost() {
         Konduto::setApiKey(LOCAL_EXISTING_KEY);        
 
         $c = new KondutoModels\Customer([
@@ -63,7 +58,7 @@ class ApiTest extends \PHPUnit_Framework_TestCase
 
         $o = new KondutoModels\Order([
             "id"           => self::generateUniqueID(),
-            "totalAmount"  => 100.50,
+            "total_amount"  => 100.50,
             "customer"     => $c,
             "ip"           => "95.31.110.43",   // We need to provide an IP for having a geolocation returned
             "visitor"      => "1234567890123456789012345678901234567890" // We need to provide visitor for having navigation info returned
@@ -78,6 +73,7 @@ class ApiTest extends \PHPUnit_Framework_TestCase
 
             $this->assertNotNull($o->geolocation(), 'Geolocation');
             // $this->assertNotNull($o->device(), 'Device');
+
             $this->assertNotNull($o->status(), 'Status');
             $this->assertNotNull($o->recommendation(), 'recommendation');
             // $this->assertNotNull($o->navigation(), 'navigation');
@@ -218,25 +214,23 @@ class ApiTest extends \PHPUnit_Framework_TestCase
         $o = new KondutoModels\Order([
             "id"           => self::generateUniqueID(),
             "visitor"      => "da39a3ee5e6b4b0d3255bfef95601890afd80709",
-            "totalAmount"  => 312.71,
-            "shippingAmount" => 20.00,
-            "taxAmount"     => 9.50,
+            "total_amount"  => 312.71,
+            "shipping_amount" => 20.00,
+            "tax_amount"     => 9.50,
             "currency"     => "USD",
             "installments" => 2,
             "ip"           => "221.102.39.19",
-            "customer"     => 
-            [
+            "customer" => [
                 "id"     => "Customer n03",
                 "name"   => "Hiroyuki Endo",
                 "email"  => "endo.hiroyuki@yahoo.jp",
                 "tax_id" => "XJ0000JX",
                 "phone1" => "151520030",
                 "phone2" => "151721295",
-                "new"    => true,
+                "is_new"    => true,
                 "vip"    => true
             ],
-            "payment"      => 
-            [
+            "payment" => [
                 [
                     "type" => "credit",
                     "bin" => "490172",
@@ -251,9 +245,8 @@ class ApiTest extends \PHPUnit_Framework_TestCase
                     "expiration_date" => "082016",
                     "status" => "declined"
                 ]
-            ]
-,            "billing"      => 
-            [
+            ],
+            "billing" => [
                 "name" => "Mary Jane",
                 "address1" => "123 Main St.",
                 "address2" => "Apartment 4",
@@ -262,8 +255,7 @@ class ApiTest extends \PHPUnit_Framework_TestCase
                 "zip" => "10460",
                 "country" => "US"
             ],
-            "shipping"     => 
-            [
+            "shipping" => [
                 "name" => "Charlotte Fitzroy",
                 "address1" => "123 Main St.",
                 "address2" => "Apartment 6",
@@ -272,8 +264,7 @@ class ApiTest extends \PHPUnit_Framework_TestCase
                 "zip" => "10460",
                 "country" => "US"
             ],
-            "shopping_cart" => 
-            [
+            "shopping_cart" => [
                 [
                     "sku" => "9919023",
                     "product_code" => 1231,
@@ -295,7 +286,7 @@ class ApiTest extends \PHPUnit_Framework_TestCase
             ]
         ]);
 
-        $this->assertTrue($o->isValid(), "Order object is not valid order.");
+        $this->assertTrue($o->is_valid(), "Order object is not valid order.");
 
         try {
             Konduto::analyze($o);
@@ -325,6 +316,10 @@ class ApiTest extends \PHPUnit_Framework_TestCase
     public function testFullGet() {
         $o = self::$testOrder_3;
         $o2 = Konduto::getOrder($o->id());
+
+        // Let's forget about created_at field for now...
+        $o->created_at("2014-12-09 12:26:40");
+        $o2->created_at("2014-12-09 12:26:40");
 
         $this->assertEquals($o, $o2, "All the fields of both objects should contain the same values.");
     }

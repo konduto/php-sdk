@@ -1,365 +1,88 @@
 <?php namespace Konduto\Models;
 
-const STATUS_PENDING         = 'pending';
-const STATUS_APPROVED        = 'approved';
-const STATUS_DECLINED        = 'declined';
-const STATUS_FRAUD           = 'fraud';
-const STATUS_NOT_AUTHORIZED  = 'not_authorized';
+const STATUS_PENDING         = "pending";
+const STATUS_APPROVED        = "approved";
+const STATUS_DECLINED        = "declined";
+const STATUS_FRAUD           = "fraud";
+const STATUS_NOT_AUTHORIZED  = "not_authorized";
 
-const RECOMMENDATION_APPROVE = 'approve';
-const RECOMMENDATION_DECLINE = 'decline';
-const RECOMMENDATION_REVIEW  = 'review';
+const RECOMMENDATION_APPROVE = "approve";
+const RECOMMENDATION_DECLINE = "decline";
+const RECOMMENDATION_REVIEW  = "review";
 
 class Order extends Model {
 
-    protected $_schema_key = 'order';
+    protected $_schema_key = "order";
 
-    // Settable/gettable properties
+    protected $_properties = [
+        "id" => null,
+        "visitor" => null,
+        "total_amount" => null,
+        "shipping_amount" => null,
+        "tax_amount" => null,
+        "currency" => null,
+        "installments" => null,
+        "ip" => null,
+        "payment" => [],
+        "customer" => null,
+        "billing" => null,
+        "shipping" => null,
+        "shopping_cart" => []
+    ];
 
-    private $id_;
-    private $visitor_;
-    private $total_amount_;
-    private $shipping_amount_;
-    private $tax_amount_;
-    private $currency_;
-    private $installments_;
-    private $ip_;
-    private $payment_array_ = [];
-    private $customer_;
-    private $billing_address_;
-    private $shipping_address_;
-    private $shopping_cart_ = [];
-
-    // Gettable-only properties
+    protected $_mandatory_fields = ["id", "total_amount", "customer"];
     
-    private $timestamp_;
-    private $status_;
-    private $device_;
-    private $geolocation_;
-    private $recommendation_;
-    private $score_;
-    private $navigation_;
+    protected $timestamp;
+    protected $status;
+    protected $device;
+    protected $geolocation;
+    protected $recommendation;
+    protected $score;
+    protected $navigation;
+    protected $created_at;
     
-    // Internal properties
+    protected $available_status = [STATUS_PENDING, STATUS_APPROVED,
+             STATUS_DECLINED, STATUS_FRAUD, STATUS_NOT_AUTHORIZED];
 
-    protected static $MANDATORY_FIELDS = ['id', 'total_amount', 'customer'];
-    protected static $AVAILABLE_STATUS = [STATUS_PENDING, STATUS_APPROVED, STATUS_DECLINED, STATUS_FRAUD];
-    
-
-    // Methods
-
-    public function __construct() {
-        // Sets mandatory fields in the parent class, so parent's static methods can access properties.
-        parent::setMandatoryFields(self::$MANDATORY_FIELDS);
-        // Sets properties according to arguments passed to the constructor.
-        $this->set(func_num_args() == 1 ? func_get_arg(0) : func_get_args());
+    public function customer($value = null) {
+        return $this->set_get_object("customer",
+                 $value, "Konduto\Models\Customer");
     }
 
-    /**
-     * Set properties given an associative array as argument with the names of the properties as keys, 
-     * or set properties with many arguments in the order of the parameters presented in Konduto API documentation.
-     * If just one parameter is passed, it should be an array with properties to be populated.
-     * If more than one parameter is passed, retrieve array of args.
-     */
-    public function set() {
-        $args = (func_num_args() == 1 ? func_get_arg(0) : func_get_args());
-
-        foreach ($args as $key => $arg) {
-
-            // key is converted to string to let switch deal with both cases of array described above.
-            switch ((string) $key) {
-                case 'id':
-                case '0':
-                    $this->id($arg);
-                    break;
-                case '1':
-                case 'visitor':
-                    $this->visitor($arg);
-                    break;
-                case "totalAmount":
-                case "total_amount":
-                case '2':
-                    $this->totalAmount($arg);
-                    break;
-                case '3':
-                case 'shipping_amount':
-                case 'shippingAmount':
-                    $this->shippingAmount($arg);
-                    break;
-                case '4':
-                case 'tax_amount':
-                case 'taxAmount':
-                    $this->taxAmount($arg);
-                    break;
-                case '5':
-                case 'currency':
-                    $this->currency($arg);
-                    break;
-                case '6':
-                case 'installments':
-                    $this->installments($arg);
-                    break;
-                case '7':
-                case 'ip':
-                    $this->ip($arg);
-                    break;
-                case '8':
-                case 'payment':
-                case 'paymentArray':
-                case 'payment_array':
-                    $this->paymentArray($arg);
-                    break;
-                case '9':
-                case 'customer':
-                    $this->customer(is_array($arg) ? new Customer($arg) : $arg);
-                    break;
-                case '10':
-                case 'billing':
-                case 'billing_address':
-                case 'billingAddress':
-                    $this->billingAddress(is_array($arg) ? new Address($arg) : $arg);
-                    break;
-                case '11':
-                case 'shipping':
-                case 'shipping_address':
-                case 'shippingAddress':
-                    $this->shippingAddress(is_array($arg) ? new Address($arg) : $arg);
-                    break;
-                case '12':
-                case 'shopping_cart':
-                case 'shopping_cart':
-                case 'shoppingCart':
-                    $this->shoppingCart($arg);
-                    break;
-                ## properties below are not settable by other way.
-                case 'device':
-                    $this->device_ = new Device($arg);
-                    break;
-                case 'status':
-                    $this->status_ = strtolower($arg);
-                    break;
-                case 'score':
-                    $this->score_ = $arg;
-                    break;
-                case 'recommendation':
-                    $this->recommendation_ = strtolower($arg);
-                    break;
-                case 'geolocation':
-                    $this->geolocation_ = new Geolocation($arg);
-                    break;
-                case 'timestamp':
-                    $this->timestamp_ = $arg;
-                    break;                    
-                case 'navigation':
-                    $this->navigation_ = new Navigation($arg);
-                    break;
-            }
-        }
+    public function billing($value = null) {
+        return $this->set_get_object("billing",
+                 $value, "Konduto\Models\Address");
     }
 
-    /* 
-     * Regular getter/setters. If a parameter is not passed, treats method as getter.
-     * Passes argument through validation if setting.
-     */
-    
-    public function id($id = null) {
-        return isset($id) ?
-            // Set
-            $this->set_property($this->id_, 'id', $id)
-            // Get
-            : $this->id_;
+    public function shipping($value = null) {
+        return $this->set_get_object("shipping",
+                 $value, "Konduto\Models\Address");
     }
 
-    public function visitor($visitor = null) {
-        return isset($visitor) ? 
-            $this->set_property($this->visitor_, 'visitor', $visitor)
-            : $this->visitor_;
-    }
-
-    public function total_amount($total_amount = null) {
-        return isset($total_amount) ? 
-            $this->set_property($this->total_amount_, 'total_amount', $total_amount) 
-            : $this->total_amount_;
-    }
-
-    /**
-     * alias for total_amount()
-     */
-    public function totalAmount($total_amount = null) {
-        return $this->total_amount($total_amount);
-    }
-
-
-    public function tax_amount($tax_amount = null) {
-        return isset($tax_amount) ?
-            $this->set_property($this->tax_amount_, 'tax_amount', $tax_amount)
-            : $this->tax_amount_;
-    }
-
-    /**
-     * alias for tax_amount()
-     */
-    public function taxAmount($tax_amount = null) {
-        return $this->tax_amount($tax_amount);
-    }
-
-    public function shipping_amount($shipping_amount = null) {
-        return isset($shipping_amount) ?
-            $this->set_property($this->shipping_amount_, 'shipping_amount', $shipping_amount)
-            : $this->shipping_amount_;
-    }
-
-    /**
-     * alias for shipping_amount()
-     */
-    public function shippingAmount($shipping_amount = null) {
-        return $this->shipping_amount($shipping_amount);
-    }
-
-    public function installments($installments = null) {
-        return isset($installments) ?
-            $this->set_property($this->installments_, 'installments', $installments)
-            : $this->installments_;
-    }
-
-    public function ip($ip = null) {
-        if (!isset($ip)) {
-            return $this->ip_;
-        }
-        else if (ip2long($ip)) {
-            $this->set_property($this->ip_, 'ip', $ip);
-        }
-        else {
-            $this->errors['ip'] = $ip;
-        }
-    }
-
-    public function currency($currency = null) {
-        return isset($currency) ?
-            $this->set_property($this->currency_, 'currency', $currency)
-            : $this->currency_;
-    }
-
-    public function payment_array(array $payment_array = null) {
-        if (!isset($payment_array)) {
-            return $this->payment_array_;
-        }
-        else {
-            foreach ($payment_array as $key => $payment) {
-                if (is_array($payment) 
-                    && array_key_exists("type", $payment)) {
-                    switch ($payment["type"]) {
-                        case "credit":
-                            $payment_array[$key] = new CreditCard($payment);
-                            break;
-
-                        case "boleto":
-                            $payment_array[$key] = new Boleto($payment);
-                            break;
-                    }
-                }
-                else if (!is_a($payment, 'Konduto\Models\CreditCard')
-                         and !is_a($payment, 'Konduto\Models\Boleto')) {
-                    $this->errors['payment'] = FIELD_NOT_VALID;
-                    return null;
-                }
-            }
-            $this->payment_array_ = $payment_array;
-            return true;
-        }
-    }
-
-    /**
-     * alias for payment_array()
-     */
-    public function paymentArray($payment_array = null) {
-        return $this->payment_array($payment_array);
-    }
-
-    public function customer(\Konduto\Models\Customer $customer = null) {
-        if (!isset($customer)) {
-            return $this->customer_;
-        }
-        else {
-            $this->customer_ = $customer;
-            return true;
-        }
-    }
-
-    public function billing_address(\Konduto\Models\Address $address = null) {
-        if (!isset($address)) {
-            return $this->billing_address_;
-        }
-        else {
-            $this->billing_address_ = $address;
-            return true;
-        }
-    }
-
-    /**
-     * alias for billing_address()
-     */
-    public function billingAddress($billing_address = null) {
-        return $this->billing_address($billing_address);
-    }
-
-    public function shipping_address(\Konduto\Models\Address $address = null) {
-        if (!isset($address)) {
-            return $this->shipping_address_;
-        }
-        else {
-            $this->shipping_address_ = $address;
-            return true;
-        }
-    }
-
-    /**
-     * alias for shipping_address()
-     */
-    public function shippingAddress($shipping_address = null) {
-        return $this->shipping_address($shipping_address);
+    public function payment($payment_array = null) {
+        return $this->set_get_array_object("payment",
+                 $payment_array, "Konduto\Models\Payment");
     }
 
     public function shopping_cart($item_array = null) {
-        if (!isset($item_array)) {
-            return $this->shopping_cart_;
-        }
-        else {
-            foreach ($item_array as $key => $item) {
-                if (is_array($item) and (new Item($item))->isValid()) {
-                    $item_array[$key] = new Item($item);
-                }
-                else if (!is_a($item, 'Konduto\Models\Item')) {
-                    $this->errors['shopping_cart'] = FIELD_NOT_VALID;
-                    return null;
-                }
-            }
-            $this->shopping_cart_ = $item_array;
-            return true;
-        }
-    }
-
-    /**
-     * alias for shopping_cart()
-     */
-    public function shoppingCart($shopping_cart = null) {
-        return $this->shopping_cart($shopping_cart);
+        return $this->set_get_array_object("shopping_cart",
+                 $item_array, "Konduto\Models\Item");
     }
 
     /**
      * Adds an item that will be purchased in this order.
      * @param a Konduto\Models\Item object
      */
-    public function addItem(\Konduto\Models\Item $item) {
-        $this->shopping_cart_[] = $item;
+    public function add_item(\Konduto\Models\Item $item) {
+        $this->_properties["shopping_cart"][] = $item;
     }
 
     /**
      * Adds a credit card used to pay for this order.
      * @param a Konduto\Models\CreditCard object
      */
-    public function addPayment(\Konduto\Models\CreditCard $cc) {
-        $this->payment_array_[] = $cc;
+    public function add_payment(\Konduto\Models\Payment $pmt) {
+        $this->_properties["payment"][] = $pmt;
     }
 
     /**
@@ -367,12 +90,31 @@ class Order extends Model {
      * @return one of 5 possible status: 
      * 'approved', 'declined', 'pending', 'fraud' or 'not_authorized'
      */
-    public function status() {
-        return $this->get_status();
+    public function status($status = null) {
+        if (!isset($status)) {
+            return $this->get_status();
+        }
+        else if (in_array($status, $this->available_status)) {
+            $this->status = $status;
+        }
     }
 
-    public function timestamp() {
-        return $this->timestamp_;
+    public function timestamp($timestamp = null) {
+        if (!isset($timestamp)) {
+            return $this->timestamp;
+        }
+        else {
+            $this->timestamp = $timestamp;
+        }
+    }
+
+    public function created_at($timestamp = null) {
+        if (!isset($timestamp)) {
+            return $this->created_at;
+        }
+        else {
+            $this->created_at = $timestamp;
+        }
     }
 
     /**
@@ -381,8 +123,16 @@ class Order extends Model {
      * about the device used by the customer that submitted order.
      * @return a Konduto\Models\Device object
      */
-    public function device() {
-        return $this->device_;
+    public function device($device = null) {
+        if (!isset($device)) {
+            return $this->device;
+        }
+        else if (is_array($device)) {
+            $this->device = new Device($device);
+        }
+        else {
+            $this->device = $device;   
+        }
     }
 
     /**
@@ -391,8 +141,16 @@ class Order extends Model {
      * about the geolocation of the order.
      * @return a Konduto\Models\Geolocation object
      */
-    public function geolocation() {
-        return $this->geolocation_;
+    public function geolocation($geo = null) {
+        if (!isset($geo)) {
+            return $this->geolocation;
+        }        
+        else if (is_array($geo)) {
+            $this->geolocation = new Geolocation($geo);
+        }
+        else {
+            $this->geolocation = $geo;
+        }
     }
 
     /**
@@ -401,8 +159,22 @@ class Order extends Model {
      * @return one of three possible recommendations: 'approve', 
      * 'decline' or 'review'
      */
-    public function recommendation() {
-        return $this->recommendation_;
+    public function recommendation($reco = null) {
+        if (!isset($reco)) {
+            return $this->recommendation;
+        }
+        else {
+            $this->recommendation = strtolower($reco);
+        }
+    }
+
+    public function score($score = null) {
+        if (!isset($score)) {
+            return $this->score;
+        }
+        else {
+            $this->score = $score;
+        }
     }
 
     /**
@@ -411,8 +183,16 @@ class Order extends Model {
      * information regarding the customer who performer this order.
      * @return a Konduto\Models\Navigation object
      */
-    public function navigation() {
-        return $this->navigation_;
+    public function navigation($nav = null) {
+        if (!isset($nav)) {
+            return $this->navigation;
+        }        
+        else if (is_array($nav)) {
+            $this->navigation = new Navigation($nav);
+        }
+        else {
+            $this->navigation = $nav;
+        }
     }
 
     /**
@@ -423,106 +203,33 @@ class Order extends Model {
      * @return status string
      */
     protected function get_status() {
-        if (is_string($this->status_)) {
-            return $this->status_;
+        if (is_string($this->status)) {
+            return $this->status;
         }
 
-        $this->status_ = null;
+        $this->status = null;
 
-        foreach ($this->payment_array() as $payment) {
-            if ($payment->status() == PAYMENT_DECLINED) {
-                $this->status_ = STATUS_NOT_AUTHORIZED;
-                return $this->status_;
+        // If a payment has 'declined' status, status of the order
+        // is 'not_autorized'
+        foreach ($this->payment() as $payment) {
+            if ($payment->status() === PAYMENT_DECLINED) {
+                $this->status = STATUS_NOT_AUTHORIZED;
+                return $this->status;
             }
         }
 
         switch ($this->recommendation()) {
             case RECOMMENDATION_REVIEW:
-                $this->status_ = STATUS_PENDING;
+                $this->status = STATUS_PENDING;
                 break;
             case RECOMMENDATION_APPROVE:
-                $this->status_ = STATUS_APPROVED;
+                $this->status = STATUS_APPROVED;
                 break;
             case RECOMMENDATION_DECLINE:
-                $this->status_ = STATUS_DECLINED;
+                $this->status = STATUS_DECLINED;
                 break;
         }
 
-        return $this->status_;
-    }
-    
-    /**
-     * Builds an array representation of this model. Includes only the fields that are needed for persisting
-     * order (building json message in POST operation).
-     */
-    public function asArray() {
-        $array = [
-            'id'              => $this->id_,
-            'visitor'         => $this->visitor_,
-            'total_amount'    => $this->total_amount_,
-            'shipping_amount' => $this->shipping_amount_,
-            'tax_amount'      => $this->tax_amount_,
-            'currency'        => $this->currency_,
-            'installments'    => $this->installments_,
-            'ip'              => $this->ip_
-        ];
-
-        if (isset($this->customer_)) {
-            if ($this->customer_->isValid()) {
-                $array['customer'] = $this->customer_->asArray();
-                unset($this->errors['customer']);
-            }
-            else {
-                $this->errors['customer'] = FIELD_NOT_VALID;
-            }
-        }
-
-        if (isset($this->billing_address_)) {
-            if ($this->billing_address_->isValid()) {
-                $array['billing'] = $this->billing_address_->asArray();
-                unset($this->errors['billing_address']);
-            }
-            else {
-                $this->errors['billing_address'] = FIELD_NOT_VALID;
-            }
-        }
-
-        if (isset($this->shipping_address_)) {
-            if ($this->shipping_address_->isValid()) {
-                $array['shipping'] = $this->shipping_address_->asArray();
-                unset($this->errors['shipping_address']);
-            }
-            else {
-                $this->errors['shipping_address'] = FIELD_NOT_VALID;
-            }
-        }
-
-        foreach ($this->payment_array_ as $payment) {
-            if ($payment->isValid()) {
-                $array['payment'][] = $payment->asArray();
-                unset($this->errors['payment_array']);
-            }
-            else {
-                $this->errors['payment_array'] = FIELD_NOT_VALID;
-            }
-        }
-
-        foreach ($this->shopping_cart_ as $item) {
-            if ($item->isValid()) {
-                $array['shopping_cart'][] = $item->asArray();
-                unset($this->errors['shopping_cart']);
-            }
-            else {
-                $this->errors['shopping_cart'] = FIELD_NOT_VALID;
-            }
-        }
-
-        foreach ($array as $key => $value) {
-            if ($value === null) {
-                unset($array[$key]);
-            }
-        }
-
-        return $array;
+        return $this->status;
     }
 }

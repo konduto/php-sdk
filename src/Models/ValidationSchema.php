@@ -10,11 +10,14 @@ const IDX_MIN     = 1;
 const IDX_MAX     = 2;
 const IDX_PATTERN = 3;
 
-const REGEX_LETTERS_DIGITS = '/^[a-zA-Z0-9-_]+\z/';
-const REGEX_LETTERS        = '/^[a-zA-Z]+\z/';
-const REGEX_DIGITS         = '/^[0-9]+\z/';
-const REGEX_HEXA_DIGITS    = '/^[a-fA-F0-9]+\z/';
-const REGEX_FULL_DATE      = '/^\d{4}-\d{2}-\d{2}\z/';
+const REGEX_LETTERS_DIGITS = "/^[a-zA-Z0-9-_]+\z/";
+const REGEX_LETTERS        = "/^[a-zA-Z]+\z/";
+const REGEX_DIGITS         = "/^[0-9]+\z/";
+const REGEX_HEXA_DIGITS    = "/^[a-fA-F0-9]+\z/";
+const REGEX_FULL_DATE      = "/^\d{4}-\d{2}-\d{2}\z/";
+const REGEX_IPv4           = "/^(?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\.){3}(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]?|[0-9])\z/";
+const REGEX_CREDIT         = "/^credit\z/";
+const REGEX_BOLETO         = "/^boleto\z/";
 
 abstract class ValidationSchema {
     
@@ -32,53 +35,56 @@ abstract class ValidationSchema {
      * Optionally, it could have a IDX_PATTERN key containing a regex expression to be applied.
      */
     private static $validation = [
-        'order' => [
-            'id'              => [STRING,  1,     100, REGEX_LETTERS_DIGITS],
-            'visitor'         => [STRING, 40,      40, REGEX_LETTERS_DIGITS],
-            'total_amount'    => [ FLOAT,  0, 9999999],
-            'shipping_amount' => [ FLOAT,  0, 9999999],
-            'tax_amount'      => [ FLOAT,  0, 9999999],
-            'currency'        => [STRING,  3,       3],
-            'installments'    => [   INT,  1,     999],
-            'ip'              => [STRING,  7,      15]
+        "order" => [
+            "id"              => [STRING,  1,     100, REGEX_LETTERS_DIGITS],
+            "visitor"         => [STRING, 40,      40, REGEX_LETTERS_DIGITS],
+            "total_amount"    => [ FLOAT,  0, 9999999],
+            "shipping_amount" => [ FLOAT,  0, 9999999],
+            "tax_amount"      => [ FLOAT,  0, 9999999],
+            "currency"        => [STRING,  3,       3],
+            "installments"    => [   INT,  1,     999],
+            "ip"              => [STRING,  7,      15, REGEX_IPv4]
         ],
-        'customer' => [
-            'id'              => [STRING,  1,     100],
-            'name'            => [STRING,  0,     100],
-            'tax_id'          => [STRING,  0,     100],
-            'phone1'          => [STRING,  0,     100],
-            'phone2'          => [STRING,  0,     100],
-            'email'           => [STRING,  0,     100],
-            'new'             => [  BOOL], 
-            'vip'             => [  BOOL]
+        "customer" => [
+            "id"              => [STRING,  1,     100],
+            "name"            => [STRING,  0,     100],
+            "tax_id"          => [STRING,  0,     100],
+            "phone1"          => [STRING,  0,     100],
+            "phone2"          => [STRING,  0,     100],
+            "email"           => [STRING,  0,     100],
+            "new"             => [  BOOL], 
+            "vip"             => [  BOOL]
         ],
-        'address' => [
-            'name'            => [STRING,  0,     100],
-            'address'         => [STRING,  0,     255],
-            'city'            => [STRING,  0,     100],
-            'state'           => [STRING,  0,     100],
-            'zip'             => [STRING,  0,     100],
-            'country'         => [STRING,  2,       2, REGEX_LETTERS]
+        "address" => [
+            "name"            => [STRING,  0,     100],
+            "address1"        => [STRING,  0,     255],
+            "address2"        => [STRING,  0,     255],
+            "city"            => [STRING,  0,     100],
+            "state"           => [STRING,  0,     100],
+            "zip"             => [STRING,  0,     100],
+            "country"         => [STRING,  2,       2, REGEX_LETTERS]
         ],
-        'credit_card' => [
-            'status'          => [STRING,  0,       8],
-            'sha1'            => [STRING, 40,      40, REGEX_HEXA_DIGITS],
-            'bin'             => [STRING,  6,       6, REGEX_DIGITS],
-            'last4'           => [STRING,  4,       4, REGEX_DIGITS],
-            'expiration_date' => [STRING,  6,       6, REGEX_DIGITS]
+        "credit_card" => [
+            "type"            => [STRING,  0,       8, REGEX_CREDIT],
+            "status"          => [STRING,  0,       8],
+            "sha1"            => [STRING, 40,      40, REGEX_HEXA_DIGITS],
+            "bin"             => [STRING,  6,       6, REGEX_DIGITS],
+            "last4"           => [STRING,  4,       4, REGEX_DIGITS],
+            "expiration_date" => [STRING,  6,       6, REGEX_DIGITS]
         ],
-        'boleto' => [
-            'expiration_date' => [STRING, 10,      10, REGEX_FULL_DATE]
+        "boleto" => [
+            "type"            => [STRING,  0,       8, REGEX_BOLETO],
+            "expiration_date" => [STRING, 10,      10, REGEX_FULL_DATE]
         ],
-        'item' => [
-            'sku'             => [STRING,  0,     100],
-            'product_code'    => [STRING,  0,     100],
-            'category'        => [   INT,  0,    9999],
-            'name'            => [STRING,  0,     100],
-            'description'     => [STRING,  0,     100],
-            'unit_cost'       => [ FLOAT,  0, 9999999],
-            'quantity'        => [   INT,  0, 9999999],
-            'discount'        => [ FLOAT,  0, 9999999]
+        "item" => [
+            "sku"             => [STRING,  0,     100],
+            "product_code"    => [STRING,  0,     100],
+            "category"        => [   INT,  0,    9999],
+            "name"            => [STRING,  0,     100],
+            "description"     => [STRING,  0,     100],
+            "unit_cost"       => [ FLOAT,  0, 9999999],
+            "quantity"        => [   INT,  0, 9999999],
+            "discount"        => [ FLOAT,  0, 9999999]
         ]
     ];
 

@@ -9,7 +9,7 @@ use \Konduto\Exceptions as Exceptions;
 const ENDPOINT = "https://api.konduto.com/";
 
 /*
- * Current version of the SDK.
+ * Current version of the API.
  */
 const CURRENT_VERSION = "v1";
 

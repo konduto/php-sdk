@@ -20,9 +20,9 @@ use \Konduto\Exceptions as Exceptions;
  * - updateOrderStatus
  * - getOrder
  *
- * @api
+ * @api v1
  *
- * @version v1
+ * @version v2
  */
 abstract class Konduto extends ApiControl {
 
@@ -90,12 +90,12 @@ abstract class Konduto extends ApiControl {
      */
     public static function analyze(Models\Order &$order, $analyze = true) {
 
-        if (!$order->isValid()) {
+        if (!$order->is_valid()) {
             throw new Exceptions\InvalidOrderException($order->getErrors());
             return;
         }
 
-        $order_array = $order->asArray();
+        $order_array = $order->to_array();
 
         if ($analyze === false) {
             $order_array["analyze"] = false;

@@ -2,6 +2,6 @@
 
 interface Entity {
     public function set();
-    public function getErrors();
-    public function isValid();
+    public function get_errors();
+    public function is_valid();
 }

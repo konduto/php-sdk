@@ -4,18 +4,110 @@ require_once "vendor/autoload.php";
 use Konduto\Models as KondutoModels;
 use Konduto\Exceptions as KondutoExceptions;
 
-class ModelsTest extends \PHPUnit_Framework_TestCase
-{
+class ModelsTest extends \PHPUnit_Framework_TestCase {
     public static $testOrder_2 = null;
+
+
+    public function testCustomer() {
+        $customer = [
+            "id"     => "Customer-n03",
+            "name"   => "Hiroyuki Endo",
+            "email"  => "endo.hiroyuki@yahoo.jp",
+            "tax_id" => "XJ0000JX",
+            "phone1" => "151520030",
+            "phone2" => "151721295",
+            "is_new" => true,
+            "vip"    => true
+        ];
+        
+        $customerObj = new KondutoModels\Customer($customer);
+
+        $this->assertTrue($customerObj->is_valid(), 'Is not a valid object');
+        $this->assertEquals($customerObj->id(), $customer['id'], 'id');
+        $this->assertEquals($customerObj->name(), $customer['name'], 'name');
+        $this->assertEquals($customerObj->email(), $customer['email'], 'email');
+        $this->assertEquals($customerObj->tax_id(), $customer['tax_id'], 'tax_id');
+        $this->assertEquals($customerObj->phone1(), $customer['phone1'], 'phone1');
+        $this->assertEquals($customerObj->phone2(), $customer['phone2'], 'phone2');
+        $this->assertEquals($customerObj->is_new(), $customer['is_new'], 'is_new');
+        $this->assertEquals($customerObj->vip(), $customer['vip'], 'vip');
+    }
+
+    public function testGetSetObject() {
+        $order = [
+            "id"           => "Order-18462",
+            "total_amount"  => 1367.00,
+            "customer" => [
+                "id"     => "Customer-n2936",
+                "name"   => "Steve Matteson",
+                "email"  => "matesson@typeface.com",
+                "tax_id" => "SJ183650"
+            ]
+        ];
+
+        $orderObj = new KondutoModels\Order($order);
+        $this->assertInstanceOf("\Konduto\Models\Customer",
+             $orderObj->customer(), "Customer() should return a Customer object");
+    }
+
+    
+    public function testGetErrors1() {
+        $customer = [
+            "id"     => "Customer-n2936",
+            "name"   => "Jose da Silva",
+            "tax_id" => "SJ183650",
+            "vip" => 25
+        ];
+
+        $custObj = new KondutoModels\Customer($customer);
+
+        $this->assertFalse($custObj->is_valid(), "This customer shouldn't be valid.");
+        $errors = $custObj->get_errors();
+
+        $this->assertArrayHasKey("vip", $errors);
+        $this->assertArrayHasKey("email", $errors);
+        $this->assertNull($errors["email"]);
+        $this->assertEquals(25, $errors["vip"]);
+    }
+
+
+    public function testGetErrors2() {
+        $order = [
+            "id"           => "Order-18462",
+            "customer" => [
+                "id"     => "Customer-n2936",
+                "name"   => "Steve Matteson",
+                "tax_id" => "SJ183650"
+            ],
+            "payment" => [
+                [
+                    "type" => "credit",
+                    "bin" => "490172",
+                    "last4"=> "0012",
+                    "expiration_date" => "072015"
+                ]
+            ]
+        ];
+
+        $orderObj = new KondutoModels\Order($order);
+
+        $this->assertFalse($orderObj->is_valid(), "This order shouldn't be valid.");
+
+        $errors = $orderObj->get_errors();
+
+        $this->assertArrayHasKey("customer", $errors);
+        $this->assertArrayHasKey("payment", $errors);
+        $this->assertArrayHasKey("total_amount", $errors);
+    }
 
     /**
      * Tests for the creation of an order object using a big array
+     * @depends                 testCustomer
      */
-    public function testFullOrderWithArray()
-    {
+    public function testFullOrderWithArray() {
         $o = new KondutoModels\Order([
             "id"           => "Order-90125",
-            "totalAmount"  => 312.71,
+            "total_amount"  => 312.71,
             "ip"           => "221.102.39.19",
             "customer"     => 
             [
@@ -83,9 +175,9 @@ class ModelsTest extends \PHPUnit_Framework_TestCase
             ]
         ]);
 
-        if (!$o->isValid()) {
+        if (!$o->is_valid()) {
             ob_start();
-            var_dump($o->getErrors());
+            var_dump($o->get_errors());
             $errors = ob_get_contents();
             ob_end_clean();
             $this->fail("The test failed because there were errors in the order: \n" . $errors);
@@ -93,7 +185,6 @@ class ModelsTest extends \PHPUnit_Framework_TestCase
         else {
             $this->assertTrue(TRUE);
         }
-        // var_dump($o);
     }
 
 
@@ -105,11 +196,11 @@ class ModelsTest extends \PHPUnit_Framework_TestCase
 
         // Set an ID that don't respect pattern (contains space);
         $o->id("Pedido 00001");
-        $this->assertTrue(array_key_exists('id', $o->getErrors()), "The 'id' key should be present in errors.");
+        $this->assertTrue(array_key_exists('id', $o->get_errors()), "The 'id' key should be present in errors.");
 
         // Now set an ID that respect pattern, and check if the error's gone.
         $o->id("Pedido00001");
-        $this->assertFalse(array_key_exists('id', $o->getErrors()), "Now the 'id' key shouldn't be present.");
+        $this->assertFalse(array_key_exists('id', $o->get_errors()), "Now the 'id' key shouldn't be present.");
     }
 
     /**
@@ -120,37 +211,12 @@ class ModelsTest extends \PHPUnit_Framework_TestCase
         $o = new KondutoModels\Order();
         // Invalid IP.
         $o->ip("192.168.0.256");
-        $this->assertTrue(array_key_exists('ip', $o->getErrors()), "The 'ip' key should be present in errors.");
+        $this->assertTrue(array_key_exists('ip', $o->get_errors()), "The 'ip' key should be present in errors.");
 
         // Now there should be no error.
         $o->ip("192.168.0.255");
-        $this->assertFalse(array_key_exists('ip', $o->getErrors()), "Now the 'ip' key shouldn't be present.");
+        $this->assertFalse(array_key_exists('ip', $o->get_errors()), "Now the 'ip' key shouldn't be present.");
     }
-
-    public function testCustomer() {
-        $c = new KondutoModels\Customer([
-            'id'     => 'cus123456',
-            'name'   => 'Tyrion Lanister',
-            'email'  => 'imp@lannister.com.kl',
-            'vip'    => true,
-            'new'    => true,
-            'phone1' => '(11) 98756789',
-            'phone2' => '(11) 98756710',
-            'taxId' => '192.102.021-12'
-]       );
-        $this->assertTrue($c->isValid(), "There should be no errors.");
-        // All the fields should be not null.
-        $this->assertNotNull($c->id());
-        $this->assertNotNull($c->name());
-        $this->assertNotNull($c->email());
-        $this->assertNotNull($c->isNew());
-        $this->assertNotNull($c->isVip());
-        $this->assertNotNull($c->email());
-        $this->assertNotNull($c->taxId());
-        $this->assertNotNull($c->phone1());
-        $this->assertNotNull($c->phone2());
-        $this->assertNotEquals($c->phone1(), $c->phone2());
-    }  
 
     public function testAddress() {
         $addr = new KondutoModels\Address();
@@ -161,7 +227,7 @@ class ModelsTest extends \PHPUnit_Framework_TestCase
         $addr->country("IT");
         $addr->zip("10141");
 
-        $this->assertTrue($addr->isValid(), "There should be no errors.");
+        $this->assertTrue($addr->is_valid(), "There should be no errors.");
         // All the fields should be not null.
         $this->assertNotNull($addr->address1());
         $this->assertNotNull($addr->address2());
@@ -174,11 +240,11 @@ class ModelsTest extends \PHPUnit_Framework_TestCase
     public function testShoppingCart() {
         $item = new KondutoModels\Item([
             "sku"           => "9919023",
-            "productCode"   => "123456789999",
+            "product_code"   => "123456789999",
             "category"      => 201,
             "name"          => "Green T-Shirt",
             "description"   => "Male Green T-Shirt V Neck",
-            "unitCost"      => 199.99,
+            "unit_cost"      => 199.99,
             "quantity"      => 1
         ]);
 
@@ -193,8 +259,8 @@ class ModelsTest extends \PHPUnit_Framework_TestCase
         ]);
 
         $o = new KondutoModels\Order();
-        $o->addItem($item);
-        $o->addItem($item2);
+        $o->add_item($item);
+        $o->add_item($item2);
         
         // All the fields should be not null.
         $this->assertNotNull($item->sku());
@@ -228,27 +294,27 @@ class ModelsTest extends \PHPUnit_Framework_TestCase
 
         $navModel = new KondutoModels\Navigation($navInfo);
         
-        $this->assertContains($navModel->sessionTime(), $navInfo);
+        $this->assertContains($navModel->session_time(), $navInfo);
         $this->assertContains($navModel->referrer(), $navInfo);
-        $this->assertContains($navModel->timeSite1d(), $navInfo);
-        $this->assertContains($navModel->newAccounts1d(), $navInfo);
-        $this->assertContains($navModel->passwordResets1d(), $navInfo);
-        $this->assertContains($navModel->salesDeclined1d(), $navInfo);
-        $this->assertContains($navModel->timeSite7d(), $navInfo);
-        $this->assertContains($navModel->timePerPage7d(), $navInfo);
-        $this->assertContains($navModel->newAccounts7d(), $navInfo);
-        $this->assertContains($navModel->passwordResets7d(), $navInfo);
-        $this->assertContains($navModel->checkoutCount7d(), $navInfo);
-        $this->assertContains($navModel->salesDeclined7d(), $navInfo);
-        $this->assertContains($navModel->sessions7d(), $navInfo);
-        $this->assertContains($navModel->timeSinceLastSale(), $navInfo);
+        $this->assertContains($navModel->time_site_1d(), $navInfo);
+        $this->assertContains($navModel->new_accounts_1d(), $navInfo);
+        $this->assertContains($navModel->password_resets_1d(), $navInfo);
+        $this->assertContains($navModel->sales_declined_1d(), $navInfo);
+        $this->assertContains($navModel->time_site_7d(), $navInfo);
+        $this->assertContains($navModel->time_per_page_7d(), $navInfo);
+        $this->assertContains($navModel->new_accounts_7d(), $navInfo);
+        $this->assertContains($navModel->password_resets_7d(), $navInfo);
+        $this->assertContains($navModel->checkout_count_7d(), $navInfo);
+        $this->assertContains($navModel->sales_declined_7d(), $navInfo);
+        $this->assertContains($navModel->sessions_7d(), $navInfo);
+        $this->assertContains($navModel->time_since_last_sale(), $navInfo);
     }
 
     public function testGetStatus1() {
         $order = [
             "id"          => "Pedido100001834",
             "visitor"     => "da39a3ee5e6b4b0d3255bfef95601890afd80709",
-            "totalAmount" => 312.71,
+            "total_amount" => 312.71,
             "currency"    => "BRL",
             "customer"    => [
                 "id"     => "Customer n03",
@@ -259,8 +325,8 @@ class ModelsTest extends \PHPUnit_Framework_TestCase
         ];
 
         $orderObj = new KondutoModels\Order($order);
+        $orderObj->status();
         
-        // 
         $this->assertContains($orderObj->status(),
                 KondutoModels\STATUS_APPROVED, 
                 "Status should be 'approved': ".
@@ -272,7 +338,7 @@ class ModelsTest extends \PHPUnit_Framework_TestCase
         $order = [
             "id"          => "Pedido100001834",
             "visitor"     => "da39a3ee5e6b4b0d3255bfef95601890afd80709",
-            "totalAmount" => 312.71,
+            "total_amount" => 312.71,
             "currency"    => "BRL",
             "customer"    => [
                 "id"     => "Customer n03",
@@ -301,8 +367,8 @@ class ModelsTest extends \PHPUnit_Framework_TestCase
 
         $orderObj = new KondutoModels\Order($order);
 
-        $this->assertContains($orderObj->status(),
-                KondutoModels\STATUS_NOT_AUTHORIZED, 
+        $this->assertContains(KondutoModels\STATUS_NOT_AUTHORIZED, 
+                $orderObj->status(),
                 "Here status should be 'not_authorized': ".
                 "We have a recommendation 'approve' but a payment ".
                 "was declined.");
@@ -314,14 +380,14 @@ class ModelsTest extends \PHPUnit_Framework_TestCase
             ["expiration_date" => "2014-12-05"]
         );
         
-        $this->assertTrue($boletoObj->isValid(), "boleto->isValid should ".
+        $this->assertTrue($boletoObj->is_valid(), "boleto->is_valid should ".
             "be true here because the expiration_date is okay.");
 
         // Has an invalid date
         $boletoObj = new KondutoModels\Boleto(
             ["expiration_date" => "8917236"]
         );
-        $this->assertFalse($boletoObj->isValid(), "boleto->isValid should ".
+        $this->assertFalse($boletoObj->is_valid(), "boleto->is_valid should ".
             "be false here because the expiration_date is not okay.");
     }
 
@@ -335,7 +401,61 @@ class ModelsTest extends \PHPUnit_Framework_TestCase
             "expiration_date" => "2014-12-05"
         ];
 
-        $this->assertEquals($boletoArray, $boletoObj->asArray(),
+        $this->assertEquals($boletoArray, $boletoObj->to_array(),
             "Both provided and generated arrays should be equal.");
     }
+
+    public function testToArray() {
+        $order = [
+            "id"           => "Order-18462",
+            "total_amount"  => 1367.00,
+            "customer" => [
+                "id"     => "Customer-n2936",
+                "name"   => "Steve Matteson",
+                "email"  => "matesson@typeface.com",
+                "tax_id" => "SJ183650"
+            ],
+            "payment" => [
+                [
+                    "type" => "credit",
+                    "bin" => "490172",
+                    "last4"=> "0012",
+                    "expiration_date" => "072015",
+                    "status" => "approved"
+                ],
+                [
+                    "type" => "credit",
+                    "bin" => "490231",
+                    "last4"=> "0231",
+                    "expiration_date" => "082016",
+                    "status" => "declined"
+                ]
+            ]
+        ];
+
+        $orderObj = new KondutoModels\Order($order);
+
+        $this->assertInstanceOf("Konduto\Models\Customer",
+                $orderObj->customer(), "Customer obj should 
+                        be of Customer instance");
+
+        $this->assertInstanceOf("Konduto\Models\Payment",
+                $orderObj->payment()[0], "Payment obj should 
+                        be of Payment instance");
+
+        $this->assertInstanceOf("Konduto\Models\Payment",
+                $orderObj->payment()[1], "Payment obj should 
+                        be of Payment instance");
+
+        $this->assertEquals($order, $orderObj->to_array(), 
+                "Array provided should be equals to the array ".
+                "generated.");
+    }
+
+    public function testCreatedAt() {
+        $order = new KondutoModels\Order();
+        $order->set(["created_at" => "2014-12-09 12:26:40"]);
+        $this->assertEquals($order->created_at(), "2014-12-09 12:26:40");
+    }
+
 }
