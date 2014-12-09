@@ -11,4 +11,8 @@ class Boleto extends Payment {
     ];
 
     protected $_mandatory_fields = ["type"];
+    
+    public function status() {
+        return null;
+    }
 }

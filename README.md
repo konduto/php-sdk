@@ -127,10 +127,11 @@ $customer = new KondutoModels\Customer([
   "phone1"  => "212-555-1234",
   "phone2"  => "202-555-6789",
   "email"   => "mary.jane@example.com",
-  "new"     => true,
+  "is_new"  => true,
   "vip"     => false
 ]);
 ```
+** OBS: Differently from API's naming, here we use `is_new` instead of simply `new` because `new` is a reserved word in PHP. **
 
 
 Parameter | Description 
@@ -258,7 +259,7 @@ $order = new KondutoModels\Order([
     "phone1" => "212-555-1234",
     "phone2" => "202-555-6789",
     "email"  => "mary.jane@example.com",
-    "new"    => true,
+    "is_new" => true,
     "vip"    => false
   ],
   "payment" => [
