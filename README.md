@@ -141,12 +141,14 @@ name | _(required)_ Customer's full name.
 email | _(required)_ Customer's e-mail address
 tax_id | _(optional)_ Customer's tax id.
 phone1 | _(optional)_ Customer's primary phone number
-phone 2 | _(optional)_ Customer's secondary phone number
-new | _(optional)_ Boolean indicating if the customer is using a newly created account for this purchase.
+phone2 | _(optional)_ Customer's secondary phone number
+is_new | _(optional)_ Boolean indicating if the customer is using a newly created account for this purchase.
 vip | _(optional)_ Boolean indicating if the customer is a VIP or frequent buyer.
 
 
 ### Payment information
+
+Order's payment field receives an array of objects whose class is children of `Payment` class. For now, the two possible options are `CreditCard` and `Boleto`.
 
 ```php
 $credit_card = new KondutoModels\CreditCard([
@@ -154,6 +156,29 @@ $credit_card = new KondutoModels\CreditCard([
   "last4"           => "0012",
   "expiration_date" => "072015",
   "status"          => "approved"
+]);
+```
+
+```php
+$credit_card = new KondutoModels\Boleto([
+  "expiration_date" => "2014-12-11"  // Here it needs to be a full date
+]);
+```
+
+Alternatively, you can create a payment object by using the static method `Payment::instantiante` of the `Payment` class. Additionally, you have to provide `type` to indicate the type of the payment you are creating:
+
+```php
+$credit_card = KondutoModels\Payment::instantiate([
+  "type"            => "credit",    // Mandatory
+  "bin"             => "490172",
+  "last4"           => "0012",
+  "expiration_date" => "072015",
+  "status"          => "approved"
+]);
+
+$boleto = KondutoModels\Payment::instantiate([
+  "type"            => "boleto",    // Mandatory
+  "expiration_date" => "2014-12-11"
 ]);
 ```
 
@@ -240,6 +265,18 @@ $item2 = new KondutoModels\Item([
 ]);
 ```
 
+Parameter | Description 
+--- | ---
+sku | _(optional)_ Product or service's SKU or inventory id.
+product_code | _(optional)_ Product or service's UPC, barcode or secondary id.
+category | _(optional)_ Category code for the item purchased. [See here](http://docs.konduto.com/#n-tables) for the list.
+name | _(optional)_ Name of the product or service.
+description | _(optional)_ Detailed description of the item.
+unit_cost | _(optional)_ Cost of a single unit of this item.
+quantity | _(optional)_ Number of units purchased.
+discount | _(optional)_ Discounted amount for this item.
+
+
 ### Creating an order with all fields at once
 
 ```php
@@ -315,18 +352,6 @@ $order = new KondutoModels\Order([
   ]
 ]);
 ```
-
-
-Parameter | Description 
---- | ---
-sku | _(optional)_ Product or service's SKU or inventory id.
-product_code | _(optional)_ Product or service's UPC, barcode or secondary id.
-category | _(optional)_ Category code for the item purchased. [See here](http://docs.konduto.com/#n-tables) for the list.
-name | _(optional)_ Name of the product or service.
-description | _(optional)_ Detailed description of the item.
-unit_cost | _(optional)_ Cost of a single unit of this item.
-quantity | _(optional)_ Number of units purchased.
-discount | _(optional)_ Discounted amount for this item.
 
 
 ## Update an order

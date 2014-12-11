@@ -458,4 +458,22 @@ class ModelsTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($order->created_at(), "2014-12-09 12:26:40");
     }
 
+    public function testPaymentInstantiate() {
+        $credit_card = KondutoModels\Payment::instantiate([
+            "type"            => "credit",
+            "bin"             => "490172",
+            "last4"           => "0012",
+            "expiration_date" => "072015",
+            "status"          => "approved"
+        ]);
+
+        $boleto = KondutoModels\Payment::instantiate([
+            "type"            => "boleto",
+            "expiration_date" => "2014-12-11"
+        ]);
+
+        $this->assertInstanceOf("Konduto\Models\CreditCard", $credit_card);
+        $this->assertInstanceOf("Konduto\Models\Boleto", $boleto);
+    }
+
 }
