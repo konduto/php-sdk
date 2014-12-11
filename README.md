@@ -92,7 +92,7 @@ $order = new KondutoModels\Order([
   "installments"      => 1,
   "ip"                => "170.149.100.10",
   "customer"          => $customer,
-  "payment"           => array($credit_card),
+  "payment"           => array($credit_card, $boleto),
   "billing"           => $billing,
   "shipping"          => $shipping,
   "shopping_cart"     => array($item1, $item2)
@@ -131,7 +131,7 @@ $customer = new KondutoModels\Customer([
   "vip"     => false
 ]);
 ```
-** OBS: Differently from API's naming, here we use `is_new` instead of simply `new` because `new` is a reserved word in PHP. **
+* OBS: Differently from API's naming, here we use `is_new` instead of simply `new` because `new` is a reserved word in PHP. *
 
 
 Parameter | Description 
@@ -159,17 +159,28 @@ $credit_card = new KondutoModels\CreditCard([
 ]);
 ```
 
+Parameter | Description 
+--- | ---
+status | _(required)_ The status of the transaction returned by the payment processor. Accepts `approved`, `declined` or `pending` if the payment wasn't been processed yet.
+bin | _(optional)_ First six digits of the customer's credit card. Used to identify the type of card being sent.
+last4 | _(optional)_ Four last digits of the customer's credit card number.
+expiration_date | _(optional)_ Card's expiration date under MMYYYY format.
+
 ```php
-$credit_card = new KondutoModels\Boleto([
+$boleto = new KondutoModels\Boleto([
   "expiration_date" => "2014-12-11"  // Here it needs to be a full date
 ]);
 ```
+
+Parameter | Description 
+--- | ---
+expiration_date | _(optional)_ Boleto's expiration date under YYYY-MM-DD format.
 
 Alternatively, you can create a payment object by using the static method `Payment::instantiante` of the `Payment` class. Additionally, you have to provide `type` to indicate the type of the payment you are creating:
 
 ```php
 $credit_card = KondutoModels\Payment::instantiate([
-  "type"            => "credit",    // Mandatory
+  "type"            => "credit",    // Required
   "bin"             => "490172",
   "last4"           => "0012",
   "expiration_date" => "072015",
@@ -177,17 +188,10 @@ $credit_card = KondutoModels\Payment::instantiate([
 ]);
 
 $boleto = KondutoModels\Payment::instantiate([
-  "type"            => "boleto",    // Mandatory
+  "type"            => "boleto",    // Required
   "expiration_date" => "2014-12-11"
 ]);
 ```
-
-Parameter | Description 
---- | ---
-status | _(required)_ The status of the transaction returned by the payment processor. Accepts `approved`, `declined` or `pending` if the payment wasn't been processed yet.
-bin | _(optional)_ First six digits of the customer's credit card. Used to identify the type of card being sent.
-last4 | _(optional)_ Four last digits of the customer's credit card number.
-expiration_date | _(optional)_ Card's expiration date under MMYYYY format.
 
 
 ### Billing address
@@ -301,14 +305,14 @@ $order = new KondutoModels\Order([
   ],
   "payment" => [
     [
-      "type"            => "credit",  // Add payment 'type'
+      "type"            => "credit",  // Payment 'type' required
       "bin"             => "490172",
       "last4"           => "0012",
       "expiration_date" => "072015",
       "status"          => "approved"
     ],
     [
-      "type"            => "boleto",  // Add payment 'type'
+      "type"            => "boleto",  // Payment 'type' required
       "expiration_date" => "2014-12-09"
     ]
   ],
