@@ -1,6 +1,6 @@
 <?php
 /*
- * Import this class to your project if you don't want to use autoloader.
+ * Import this file to your project if you don't want to use autoloader.
  * e.g.
  * require_once "konduto/sdk/konduto.php";
  */

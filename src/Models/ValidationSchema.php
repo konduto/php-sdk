@@ -12,6 +12,7 @@ const IDX_PATTERN = 3;
 
 const REGEX_LETTERS_DIGITS = "/^[a-zA-Z0-9-_]+\z/";
 const REGEX_LETTERS        = "/^[a-zA-Z]+\z/";
+const REGEX_UPPERCASE      = "/^[A-Z]+\z/";
 const REGEX_DIGITS         = "/^[0-9]+\z/";
 const REGEX_HEXA_DIGITS    = "/^[a-fA-F0-9]+\z/";
 const REGEX_FULL_DATE      = "/^\d{4}-\d{2}-\d{2}\z/";
@@ -20,7 +21,7 @@ const REGEX_CREDIT         = "/^credit\z/";
 const REGEX_BOLETO         = "/^boleto\z/";
 
 abstract class ValidationSchema {
-    
+
     /**
      * This structure $validation follows the pattern:
      * object => [
@@ -37,23 +38,24 @@ abstract class ValidationSchema {
     private static $validation = [
         "order" => [
             "id"              => [STRING,  1,     100, REGEX_LETTERS_DIGITS],
-            "visitor"         => [STRING, 40,      40, REGEX_LETTERS_DIGITS],
+            "visitor"         => [STRING,  0,     100, REGEX_LETTERS_DIGITS],
             "total_amount"    => [ FLOAT,  0, 9999999],
             "shipping_amount" => [ FLOAT,  0, 9999999],
             "tax_amount"      => [ FLOAT,  0, 9999999],
-            "currency"        => [STRING,  3,       3],
+            "currency"        => [STRING,  3,       3, REGEX_UPPERCASE],
             "installments"    => [   INT,  1,     999],
             "ip"              => [STRING,  7,      15, REGEX_IPv4]
         ],
         "customer" => [
-            "id"              => [STRING,  1,     100],
+            "id"              => [STRING,  0,     100],
             "name"            => [STRING,  0,     100],
             "tax_id"          => [STRING,  0,     100],
             "phone1"          => [STRING,  0,     100],
             "phone2"          => [STRING,  0,     100],
             "email"           => [STRING,  0,     100],
-            "new"             => [  BOOL], 
-            "vip"             => [  BOOL]
+            "new"             => [  BOOL],
+            "vip"             => [  BOOL],
+            "dob"             => [STRING,  8,      10]
         ],
         "address" => [
             "name"            => [STRING,  0,     100],
@@ -79,7 +81,7 @@ abstract class ValidationSchema {
         "item" => [
             "sku"             => [STRING,  0,     100],
             "product_code"    => [STRING,  0,     100],
-            "category"        => [   INT,  0,    9999],
+            "category"        => [   INT,100,    9999],
             "name"            => [STRING,  0,     100],
             "description"     => [STRING,  0,     100],
             "unit_cost"       => [ FLOAT,  0, 9999999],
@@ -89,7 +91,7 @@ abstract class ValidationSchema {
     ];
 
     /**
-     * Validates whether a field is valid according to $validation structure. 
+     * Validates whether a field is valid according to $validation structure.
      * Converts $var to the correct type if possible.
      */
     public static function validateField($object, $field, &$var) {

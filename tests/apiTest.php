@@ -5,7 +5,7 @@ use Konduto\Core\Konduto as Konduto;
 use Konduto\Models as KondutoModels;
 use Konduto\Exceptions as KondutoExceptions;
 
-const LOCAL_EXISTING_KEY = "T738D516F09CAB3A2C1EE";
+const SANDBOX_API_KEY = "T738D516F09CAB3A2C1EE";
 
 class ApiTest extends \PHPUnit_Framework_TestCase {
 
@@ -32,7 +32,7 @@ class ApiTest extends \PHPUnit_Framework_TestCase {
 
     public function testValidAPIKey() {
         // Now it is a valid API key
-        $is_valid = Konduto::setApiKey(LOCAL_EXISTING_KEY);
+        $is_valid = Konduto::setApiKey(SANDBOX_API_KEY);
         $this->assertTrue($is_valid, "If the API key is valid, setApiKey returns true.");
     }
 
@@ -48,7 +48,7 @@ class ApiTest extends \PHPUnit_Framework_TestCase {
      * Uses a small number of fields to test Post.
      */
     public function testSimplePost() {
-        Konduto::setApiKey(LOCAL_EXISTING_KEY);        
+        Konduto::setApiKey(SANDBOX_API_KEY);
 
         $c = new KondutoModels\Customer([
             "id"    => "Customer n01",
@@ -138,7 +138,7 @@ class ApiTest extends \PHPUnit_Framework_TestCase {
         $this->assertNotNull($o2->geolocation(), 'Geolocation');
         $this->assertInstanceOf('Konduto\models\Geolocation', $o2->geolocation());
         // These 2 lines are commented because we cannot generate a device without providing a visitor id with behaviour
-        // $this->assertNotNull($o2->device(), 'Device');  
+        // $this->assertNotNull($o2->device(), 'Device');
         // $this->assertInstanceOf('Konduto\models\Device', $o2->device());
     }
 
@@ -199,7 +199,7 @@ class ApiTest extends \PHPUnit_Framework_TestCase {
      * @depends                 testSendOrder
      * @expectedException       Konduto\exceptions\OperationNotAllowedException
      */
-    /// Since EngineSimulator ignores flag analyze=false, this test does not make sense in test environment.    
+    /// Since EngineSimulator ignores flag analyze=false, this test does not make sense in test environment.
     public function testPutNotAnalyzedOrder() {
         // When trying to update status of an order sent with analyze=false flag,
         // it should raise a OperationNotAllowedException
@@ -295,9 +295,9 @@ class ApiTest extends \PHPUnit_Framework_TestCase {
             $this->assertNotNull($o->status(), 'status');
             $this->assertNotNull($o->recommendation(), 'recommendation');
             $this->assertNotNull($o->navigation(), 'navigation');
-            $this->assertInstanceOf('Konduto\Models\Geolocation', $o->geolocation(), 
+            $this->assertInstanceOf('Konduto\Models\Geolocation', $o->geolocation(),
                     "Geolocation obj is not instance of Geolocation class");
-            $this->assertInstanceOf('Konduto\Models\Navigation', $o->navigation(), 
+            $this->assertInstanceOf('Konduto\Models\Navigation', $o->navigation(),
                     "Navigation obj is not instance of Navigation class");
 
             self::$testOrder_3 = $o;
@@ -396,15 +396,15 @@ class ApiTest extends \PHPUnit_Framework_TestCase {
             $this->assertNotNull($o->status(), 'status');
             $this->assertNotNull($o->recommendation(), 'recommendation');
             $this->assertNotNull($o->navigation(), 'navigation');
-            $this->assertInstanceOf('Konduto\Models\Geolocation', $o->geolocation(), 
+            $this->assertInstanceOf('Konduto\Models\Geolocation', $o->geolocation(),
                     "Geolocation obj is not instance of Geolocation class");
-            $this->assertInstanceOf('Konduto\Models\Customer', $o->customer(), 
+            $this->assertInstanceOf('Konduto\Models\Customer', $o->customer(),
                     "Customer obj is not instance of Customer class");
-            $this->assertInstanceOf('Konduto\Models\Address', $o->billing(), 
+            $this->assertInstanceOf('Konduto\Models\Address', $o->billing(),
                     "Billing obj is not instance of Address class");
-            $this->assertInstanceOf('Konduto\Models\Address', $o->shipping(), 
+            $this->assertInstanceOf('Konduto\Models\Address', $o->shipping(),
                     "shipping obj is not instance of Address class");
-            $this->assertInstanceOf('Konduto\Models\Navigation', $o->navigation(), 
+            $this->assertInstanceOf('Konduto\Models\Navigation', $o->navigation(),
                     "Navigation obj is not instance of Navigation class");
 
             // self::$testOrder_3 = $o;
