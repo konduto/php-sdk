@@ -19,7 +19,7 @@ class ModelsTest extends \PHPUnit_Framework_TestCase {
             "is_new" => true,
             "vip"    => true
         ];
-        
+
         $customerObj = new KondutoModels\Customer($customer);
 
         $this->assertTrue($customerObj->is_valid(), 'Is not a valid object');
@@ -50,7 +50,7 @@ class ModelsTest extends \PHPUnit_Framework_TestCase {
              $orderObj->customer(), "Customer() should return a Customer object");
     }
 
-    
+
     public function testGetErrors1() {
         $customer = [
             "id"     => "Customer-n2936",
@@ -109,13 +109,13 @@ class ModelsTest extends \PHPUnit_Framework_TestCase {
             "id"           => "Order-90125",
             "total_amount"  => 312.71,
             "ip"           => "221.102.39.19",
-            "customer"     => 
+            "customer"     =>
             [
                 "id"    => "Customer n03",
                 "name"  => "Hiroyuki Endo",
                 "email" => "endo.hiroyuki@yahoo.jp"
             ],
-            "payment"      => 
+            "payment"      =>
             [
                 [
                     "type" => "credit",
@@ -132,7 +132,7 @@ class ModelsTest extends \PHPUnit_Framework_TestCase {
                     "expiration_date" => "082016"
                 ]
             ],
-            "billing"      => 
+            "billing"      =>
             [
                 "name" => "Mary Jane",
                 "address1" => "123 Main St.",
@@ -142,7 +142,7 @@ class ModelsTest extends \PHPUnit_Framework_TestCase {
                 "zip" => "10460",
                 "country" => "US"
             ],
-            "shipping"     => 
+            "shipping"     =>
             [
                 "name" => "Mary Jane",
                 "address1" => "123 Main St.",
@@ -152,7 +152,7 @@ class ModelsTest extends \PHPUnit_Framework_TestCase {
                 "zip" => "10460",
                 "country" => "US"
             ],
-            "shopping_cart" => 
+            "shopping_cart" =>
             [
                 [
                     "sku" => "9919023",
@@ -261,7 +261,7 @@ class ModelsTest extends \PHPUnit_Framework_TestCase {
         $o = new KondutoModels\Order();
         $o->add_item($item);
         $o->add_item($item2);
-        
+
         // All the fields should be not null.
         $this->assertNotNull($item->sku());
         $this->assertNotNull($item->product_code());
@@ -293,7 +293,7 @@ class ModelsTest extends \PHPUnit_Framework_TestCase {
         ];
 
         $navModel = new KondutoModels\Navigation($navInfo);
-        
+
         $this->assertContains($navModel->session_time(), $navInfo);
         $this->assertContains($navModel->referrer(), $navInfo);
         $this->assertContains($navModel->time_site_1d(), $navInfo);
@@ -326,9 +326,9 @@ class ModelsTest extends \PHPUnit_Framework_TestCase {
 
         $orderObj = new KondutoModels\Order($order);
         $orderObj->status();
-        
+
         $this->assertContains($orderObj->status(),
-                KondutoModels\STATUS_APPROVED, 
+                KondutoModels\STATUS_APPROVED,
                 "Status should be 'approved': ".
                 " We have a recommendation 'approve' ".
                 "and no available payment.");
@@ -367,7 +367,7 @@ class ModelsTest extends \PHPUnit_Framework_TestCase {
 
         $orderObj = new KondutoModels\Order($order);
 
-        $this->assertContains(KondutoModels\STATUS_NOT_AUTHORIZED, 
+        $this->assertContains(KondutoModels\STATUS_NOT_AUTHORIZED,
                 $orderObj->status(),
                 "Here status should be 'not_authorized': ".
                 "We have a recommendation 'approve' but a payment ".
@@ -379,7 +379,7 @@ class ModelsTest extends \PHPUnit_Framework_TestCase {
         $boletoObj = new KondutoModels\Boleto(
             ["expiration_date" => "2014-12-05"]
         );
-        
+
         $this->assertTrue($boletoObj->is_valid(), "boleto->is_valid should ".
             "be true here because the expiration_date is okay.");
 
@@ -395,7 +395,7 @@ class ModelsTest extends \PHPUnit_Framework_TestCase {
         // Has a valid date
         $boletoObj = new KondutoModels\Boleto();
         $boletoObj->expiration_date("2014-12-05");
-        
+
         $boletoArray = [
             "type" => "boleto",
             "expiration_date" => "2014-12-05"
@@ -436,18 +436,18 @@ class ModelsTest extends \PHPUnit_Framework_TestCase {
         $orderObj = new KondutoModels\Order($order);
 
         $this->assertInstanceOf("Konduto\Models\Customer",
-                $orderObj->customer(), "Customer obj should 
+                $orderObj->customer(), "Customer obj should
                         be of Customer instance");
 
         $this->assertInstanceOf("Konduto\Models\Payment",
-                $orderObj->payment()[0], "Payment obj should 
+                $orderObj->payment()[0], "Payment obj should
                         be of Payment instance");
 
         $this->assertInstanceOf("Konduto\Models\Payment",
-                $orderObj->payment()[1], "Payment obj should 
+                $orderObj->payment()[1], "Payment obj should
                         be of Payment instance");
 
-        $this->assertEquals($order, $orderObj->to_array(), 
+        $this->assertEquals($order, $orderObj->to_array(),
                 "Array provided should be equals to the array ".
                 "generated.");
     }

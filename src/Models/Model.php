@@ -123,6 +123,10 @@ abstract class Model implements Entity {
             if ($key == 'new') {
                 $key = 'is_new';
             }
+            // Treat the case of PHP's reserved word 'return'
+            if ($key == 'return') {
+                $key = 'return_leg';
+            }
 
             // Check if a method named $key exists
             if (in_array($key, $class_methods)

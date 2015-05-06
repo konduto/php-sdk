@@ -1,14 +1,14 @@
 <?php namespace Konduto\Models;
 
-const BOOL   = 'boolean';
-const INT    = 'integer';
-const STRING = 'string';
-const FLOAT  = 'double';
+const BOOL   = "boolean";
+const INT    = "integer";
+const STRING = "string";
+const FLOAT  = "double";
 
-const IDX_TYPE    = 0;
-const IDX_MIN     = 1;
-const IDX_MAX     = 2;
-const IDX_PATTERN = 3;
+const I_TYPE    = 0;
+const I_MIN     = 1;
+const I_MAX     = 2;
+const I_PATTERN = 3;
 
 const REGEX_LETTERS_DIGITS = "/^[a-zA-Z0-9-_]+\z/";
 const REGEX_LETTERS        = "/^[a-zA-Z]+\z/";
@@ -16,9 +16,13 @@ const REGEX_UPPERCASE      = "/^[A-Z]+\z/";
 const REGEX_DIGITS         = "/^[0-9]+\z/";
 const REGEX_HEXA_DIGITS    = "/^[a-fA-F0-9]+\z/";
 const REGEX_FULL_DATE      = "/^\d{4}-\d{2}-\d{2}\z/";
+const REGEX_DATETIME       = "/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}Z\z/";
 const REGEX_IPv4           = "/^(?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\.){3}(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]?|[0-9])\z/";
 const REGEX_CREDIT         = "/^credit\z/";
 const REGEX_BOLETO         = "/^boleto\z/";
+const REGEX_TRAVEL_TYPE    = "/^(flight|bus)\z/";
+const REGEX_DOCUMENT_TYPE  = "/^(passport|id)\z/";
+const REGEX_TRAVEL_CLASS   = "/^(economy|business|first)\z/";
 
 abstract class ValidationSchema {
 
@@ -55,7 +59,7 @@ abstract class ValidationSchema {
             "email"           => [STRING,  0,     100],
             "new"             => [  BOOL],
             "vip"             => [  BOOL],
-            "dob"             => [STRING,  8,      10]
+            "dob"             => [STRING,  8,      10, REGEX_FULL_DATE]
         ],
         "address" => [
             "name"            => [STRING,  0,     100],
@@ -87,6 +91,28 @@ abstract class ValidationSchema {
             "unit_cost"       => [ FLOAT,  0, 9999999],
             "quantity"        => [   INT,  0, 9999999],
             "discount"        => [ FLOAT,  0, 9999999]
+        ],
+        "travel" => [
+            "type"            => [STRING,  1,     10, REGEX_TRAVEL_TYPE]
+        ],
+        "passenger" => [
+            "name"            => [STRING,  0,    100],
+            "document"        => [STRING,  0,    100],
+            "document_type"   => [STRING,  0,      8, REGEX_DOCUMENT_TYPE],
+            "dob"             => [STRING, 10,     10, REGEX_FULL_DATE],
+            "nationality"     => [STRING,  2,      2, REGEX_LETTERS],
+            "frequent_traveler" => [BOOL],
+            "special_needs"   => [BOOL]
+        ],
+        "travel_info" => [
+            "origin_city"     => [STRING,  0,    100],
+            "origin_airport"  => [STRING,  3,      3],
+            "destination_city" => [STRING, 0,    100],
+            "destination_airport" => [STRING,  3,  3, REGEX_LETTERS],
+            "number_of_connections" => [INT,   0, 99],
+            "date"            => [STRING, 17,     17, REGEX_DATETIME],
+            "class"           => [STRING,  1,      8, REGEX_TRAVEL_CLASS],
+            "fare_basis"      => [STRING,  0,     20]
         ]
     ];
 
@@ -98,7 +124,7 @@ abstract class ValidationSchema {
 
         $isValid = false;
 
-        switch (self::$validation[$object][$field][IDX_TYPE]) {
+        switch (self::$validation[$object][$field][I_TYPE]) {
 
             case INT:
                 // If $var is a string containing an int, convert $val to int
@@ -117,7 +143,7 @@ abstract class ValidationSchema {
                 break;
 
             case FLOAT:
-                // If $var is convertible to float, converts it.
+                // If $var is convertible to float, convert it.
                 if (!is_float($var) and is_numeric($var)) {
                     $var = floatval($var);
                 }
@@ -125,21 +151,13 @@ abstract class ValidationSchema {
                 break;
 
             case BOOL:
-                // If $var is 0, 1, '0' or '1', converts to bool.
-                if (is_numeric($var) and ($var == 1 or $var == 0)) {
-                    $var = boolval($var);
-                }
-                // If $var is a string 'true' or 'false', case insensitive, converts to bool.
-                if (is_string($var) and (strcasecmp('true', $var) or strcasecmp('false', $var))) {
-                    $var = (strcasecmp('true', $var) == 0);
-                }
                 $isValid = is_bool($var);
                 break;
         }
 
         // Validate regex pattern, if present
-        if ($isValid and array_key_exists(IDX_PATTERN, self::$validation[$object][$field])) {
-            $isValid &= preg_match(self::$validation[$object][$field][IDX_PATTERN], $var) == 1;
+        if ($isValid and array_key_exists(I_PATTERN, self::$validation[$object][$field])) {
+            $isValid &= preg_match(self::$validation[$object][$field][I_PATTERN], $var) == 1;
         }
 
         return $isValid;
@@ -147,12 +165,12 @@ abstract class ValidationSchema {
 
     public static function validateNumberLength($object, $field, $number) {
         // Assumes $number is numeric!
-        return $number >= self::$validation[$object][$field][IDX_MIN] && $number <= self::$validation[$object][$field][IDX_MAX];
+        return $number >= self::$validation[$object][$field][I_MIN] && $number <= self::$validation[$object][$field][I_MAX];
     }
 
 
     public static function validateStringLength($object, $field, $string) {
         // Assumes $string is string!
-        return strlen($string) >= self::$validation[$object][$field][IDX_MIN] && strlen($string) <= self::$validation[$object][$field][IDX_MAX];
+        return strlen($string) >= self::$validation[$object][$field][I_MIN] && strlen($string) <= self::$validation[$object][$field][I_MAX];
     }
 }
