@@ -6,7 +6,7 @@ abstract class Model implements Entity {
 
     /**
      * Associative array containing the properties of the model.
-     * The fields provided are the ones used in 
+     * The fields provided are the ones used in
      * json message posted to server.
      */
     protected $_properties = [];
@@ -17,13 +17,13 @@ abstract class Model implements Entity {
     protected $_mandatory_fields = [];
 
     /**
-     * Contains values of properties that haven't succeded 
+     * Contains values of properties that haven't succeded
      * validation.
      */
     protected $_errors = [];
 
     /**
-     * Informs the key containing the validation 
+     * Informs the key containing the validation
      * schema for the model.
      */
     protected $_schema_key;
@@ -33,8 +33,7 @@ abstract class Model implements Entity {
      * way as the 'set' method.
      */
     public function __construct() {
-        $this->set(func_num_args() === 1 
-            ? func_get_arg(0) : func_get_args());
+        $this->set(func_num_args() == 1 ? func_get_arg(0) : func_get_args());
     }
 
     /**
@@ -45,7 +44,7 @@ abstract class Model implements Entity {
     }
 
     /**
-     * Look for unpopulated mandatory fields or invalid objects 
+     * Look for unpopulated mandatory fields or invalid objects
      * and add them to _errors property.
      */
     public function get_errors() {
@@ -64,8 +63,8 @@ abstract class Model implements Entity {
 
         // Check if all mandatory fields are present
         foreach ($this->_mandatory_fields as $field) {
-            if ((!array_key_exists($field, $properties) 
-                 or $properties[$field] === null) 
+            if ((!array_key_exists($field, $properties)
+                 or $properties[$field] === null)
                  and (!isset($this->_errors[$field]))) {
                 $this->_errors[$field] = null;
             }
@@ -79,12 +78,13 @@ abstract class Model implements Entity {
      * mandatory fields are populated.
      */
     public function is_valid() {
-        return empty($this->get_errors());
+        $errors = $this->get_errors(); // Hack for php 5.4-
+        return empty($errors);
     }
 
     /**
-     * Overrides __call magic method: tries to see if the method's name is 
-     * the same as of a property in $properties array. If yes, set it (if 
+     * Overrides __call magic method: tries to see if the method's name is
+     * the same as of a property in $properties array. If yes, set it (if
      * an argument is passed), or get its value (if no argument is passed).
      * @throws BadMethodCallException if methods' name is not a property.
      */
@@ -93,7 +93,7 @@ abstract class Model implements Entity {
 
             $name = $this->clean_name($name);
 
-            return count($arguments) > 0 ? 
+            return count($arguments) > 0 ?
                 $this->set_property($name, $arguments[0]) // set
                 : $this->_properties[$name];              // get
         }
@@ -106,11 +106,11 @@ abstract class Model implements Entity {
     /**
      * Set one or more properties in the $_properties array.
      * It accepts a sequence of arguments in the same order
-     * as the $_properties array, or as an associative array 
+     * as the $_properties array, or as an associative array
      * with the properties' keys as values.
      */
     public function set() {
-        $args = func_num_args() === 1 ? func_get_arg(0) : func_get_args();
+        $args = func_num_args() == 1 ? func_get_arg(0) : func_get_args();
         $properties_keys = array_keys($this->_properties);
         $class_methods = get_class_methods(get_class($this));
 
@@ -133,8 +133,8 @@ abstract class Model implements Entity {
     }
 
     /**
-     * Does the validation according to ValidationSchema rules. 
-     * If the parameter passed is valid, 
+     * Does the validation according to ValidationSchema rules.
+     * If the parameter passed is valid,
      * sets the property and returns true. Returns false otherwise.
      * @param name: the name of the property.
      * @param value: the value to be set in the property.
@@ -145,7 +145,7 @@ abstract class Model implements Entity {
             return true;
         }
         else {
-            if (ValidationSchema::validateField($this->_schema_key, 
+            if (ValidationSchema::validateField($this->_schema_key,
                                     $name, $value)) {
                 $this->_properties[$name] = $value;
                 unset($this->_errors[$name]);
@@ -164,15 +164,14 @@ abstract class Model implements Entity {
      * @param class: class of the object being set or get.
      */
     protected function set_get_object($property, $value, $class) {
-        if (!empty($property) && !empty($class)) {            
+        if (!empty($property) && !empty($class)) {
             // Getter
             if (!isset($value)) {
-                
                 return $this->_properties[$property];
             }
 
             // Setter
-            else {                
+            else {
                 if (is_a($value, $class)) {
                     $this->_properties[$property] = $value;
                 }
@@ -186,7 +185,7 @@ abstract class Model implements Entity {
             }
         }
         else {
-            throw new \Konduto\Models\KondutoAPIErrorException();            
+            throw new \Konduto\Models\KondutoAPIErrorException();
         }
     }
 
@@ -204,7 +203,7 @@ abstract class Model implements Entity {
         }
 
         // Setter
-        $this->property_[$property] = [];
+        // $this->property_[$property] = [];
         if (!is_array($array)) {
             $this->_errors[$property] = FIELD_NOT_VALID;
             return null;
@@ -218,8 +217,8 @@ abstract class Model implements Entity {
                     $this->_properties[$property][] =
                             Payment::instantiate($object);
                 }
-                else {                    
-                    $this->_properties[$property][] = 
+                else {
+                    $this->_properties[$property][] =
                             new $class($object);
                 }
             }
