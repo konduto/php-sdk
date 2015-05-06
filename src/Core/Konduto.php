@@ -148,9 +148,8 @@ abstract class Konduto extends ApiControl {
         }
 
         $json_msg = [
-            "order_id" => $order_id,
             "status" => $status,
-            "comments" => "$comments",
+            "comments" => "$comments"
         ];
 
         $json_msg = json_encode($json_msg);
