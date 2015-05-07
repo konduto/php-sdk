@@ -2,7 +2,7 @@
 
 Welcome! This document will explain how to integrate with Konduto's anti-fraud service so you can begin to spot fraud on your e-commerce website.
 
-Our service uses the visitor's behavior to analyze browsing patterns and detect fraud. You will need to add a **JavaScript** snippet to your website and tag your pages, so we can see your visitors, and call our **REST API** to send purchases, so we can analyze them. 
+Our service uses the visitor's behavior to analyze browsing patterns and detect fraud. You will need to add a **JavaScript** snippet to your website and tag your pages, so we can see your visitors, and call our **REST API** to send purchases, so we can analyze them.
 
 This document refers to the **PHP SDK** used for our API.
 
@@ -16,7 +16,7 @@ This document refers to the **PHP SDK** used for our API.
 ```json
 {
   "require": {
-    "konduto/sdk": "dev-master"
+    "konduto/sdk": "v1.1"
   }
 }
 ```
@@ -38,7 +38,7 @@ require_once "konduto/sdk/konduto.php";
 
 ## Getting started
 
-When a customer makes a purchase you must send the order information to us so we can analyze it. We perform a real-time analysis and return you a **recommendation** of what to do next and a **score**, a numeric confidence level about that order. 
+When a customer makes a purchase you must send the order information to us so we can analyze it. We perform a real-time analysis and return you a **recommendation** of what to do next and a **score**, a numeric confidence level about that order.
 
 While many of the parameters we accept are optional we recommend you send all you can, because every data point matters for the analysis. The **billing address** and **credit card information** are specially important, though we understand there are cases where you don't have that information.
 
@@ -53,7 +53,7 @@ use Konduto\Models as KondutoModels;
 
 ### Set your API key
 
-You will need an API key to authenticate the requests. Luckily for you the examples below have been populated with a working key, so you can just copy and paste to see how it works. 
+You will need an API key to authenticate the requests. Luckily for you the examples below have been populated with a working key, so you can just copy and paste to see how it works.
 
 The `setApiKey()` method returns `true` if the API key is valid. Otherwise it throws an Exception:
 
@@ -95,12 +95,13 @@ $order = new KondutoModels\Order([
   "payment"           => array($credit_card, $boleto),
   "billing"           => $billing,
   "shipping"          => $shipping,
-  "shopping_cart"     => array($item1, $item2)
+  "shopping_cart"     => array($item1, $item2),
+  "travel"            => $travel
 ]);
 ```
 
 
-Parameter | Description 
+Parameter | Description
 --- | ---
 id | _(required)_ Unique identifier for each order.
 visitor | _(required)_ Visitor identifier obtained from our JavaScript snippet.
@@ -110,31 +111,32 @@ tax_amount | _(optional)_ Taxes amount.
 currency | _(optional)_ Currency code with 3 letters (ISO-4712).
 installments | _(optional)_ Number of installments in the payment plan.
 ip | _(optional)_ Customer's IPv4 address.
-customer | _(required)_ Object containing the customer details.
-payment | _(optional)_ Array containing the payment methods.
-billing | _(optional)_ Object containing the billing information.
-shipping | _(optional)_ Object containing the shipping information.
-shopping_cart | _(optional)_ Array containing the items purchased.
+customer | _(required)_ [Customer object](#Customer) containing the customer details.
+payment | _(optional)_ Array containing [Payment objects](#Payment).
+billing | _(optional)_ [Address object](#Address) containing billing information.
+shipping | _(optional)_ [Address object](#Address) containing shipping information.
+shopping_cart | _(optional)_ Array containing the [Item objects](#Item).
+travel | _(optional)_ [Travel object](#Travel) containing travel information
 
 
 ### Customer information
 
 ```php
 $customer = new KondutoModels\Customer([
-  "id"      => "28372",
-  "name"    => "Mary Jane",
-  "tax_id"  => "6253407",
-  "phone1"  => "212-555-1234",
-  "phone2"  => "202-555-6789",
-  "email"   => "mary.jane@example.com",
-  "is_new"  => true,
-  "vip"     => false
+    "id"      => "28372",
+    "name"    => "Mary Jane",
+    "tax_id"  => "6253407",
+    "phone1"  => "212-555-1234",
+    "phone2"  => "202-555-6789",
+    "email"   => "mary.jane@example.com",
+    "is_new"  => true,
+    "vip"     => false
 ]);
 ```
-* OBS: Differently from API's naming, here we use `is_new` instead of simply `new` because `new` is a reserved word in PHP. *
+* OBS: Differently from API's naming, here we use `is_new` instead of simply `new` because `new` is a reserved word in PHP.
 
 
-Parameter | Description 
+Parameter | Description
 --- | ---
 id | _(required)_ **Unique** identifier for each customer. Can be anything you like (counter, id, e-mail address) as long as it's consistent in future orders.
 name | _(required)_ Customer's full name.
@@ -159,7 +161,7 @@ $credit_card = new KondutoModels\CreditCard([
 ]);
 ```
 
-Parameter | Description 
+Parameter | Description
 --- | ---
 status | _(required)_ The status of the transaction returned by the payment processor. Accepts `approved`, `declined` or `pending` if the payment wasn't been processed yet.
 bin | _(optional)_ First six digits of the customer's credit card. Used to identify the type of card being sent.
@@ -172,7 +174,7 @@ $boleto = new KondutoModels\Boleto([
 ]);
 ```
 
-Parameter | Description 
+Parameter | Description
 --- | ---
 expiration_date | _(optional)_ Boleto's expiration date under YYYY-MM-DD format.
 
@@ -209,7 +211,7 @@ $billing = new KondutoModels\Address([
 ```
 
 
-Parameter | Description 
+Parameter | Description
 --- | ---
 name | _(optional)_ Cardholder's full name.
 address1 | _(optional)_ Cardholder's billing address on file with the bank.
@@ -234,7 +236,7 @@ $shipping = new KondutoModels\Address([
 ]);
 ```
 
-Parameter | Description 
+Parameter | Description
 --- | ---
 name | _(optional)_ Recipient's full name.
 address1 | _(optional)_ Recipient's shipping address.
@@ -249,27 +251,95 @@ country | _(optional)_ Recipient's country code (ISO 3166-2)
 
 ```php
 $item1 = new KondutoModels\Item([
-  "sku"           => "9919023",
-  "product_code"  => "123456789999",
-  "category"      => 201,
-  "name"          => "Green T-Shirt",
-  "description"   => "Male Green T-Shirt V Neck",
-  "unit_cost"     => 1999.99,
-  "quantity"      => 1
+    "sku"           => "9919023",
+    "product_code"  => "123456789999",
+    "category"      => 201,
+    "name"          => "Green T-Shirt",
+    "description"   => "Male Green T-Shirt V Neck",
+    "unit_cost"     => 1999.99,
+    "quantity"      => 1
 ]);
 
 $item2 = new KondutoModels\Item([
-  "sku"         => "0017273",
-  "category"    => 202,
-  "name"        => "Yellow Socks",
-  "description" => "Pair of Yellow Socks",
-  "unit_cost"   => 29.90,
-  "quantity"    => 2,
-  "discount"    => 5.00
+    "sku"         => "0017273",
+    "category"    => 202,
+    "name"        => "Yellow Socks",
+    "description" => "Pair of Yellow Socks",
+    "unit_cost"   => 29.90,
+    "quantity"    => 2,
+    "discount"    => 5.00
 ]);
 ```
 
-Parameter | Description 
+Parameter | Description
+--- | ---
+sku | _(optional)_ Product or service's SKU or inventory id.
+product_code | _(optional)_ Product or service's UPC, barcode or secondary id.
+category | _(optional)_ Category code for the item purchased. [See here](http://docs.konduto.com/#n-tables) for the list.
+name | _(optional)_ Name of the product or service.
+description | _(optional)_ Detailed description of the item.
+unit_cost | _(optional)_ Cost of a single unit of this item.
+quantity | _(optional)_ Number of units purchased.
+discount | _(optional)_ Discounted amount for this item.
+
+
+### <a name="Travel"></a>Travel
+
+The object `travel`
+
+```php
+$flight = new Konduto\Models\Flight([
+    "departure" => [
+        "origin_city" => "São Paulo",
+        "origin_airport" => "GRU",
+        "destination_city" => "São Francisco",
+        "destination_airport" => "SFO",
+        "date" => "2018-12-25T18:00Z",
+        "number_of_connections" => 1,
+        "class" => "economy",
+        "fare_basis" => "Y"
+    ],
+    "return" => [
+        "origin_city" => "São Paulo",
+        "origin_airport" => "GRU",
+        "destination_city" => "São Francisco",
+        "destination_airport" => "SFO",
+        "date" => "2018-12-30T18:00Z",
+        "number_of_connections" => 1,
+        "class" => "business"
+    ],
+    "passengers" => [
+        [
+            "name" => "Júlia da Silva",
+            "document" => "A1B2C3D4",
+            "document_type" => "id",
+            "dob" => "1986-03-22",
+            "nationality" => "US",
+            "frequent_flyer" => true,
+            "special_needs" => false,
+            "loyalty" => [
+                "program" => "advantage",
+                "category" => "gold"
+            ]
+        ],
+        [
+            "name" => "Carlos Siqueira",
+            "document" => "AB11223344",
+            "document_type" => "passport",
+            "dob" => "1970-12-01",
+            "nationality" => "US",
+            "frequent_flyer" => false,
+            "special_needs" => true,
+            "loyalty" => [
+                "program" => "skymiles",
+                "category" => "silver"
+            ]
+        ]
+    ]
+]);
+```
+
+Parameter | Description
 --- | ---
 sku | _(optional)_ Product or service's SKU or inventory id.
 product_code | _(optional)_ Product or service's UPC, barcode or secondary id.
@@ -367,7 +437,7 @@ $update = Konduto::updateOrderStatus("ORD1237163", "approved", "Comments about t
 ```
 
 
-Parameter | Description 
+Parameter | Description
 --- | ---
 status | _(required)_ New status for this transaction. Either `approved`, `declined` or `fraud`, when you have identified a fraud or chargeback.
 comments | _(required)_ Reason or comments about the status update.
