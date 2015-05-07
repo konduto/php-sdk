@@ -229,12 +229,12 @@ class ModelsTest extends \PHPUnit_Framework_TestCase {
 
         $this->assertTrue($addr->is_valid(), "There should be no errors.");
         // All the fields should be not null.
-        $this->assertNotNull($addr->address1());
-        $this->assertNotNull($addr->address2());
-        $this->assertNotNull($addr->city());
-        $this->assertNotNull($addr->state());
-        $this->assertNotNull($addr->country());
-        $this->assertNotNull($addr->zip());
+        $this->assertEquals($addr->address1(), "Via Volvera, 14");
+        $this->assertEquals($addr->address2(), "Appartamento 6");
+        $this->assertEquals($addr->city(), "Torino");
+        $this->assertEquals($addr->state(), "Piemonte");
+        $this->assertEquals($addr->country(), "IT");
+        $this->assertEquals($addr->zip(), "10141");
     }
 
     public function testShoppingCart() {

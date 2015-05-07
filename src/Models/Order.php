@@ -27,11 +27,12 @@ class Order extends Model {
         "customer" => null,
         "billing" => null,
         "shipping" => null,
-        "shopping_cart" => []
+        "shopping_cart" => [],
+        "travel" => null
     ];
 
     protected $_mandatory_fields = ["id", "total_amount", "customer"];
-    
+
     protected $timestamp;
     protected $status;
     protected $device;
@@ -40,23 +41,24 @@ class Order extends Model {
     protected $score;
     protected $navigation;
     protected $created_at;
-    
+
     protected $available_status = [STATUS_PENDING, STATUS_APPROVED,
              STATUS_DECLINED, STATUS_FRAUD, STATUS_NOT_AUTHORIZED];
 
     public function customer($value = null) {
-        return $this->set_get_object("customer",
-                 $value, "Konduto\Models\Customer");
+        return $this->set_get_object("customer", $value, "Konduto\Models\Customer");
     }
 
     public function billing($value = null) {
-        return $this->set_get_object("billing",
-                 $value, "Konduto\Models\Address");
+        return $this->set_get_object("billing", $value, "Konduto\Models\Address");
     }
 
     public function shipping($value = null) {
-        return $this->set_get_object("shipping",
-                 $value, "Konduto\Models\Address");
+        return $this->set_get_object("shipping", $value, "Konduto\Models\Address");
+    }
+
+    public function travel($value = null) {
+        return $this->set_get_object("travel", $value, "Konduto\Models\Travel");
     }
 
     public function payment($payment_array = null) {
@@ -87,7 +89,7 @@ class Order extends Model {
 
     /**
      * The current status of the order.
-     * @return one of 5 possible status: 
+     * @return one of 5 possible status:
      * 'approved', 'declined', 'pending', 'fraud' or 'not_authorized'
      */
     public function status($status = null) {
@@ -118,7 +120,7 @@ class Order extends Model {
     }
 
     /**
-     * If this order was already subject to analysis by Konduto, 
+     * If this order was already subject to analysis by Konduto,
      * returns information
      * about the device used by the customer that submitted order.
      * @return a Konduto\Models\Device object
@@ -131,12 +133,12 @@ class Order extends Model {
             $this->device = new Device($device);
         }
         else {
-            $this->device = $device;   
+            $this->device = $device;
         }
     }
 
     /**
-     * If this order was already subject to analysis by Konduto, 
+     * If this order was already subject to analysis by Konduto,
      * returns information
      * about the geolocation of the order.
      * @return a Konduto\Models\Geolocation object
@@ -144,7 +146,7 @@ class Order extends Model {
     public function geolocation($geo = null) {
         if (!isset($geo)) {
             return $this->geolocation;
-        }        
+        }
         else if (is_array($geo)) {
             $this->geolocation = new Geolocation($geo);
         }
@@ -154,9 +156,9 @@ class Order extends Model {
     }
 
     /**
-     * If this order was already subject to analysis by Konduto, 
+     * If this order was already subject to analysis by Konduto,
      * returns the recommendation
-     * @return one of three possible recommendations: 'approve', 
+     * @return one of three possible recommendations: 'approve',
      * 'decline' or 'review'
      */
     public function recommendation($reco = null) {
@@ -178,15 +180,15 @@ class Order extends Model {
     }
 
     /**
-     * If this order was already subject to analysis by Konduto, 
-     * returns navigation 
+     * If this order was already subject to analysis by Konduto,
+     * returns navigation
      * information regarding the customer who performer this order.
      * @return a Konduto\Models\Navigation object
      */
     public function navigation($nav = null) {
         if (!isset($nav)) {
             return $this->navigation;
-        }        
+        }
         else if (is_array($nav)) {
             $this->navigation = new Navigation($nav);
         }
@@ -197,7 +199,7 @@ class Order extends Model {
 
     /**
      * Returns the status of an order
-     * 
+     *
      * @param recommendation string
      *
      * @return status string

@@ -120,33 +120,24 @@ abstract class ValidationSchema {
      * Validates whether a field is valid according to $validation structure.
      * Converts $var to the correct type if possible.
      */
-    public static function validateField($object, $field, &$var) {
+    public static function validateField($object, $field, $var) {
 
         $isValid = false;
 
         switch (self::$validation[$object][$field][I_TYPE]) {
 
             case INT:
-                // If $var is a string containing an int, convert $val to int
-                if ((gettype($var) == STRING and ctype_digit($var)) or gettype($var) == FLOAT) {
-                    $var = intval($var);
-                }
+                $var = self::coerceToInt($var);
                 $isValid = is_int($var) && self::validateNumberLength($object, $field, $var);
                 break;
 
             case STRING:
-                // If $var is a string containing an int, convert $val to int
-                if (gettype($var) == INT or gettype($var) == FLOAT) {
-                    $var = strval($var);
-                }
+                $var = self::coerceToString($var);
                 $isValid = is_string($var) && self::validateStringLength($object, $field, $var);
                 break;
 
             case FLOAT:
-                // If $var is convertible to float, convert it.
-                if (!is_float($var) and is_numeric($var)) {
-                    $var = floatval($var);
-                }
+                $var = self::coerceToFloat($var);
                 $isValid = is_float($var) && self::validateNumberLength($object, $field, $var);
                 break;
 
@@ -168,9 +159,35 @@ abstract class ValidationSchema {
         return $number >= self::$validation[$object][$field][I_MIN] && $number <= self::$validation[$object][$field][I_MAX];
     }
 
-
     public static function validateStringLength($object, $field, $string) {
         // Assumes $string is string!
         return strlen($string) >= self::$validation[$object][$field][I_MIN] && strlen($string) <= self::$validation[$object][$field][I_MAX];
+    }
+
+    public static function schemaHasField($schema_key, $field_name) {
+        return array_key_exists($field_name, self::$validation[$schema_key]);
+    }
+
+    public static function coerceToInt($var) {
+        return ((gettype($var) == STRING and ctype_digit($var))
+            or gettype($var) == FLOAT) ? intval($var) : $var;
+    }
+
+    public static function coerceToString($var) {
+        return (gettype($var) == INT or gettype($var) == FLOAT) ?
+                strval($var) : $var;
+    }
+
+    public static function coerceToFloat($var) {
+        return is_numeric($var) ? floatval($var) : $var;
+    }
+
+    public static function coerce($schema_key, $field, $var) {
+        switch (self::$validation[$schema_key][$field][I_TYPE]) {
+            case INT: return self::coerceToInt($var);
+            case STRING: return self::coerceToString($var);
+            case FLOAT: return self::coerceToFloat($var);
+            default: return $var;
+        }
     }
 }

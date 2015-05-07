@@ -267,7 +267,7 @@ class ApiTest extends \PHPUnit_Framework_TestCase {
             "shopping_cart" => [
                 [
                     "sku" => "9919023",
-                    "product_code" => 1231,
+                    "product_code" => "1231",
                     "category" => 201,
                     "name" => "Green T-Shirt",
                     "description" => "Male Green T-Shirt V Neck",

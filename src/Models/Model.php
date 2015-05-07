@@ -48,26 +48,10 @@ abstract class Model implements Entity {
      * and add them to _errors property.
      */
     public function get_errors() {
+        $this->clean_errors();
 
-        // Check if sub-objects are valid
-        foreach ($this->_properties as $field => $value) {
-            $this->is_valid_model($value, $field);
-
-            if (is_array($value)) {
-                foreach ($value as $arr_value) {
-                    $this->is_valid_model($arr_value, $field);
-                }
-            }
-        }
-        $properties = $this->to_array();
-
-        // Check if all mandatory fields are present
-        foreach ($this->_mandatory_fields as $field) {
-            if ((!array_key_exists($field, $properties)
-                 or $properties[$field] === null)
-                 and (!isset($this->_errors[$field]))) {
-                $this->_errors[$field] = null;
-            }
+        foreach ($this->_properties as $property => $value) {
+            $this->validate_property($property);
         }
 
         return $this->_errors;
@@ -120,12 +104,12 @@ abstract class Model implements Entity {
             }
 
             // Treat the case of PHP's reserved word 'new'
-            if ($key == 'new') {
-                $key = 'is_new';
+            if ($key == "new") {
+                $key = "is_new";
             }
             // Treat the case of PHP's reserved word 'return'
-            if ($key == 'return') {
-                $key = 'return_leg';
+            if ($key == "return") {
+                $key = "return_leg";
             }
 
             // Check if a method named $key exists
@@ -144,20 +128,11 @@ abstract class Model implements Entity {
      * @param value: the value to be set in the property.
      */
     protected function set_property($name, $value) {
-        if (empty($this->_schema_key)) {
-            $this->_properties[$name] = $value;
-            return true;
+        if (!empty($this->_schema_key)) {
+            $value = ValidationSchema::coerce($this->_schema_key, $name, $value);
         }
-        else {
-            if (ValidationSchema::validateField($this->_schema_key,
-                                    $name, $value)) {
-                $this->_properties[$name] = $value;
-                unset($this->_errors[$name]);
-                return true;
-            }
-            $this->_errors[$name] = $value;
-        }
-        return false;
+        $this->_properties[$name] = $value;
+        return $this->validate_property($name, $value);
     }
 
     /**
@@ -180,7 +155,10 @@ abstract class Model implements Entity {
                     $this->_properties[$property] = $value;
                 }
                 else if (is_array($value)) {
-                    $this->_properties[$property] = new $class($value);
+                    $this->_properties[$property] =
+                        method_exists($class, "instantiate") ?
+                            call_user_func([$class, "instantiate"], $value) :
+                            new $class($value);
                 }
                 else {
                     $this->_errors[$property] = FIELD_NOT_VALID;
@@ -189,7 +167,7 @@ abstract class Model implements Entity {
             }
         }
         else {
-            throw new \Konduto\Models\KondutoAPIErrorException();
+            throw new \Konduto\Exceptions\KondutoAPIErrorException();
         }
     }
 
@@ -207,7 +185,6 @@ abstract class Model implements Entity {
         }
 
         // Setter
-        // $this->property_[$property] = [];
         if (!is_array($array)) {
             $this->_errors[$property] = FIELD_NOT_VALID;
             return null;
@@ -217,14 +194,10 @@ abstract class Model implements Entity {
                 $this->_properties[$property][] = $object;
             }
             else if (is_array($object)) {
-                if ($class === "Konduto\Models\Payment") {
-                    $this->_properties[$property][] =
-                            Payment::instantiate($object);
-                }
-                else {
-                    $this->_properties[$property][] =
-                            new $class($object);
-                }
+                $this->_properties[$property][] =
+                    method_exists($class, "instantiate") ?
+                        call_user_func([$class, "instantiate"], $object) :
+                        new $class($object);
             }
             else {
                 $this->_errors[$property] = FIELD_NOT_VALID;
@@ -243,22 +216,10 @@ abstract class Model implements Entity {
         if (strpos($field_name, "is_") === 0) {
             return substr($field_name, 3);
         }
-        return $field_name;
-    }
-
-    /**
-     * Checks for whether an object is a valid model for a field.
-     * @param obj
-     * @param field name
-     * @return boolean
-     */
-    protected function is_valid_model($obj, $property) {
-        if (is_a($obj, "Konduto\Models\Model")
-             && !$obj->is_valid()) {
-            $this->_errors[$property] = FIELD_NOT_VALID;
-            return false;
+        else if ($field_name == "return_leg") {
+            return "return";
         }
-        return true;
+        return $field_name;
     }
 
     /**
@@ -273,16 +234,62 @@ abstract class Model implements Entity {
             }
             else if (is_array($value)) {
                 foreach ($value as $sub_key => $sub_value) {
-                    if (is_a($sub_value, 'Konduto\Models\Model')) {
+                    if (is_a($sub_value, "Konduto\Models\Model")) {
                         $array[$key][$sub_key] = $sub_value->to_array();
                     }
                 }
             }
-            else if (is_a($value, 'Konduto\Models\Model')) {
+            else if (is_a($value, "Konduto\Models\Model")) {
                 $array[$key] = $value->to_array();
             }
         }
 
         return $array;
+    }
+
+    /**
+     * Validates if a property contains a valid value.
+     * If the property accepts an array
+     * @param prop_name
+     * @return boolean
+     */
+    protected function validate_property($prop_name) {
+        if (empty($this->_schema_key)) {
+            return true;
+        }
+
+        $value = $this->_properties[$prop_name];
+        $prop_in_schema = ValidationSchema::schemaHasField($this->_schema_key, $prop_name);
+
+        if (is_array($value) && !$prop_in_schema) {
+            if (count($value) == 0 && in_array($prop_name, $this->_mandatory_fields)) {
+                $this->_errors[$prop_name] = FIELD_NOT_VALID;
+                return false;
+            }
+            foreach ($value as $arr_item) {
+                if (!is_a($arr_item, "Konduto\Models\Model") || !$arr_item->is_valid()) {
+                    $this->_errors[$prop_name] = FIELD_NOT_VALID;
+                    return false;
+                }
+            }
+        }
+        else if ($prop_in_schema && ValidationSchema::validateField($this->_schema_key,
+                                                                $prop_name, $value)) {
+            // Continue
+        }
+        else if (!$prop_in_schema && is_a($value, "Konduto\Models\Model")
+                    && $value->is_valid()) {
+            // Continue
+        }
+        else if ((is_null($value) || !isset($value))
+                && !in_array($prop_name, $this->_mandatory_fields)) {
+            // Continue
+        }
+        else {
+            $this->_errors[$prop_name] = is_array($value) ? FIELD_NOT_VALID : $value;
+            return false;
+        }
+        unset($this->_errors[$prop_name]);
+        return true;
     }
 }
