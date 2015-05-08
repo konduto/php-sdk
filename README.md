@@ -16,7 +16,7 @@ This document refers to the **PHP SDK** used for our API.
 ```json
 {
   "require": {
-    "konduto/sdk": "v1.1"
+    "konduto/sdk": "v1.2"
   }
 }
 ```
@@ -113,13 +113,13 @@ installments | _(optional)_ Number of installments in the payment plan.
 ip | _(optional)_ Customer's IPv4 address.
 customer | _(required)_ [Customer object](#Customer) containing the customer details.
 payment | _(optional)_ Array containing [Payment objects](#Payment).
-billing | _(optional)_ [Address object](#Address) containing billing information.
-shipping | _(optional)_ [Address object](#Address) containing shipping information.
+billing | _(optional)_ [Address object](#Billing) containing billing information.
+shipping | _(optional)_ [Address object](#Shipping) containing shipping information.
 shopping_cart | _(optional)_ Array containing the [Item objects](#Item).
 travel | _(optional)_ [Travel object](#Travel) containing travel information
 
 
-### Customer information
+### <a name="Customer"></a>Customer information
 
 ```php
 $customer = new KondutoModels\Customer([
@@ -148,7 +148,7 @@ is_new | _(optional)_ Boolean indicating if the customer is using a newly create
 vip | _(optional)_ Boolean indicating if the customer is a VIP or frequent buyer.
 
 
-### Payment information
+### <a name="Payment"></a>Payment information
 
 Order's payment field receives an array of objects whose class is children of `Payment` class. For now, the two possible options are `CreditCard` and `Boleto`.
 
@@ -196,7 +196,7 @@ $boleto = KondutoModels\Payment::instantiate([
 ```
 
 
-### Billing address
+### <a name="Billing"></a>Billing address
 
 ```php
 $billing = new KondutoModels\Address([
@@ -222,7 +222,7 @@ zip | _(optional)_ Cardholder's ZIP code.
 country | _(optional)_ Cardholder's country code (ISO 3166-2)
 
 
-### Shipping address
+### <a name="Shipping"></a>Shipping address
 
 ```php
 $shipping = new KondutoModels\Address([
@@ -247,7 +247,7 @@ zip | _(optional)_ Recipient's ZIP code.
 country | _(optional)_ Recipient's country code (ISO 3166-2)
 
 
-### Shopping cart
+### <a name="Item"></a>Shopping cart
 
 ```php
 $item1 = new KondutoModels\Item([
@@ -285,7 +285,8 @@ discount | _(optional)_ Discounted amount for this item.
 
 ### <a name="Travel"></a>Travel
 
-The object `travel`
+The object `travel` can be populated with 2 different types of object: `Flight`
+or `BusTravel`. Both classes inherit from a common `Travel` class.
 
 ```php
 $flight = new Konduto\Models\Flight([
@@ -299,7 +300,7 @@ $flight = new Konduto\Models\Flight([
         "class" => "economy",
         "fare_basis" => "Y"
     ],
-    "return" => [
+    "return_leg" => [
         "origin_city" => "São Paulo",
         "origin_airport" => "GRU",
         "destination_city" => "São Francisco",
@@ -337,18 +338,92 @@ $flight = new Konduto\Models\Flight([
         ]
     ]
 ]);
+
+$bus_travel = new Konduto\Models\BusTravel([
+    "departure" => [
+        "origin_city" => "Campinas",
+        "destination_city" => "Ponta Grossa",
+        "date" => "2015-06-01T08:30Z"
+    ],
+    "return" => [
+        "origin_city" => "Ponta Grossa",
+        "destination_city" => "Campinas",
+        "date" => "2015-06-08T11:15Z"
+    ],
+    "passengers" => [
+        [
+            "name" => "Amilton de Oliveira",
+            "document" => "191123872-1",
+            "document_type" => "id"
+        ]
+    ]
+]);
 ```
+
+Optionally, you may instead use the *static* method `Travel::instantiate` to build
+a `BusTravel` or `Flight` object. Additionally you must provide the property `type`, that can assume the values `flight` or `bus`.
+
+```
+$bus_travel = Konduto\Models\Travel::instantiate([
+    "type" => "bus",   // or "flight"
+    "departure" => [
+        "origin_city" => "Campinas",
+        "destination_city" => "Ponta Grossa",
+        "date" => "2015-06-01T08:30Z"
+    ],
+    "passengers" => [
+        [
+            "name" => "Amilton de Oliveira",
+            "document" => "191123872-1",
+            "document_type" => "id"
+        ]
+    ]
+]);
+```
+
+#### Travel
 
 Parameter | Description
 --- | ---
-sku | _(optional)_ Product or service's SKU or inventory id.
-product_code | _(optional)_ Product or service's UPC, barcode or secondary id.
-category | _(optional)_ Category code for the item purchased. [See here](http://docs.konduto.com/#n-tables) for the list.
-name | _(optional)_ Name of the product or service.
-description | _(optional)_ Detailed description of the item.
-unit_cost | _(optional)_ Cost of a single unit of this item.
-quantity | _(optional)_ Number of units purchased.
-discount | _(optional)_ Discounted amount for this item.
+type | _(required)_ `bus` or `flight`. It is automatically provided if you are building from `BusTravel` or `Flight` classes.
+departure | _(required)_ A [`TravelLeg` object](#TravelLeg) containing departure trip information.
+return_leg * | _(optional)_ A [`TravelLeg` object](#TravelLeg) containing return trip information.
+passengers | _(optional)_ Array of [`Passenger` objects](#Passenger).
+
+* The field `return_leg` is referred in the API documentation as solely `return`. Since *return* is a reserved word in PHP, we use *return_leg* as the name of the property.
+
+#### <a name="TravelLeg"></a>TravelLeg
+
+Parameter | Description
+--- | ---
+origin_city | _(required)_ for `BusTravel`, _(optional)_ for `Flight`
+origin_airport | _(required)_ for `Flight`, leave absent for `BusTravel`
+destination_city | _(required)_ for `BusTravel`, _(optional)_ for `Flight`
+destination_airport | _(required)_ for `Flight`, leave absent for `BusTravel`
+date | _(required)_ string with UTC date and time of departure in YYYY-MM-DDThh:mmZ format (ISO 8601)
+number_of_connections | _(optional)_ Number of connections
+class | _(optional)_ One of the strings: `economy`, `business` or `travel`
+fare_basis | _(optional)_ (Fare basis code)[https://en.wikipedia.org/wiki/Fare_basis_code]
+
+#### <a name="Passenger"></a>Passenger
+
+Parameter | Description
+--- | ---
+name | _(required)_ Passenger's full name
+document | _(required)_ Document number or identification
+document_type | _(required)_ One of the strings: `id` or `passport`
+dob | _(optional)_ Passenger's country of birth in YYYY-MM-DD (ISO 3166-2)
+nationality | _(optional)_ Passenger's country of birth (ISO 3166-2)
+loyalty | _(optional)_ [`Loyalty` object](#Loyalty)
+frequent_traveler | _(optional)_ Boolean
+special_needs | _(optional)_ Boolean
+
+#### <a name="Loyalty"></a>Loyalty
+
+Parameter | Description
+--- | ---
+program | _(optional)_ Name of loyalty program.
+category | _(optional)_ Category of loyalty program.
 
 
 ### Creating an order with all fields at once
