@@ -363,7 +363,7 @@ $bus_travel = new KondutoModels\BusTravel(array(
 Optionally, you may instead use the *static* method `Travel::instantiate` to build
 a `BusTravel` or `Flight` object. Additionally you must provide the property `type`, that can assume the values `flight` or `bus`.
 
-```
+```php
 $bus_travel = KondutoModels\Travel::instantiate(array(
     "type" => "bus",   // or "flight"
     "departure" => array(
