@@ -3,7 +3,7 @@
   "description": "Konduto Fraud Detection Service PHP SDK",
   "license": "MIT",
   "require": {
-    "php": ">=5.3.2"
+    "php": ">=5.3.10"
   },
   "require-dev": {
     "phpunit/phpunit": "4.1.*@dev"

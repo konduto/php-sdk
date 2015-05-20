@@ -8,7 +8,7 @@ This document refers to the **PHP SDK** used for our API.
 
 ## Requirements
 
-* PHP 5.3.2+
+* PHP 5.3.10+
 * cURL extension
 
 ## Installation with Composer
@@ -82,7 +82,7 @@ The request consists of a root object containing information related to the orde
 ### Order information
 
 ```php
-$order = new KondutoModels\Order([
+$order = new KondutoModels\Order(array(
   "id"                => uniqid(),
   "visitor"           => "4738d516f09cab3a2c1ee973bec88a5a367a59e4",
   "total_amount"      => 100.00,
@@ -122,7 +122,7 @@ travel | _(optional)_ [Travel object](#Travel) containing travel information
 ### <a name="Customer"></a>Customer information
 
 ```php
-$customer = new KondutoModels\Customer([
+$customer = new KondutoModels\Customer(array(
     "id"      => "28372",
     "name"    => "Mary Jane",
     "tax_id"  => "6253407",
@@ -131,7 +131,7 @@ $customer = new KondutoModels\Customer([
     "email"   => "mary.jane@example.com",
     "is_new"  => true,
     "vip"     => false
-]);
+));
 ```
 * OBS: Differently from API's naming, here we use `is_new` instead of simply `new` because `new` is a reserved word in PHP.
 
@@ -153,12 +153,12 @@ vip | _(optional)_ Boolean indicating if the customer is a VIP or frequent buyer
 Order's payment field receives an array of objects whose class is children of `Payment` class. For now, the two possible options are `CreditCard` and `Boleto`.
 
 ```php
-$credit_card = new KondutoModels\CreditCard([
+$credit_card = new KondutoModels\CreditCard(array(
   "bin"             => "490172",
   "last4"           => "0012",
   "expiration_date" => "072015",
   "status"          => "approved"
-]);
+));
 ```
 
 Parameter | Description
@@ -169,9 +169,9 @@ last4 | _(optional)_ Four last digits of the customer's credit card number.
 expiration_date | _(optional)_ Card's expiration date under MMYYYY format.
 
 ```php
-$boleto = new KondutoModels\Boleto([
+$boleto = new KondutoModels\Boleto(array(
   "expiration_date" => "2014-12-11"  // Here it needs to be a full date
-]);
+));
 ```
 
 Parameter | Description
@@ -181,25 +181,25 @@ expiration_date | _(optional)_ Boleto's expiration date under YYYY-MM-DD format.
 Alternatively, you can create a payment object by using the static method `Payment::instantiante` of the `Payment` class. Additionally, you have to provide `type` to indicate the type of the payment you are creating:
 
 ```php
-$credit_card = KondutoModels\Payment::instantiate([
+$credit_card = KondutoModels\Payment::instantiate(array(
   "type"            => "credit",    // Required
   "bin"             => "490172",
   "last4"           => "0012",
   "expiration_date" => "072015",
   "status"          => "approved"
-]);
+));
 
-$boleto = KondutoModels\Payment::instantiate([
+$boleto = KondutoModels\Payment::instantiate(array(
   "type"            => "boleto",    // Required
   "expiration_date" => "2014-12-11"
-]);
+));
 ```
 
 
 ### <a name="Billing"></a>Billing address
 
 ```php
-$billing = new KondutoModels\Address([
+$billing = new KondutoModels\Address(array(
   "name"      => "Mary Jane",
   "address1"  => "123 Main St.",
   "address2"  => "Apartment 4",
@@ -207,7 +207,7 @@ $billing = new KondutoModels\Address([
   "state"     => "NY",
   "zip"       => "10460",
   "country"   => "US"
-]);
+));
 ```
 
 
@@ -225,7 +225,7 @@ country | _(optional)_ Cardholder's country code (ISO 3166-2)
 ### <a name="Shipping"></a>Shipping address
 
 ```php
-$shipping = new KondutoModels\Address([
+$shipping = new KondutoModels\Address(array(
   "name"      => "Mary Jane",
   "address1"  => "123 Main St.",
   "address2"  => "Apartment 4",
@@ -233,7 +233,7 @@ $shipping = new KondutoModels\Address([
   "state"     => "NY",
   "zip"       => "10460",
   "country"   => "US"
-]);
+));
 ```
 
 Parameter | Description
@@ -250,7 +250,7 @@ country | _(optional)_ Recipient's country code (ISO 3166-2)
 ### <a name="Item"></a>Shopping cart
 
 ```php
-$item1 = new KondutoModels\Item([
+$item1 = new KondutoModels\Item(array(
     "sku"           => "9919023",
     "product_code"  => "123456789999",
     "category"      => 201,
@@ -258,9 +258,9 @@ $item1 = new KondutoModels\Item([
     "description"   => "Male Green T-Shirt V Neck",
     "unit_cost"     => 1999.99,
     "quantity"      => 1
-]);
+));
 
-$item2 = new KondutoModels\Item([
+$item2 = new KondutoModels\Item(array(
     "sku"         => "0017273",
     "category"    => 202,
     "name"        => "Yellow Socks",
@@ -268,7 +268,7 @@ $item2 = new KondutoModels\Item([
     "unit_cost"   => 29.90,
     "quantity"    => 2,
     "discount"    => 5.00
-]);
+));
 ```
 
 Parameter | Description
@@ -289,8 +289,8 @@ The object `travel` can be populated with 2 different types of object: `Flight`
 or `BusTravel`. Both classes inherit from a common `Travel` class.
 
 ```php
-$flight = new Konduto\Models\Flight([
-    "departure" => [
+$flight = new Konduto\Models\Flight(array(
+    "departure" => array(
         "origin_city" => "São Paulo",
         "origin_airport" => "GRU",
         "destination_city" => "São Francisco",
@@ -299,8 +299,8 @@ $flight = new Konduto\Models\Flight([
         "number_of_connections" => 1,
         "class" => "economy",
         "fare_basis" => "Y"
-    ],
-    "return_leg" => [
+    ),
+    "return_leg" => array(
         "origin_city" => "São Paulo",
         "origin_airport" => "GRU",
         "destination_city" => "São Francisco",
@@ -308,9 +308,9 @@ $flight = new Konduto\Models\Flight([
         "date" => "2018-12-30T18:00Z",
         "number_of_connections" => 1,
         "class" => "business"
-    ],
-    "passengers" => [
-        [
+    ),
+    "passengers" => array(
+        array(
             "name" => "Júlia da Silva",
             "document" => "A1B2C3D4",
             "document_type" => "id",
@@ -318,12 +318,12 @@ $flight = new Konduto\Models\Flight([
             "nationality" => "US",
             "frequent_flyer" => true,
             "special_needs" => false,
-            "loyalty" => [
+            "loyalty" => array(
                 "program" => "advantage",
                 "category" => "gold"
-            ]
-        ],
-        [
+            )
+        ),
+        array(
             "name" => "Carlos Siqueira",
             "document" => "AB11223344",
             "document_type" => "passport",
@@ -331,54 +331,54 @@ $flight = new Konduto\Models\Flight([
             "nationality" => "US",
             "frequent_flyer" => false,
             "special_needs" => true,
-            "loyalty" => [
+            "loyalty" => array(
                 "program" => "skymiles",
                 "category" => "silver"
-            ]
-        ]
-    ]
-]);
+            )
+        )
+    )
+));
 
-$bus_travel = new Konduto\Models\BusTravel([
-    "departure" => [
+$bus_travel = new Konduto\Models\BusTravel(array(
+    "departure" => array(
         "origin_city" => "Campinas",
         "destination_city" => "Ponta Grossa",
         "date" => "2015-06-01T08:30Z"
-    ],
-    "return" => [
+    ),
+    "return" => array(
         "origin_city" => "Ponta Grossa",
         "destination_city" => "Campinas",
         "date" => "2015-06-08T11:15Z"
-    ],
-    "passengers" => [
-        [
+    ),
+    "passengers" => array(
+        array(
             "name" => "Amilton de Oliveira",
             "document" => "191123872-1",
             "document_type" => "id"
-        ]
-    ]
-]);
+        )
+    )
+));
 ```
 
 Optionally, you may instead use the *static* method `Travel::instantiate` to build
 a `BusTravel` or `Flight` object. Additionally you must provide the property `type`, that can assume the values `flight` or `bus`.
 
 ```
-$bus_travel = Konduto\Models\Travel::instantiate([
+$bus_travel = Konduto\Models\Travel::instantiate(array(
     "type" => "bus",   // or "flight"
-    "departure" => [
+    "departure" => array(
         "origin_city" => "Campinas",
         "destination_city" => "Ponta Grossa",
         "date" => "2015-06-01T08:30Z"
-    ],
-    "passengers" => [
-        [
+    ),
+    "passengers" => array(
+        array(
             "name" => "Amilton de Oliveira",
             "document" => "191123872-1",
             "document_type" => "id"
-        ]
-    ]
-]);
+        )
+    )
+));
 ```
 
 #### Travel
@@ -429,7 +429,7 @@ category | _(optional)_ Category of loyalty program.
 ### Creating an order with all fields at once
 
 ```php
-$order = new KondutoModels\Order([
+$order = new KondutoModels\Order(array(
   "id"              => uniqid(),
   "visitor"         => "4738d516f09cab3a2c1ee973bec88a5a367a59e4",
   "total_amount"    => 100.00,
@@ -438,7 +438,7 @@ $order = new KondutoModels\Order([
   "currency"        => "USD",
   "installments"    => 1,
   "ip"              => "170.149.100.10",
-  "customer"        => [
+  "customer"        => array(
     "id"     => "28372",
     "name"   => "Mary Jane",
     "tax_id" => "6253407",
@@ -447,21 +447,21 @@ $order = new KondutoModels\Order([
     "email"  => "mary.jane@example.com",
     "is_new" => true,
     "vip"    => false
-  ],
-  "payment" => [
-    [
+  ),
+  "payment" => array(
+    array(
       "type"            => "credit",  // Payment 'type' required
       "bin"             => "490172",
       "last4"           => "0012",
       "expiration_date" => "072015",
       "status"          => "approved"
-    ],
-    [
+    ),
+    array(
       "type"            => "boleto",  // Payment 'type' required
       "expiration_date" => "2014-12-09"
-    ]
-  ],
-  "billing" => [
+    )
+  ),
+  "billing" => array(
     "name"     => "Mary Jane",
     "address1" => "123 Main St.",
     "address2" => "Apartment 4",
@@ -469,8 +469,8 @@ $order = new KondutoModels\Order([
     "state"    => "NY",
     "zip"      => "10460",
     "country"  => "US"
-  ],
-  "shipping" => [
+  ),
+  "shipping" => array(
     "name"     => "Mary Jane",
     "address1" => "123 Main St.",
     "address2" => "Apartment 4",
@@ -478,9 +478,9 @@ $order = new KondutoModels\Order([
     "state"    => "NY",
     "zip"      => "10460",
     "country"  => "US"
-  ],
-  "shopping_cart" => [
-    [
+  ),
+  "shopping_cart" => array(
+    array(
       "sku"          => "9919023",
       "product_code" => "123456789999",
       "category"     => 201,
@@ -488,8 +488,8 @@ $order = new KondutoModels\Order([
       "description"  => "Male Green T-Shirt V Neck",
       "unit_cost"    => 1999.99,
       "quantity"     => 1
-    ],
-    [
+    ),
+    array(
       "sku"         => "0017273",
       "category"    => 202,
       "name"        => "Yellow Socks",
@@ -497,9 +497,9 @@ $order = new KondutoModels\Order([
       "unit_cost"   => 29.90,
       "quantity"    => 2,
       "discount"    => 5.00
-    ]
-  ]
-]);
+    )
+  )
+));
 ```
 
 
