@@ -97,7 +97,7 @@ $order = new KondutoModels\Order(array(
   "shipping"          => $shipping,
   "shopping_cart"     => array($item1, $item2),
   "travel"            => $travel
-]);
+));
 ```
 
 
