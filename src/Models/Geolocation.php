@@ -4,9 +4,9 @@ class Geolocation extends Model {
 
     protected $_schema_key = 'address';
 
-    protected $_properties = [
-        "city" => null, 
-        "state" => null, 
+    protected $_properties = array(
+        "city" => null,
+        "state" => null,
         "country" => null
-    ];
+    );
 }

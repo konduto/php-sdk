@@ -2,7 +2,7 @@
 
 class Device extends Model {
 
-    protected $_properties = [
+    protected $_properties = array(
         "user_id" => null,
         "fingerprint" => null,
         "platform" => null,
@@ -12,5 +12,5 @@ class Device extends Model {
         "cookie" => null,
         "javascript" => null,
         "flash" => null
-    ];
+    );
 }

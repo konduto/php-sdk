@@ -2,7 +2,7 @@
 
 class Navigation extends Model {
 
-    protected $_properties = [
+    protected $_properties = array(
         "session_time" => null,
         "referrer" => null,
         "time_site_1d" => null,
@@ -18,5 +18,5 @@ class Navigation extends Model {
         "sales_declined_7d" => null,
         "sessions_7d" => null,
         "time_since_last_sale" => null
-    ];
+    );
 }

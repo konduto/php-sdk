@@ -7,14 +7,14 @@ class Travel extends Model {
 
     protected $_schema_key = "travel";
 
-    protected $_properties = [
+    protected $_properties = array(
         "type" => self::TYPE_FLIGHT,
         "departure" => null,
         "return_leg" => null,
-        "passengers" => []
-    ];
+        "passengers" => array()
+    );
 
-    protected $_mandatory_fields = ["type", "departure", "passengers"];
+    protected $_mandatory_fields = array("type", "departure", "passengers");
 
     /**
      * Given an array, instantiates a payment among the possible

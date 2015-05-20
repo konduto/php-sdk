@@ -9,7 +9,7 @@ class ModelsTest extends \PHPUnit_Framework_TestCase {
 
 
     public function testCustomer() {
-        $customer = [
+        $customer = array(
             "id"     => "Customer-n03",
             "name"   => "Hiroyuki Endo",
             "email"  => "endo.hiroyuki@yahoo.jp",
@@ -18,7 +18,7 @@ class ModelsTest extends \PHPUnit_Framework_TestCase {
             "phone2" => "151721295",
             "is_new" => true,
             "vip"    => true
-        ];
+        );
 
         $customerObj = new KondutoModels\Customer($customer);
 
@@ -34,16 +34,16 @@ class ModelsTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testGetSetObject() {
-        $order = [
+        $order = array(
             "id"           => "Order-18462",
             "total_amount"  => 1367.00,
-            "customer" => [
+            "customer" => array(
                 "id"     => "Customer-n2936",
                 "name"   => "Steve Matteson",
                 "email"  => "matesson@typeface.com",
                 "tax_id" => "SJ183650"
-            ]
-        ];
+            )
+        );
 
         $orderObj = new KondutoModels\Order($order);
         $this->assertInstanceOf("\Konduto\Models\Customer",
@@ -52,12 +52,12 @@ class ModelsTest extends \PHPUnit_Framework_TestCase {
 
 
     public function testGetErrors1() {
-        $customer = [
+        $customer = array(
             "id"     => "Customer-n2936",
             "name"   => "Jose da Silva",
             "tax_id" => "SJ183650",
             "vip" => 25
-        ];
+        );
 
         $custObj = new KondutoModels\Customer($customer);
 
@@ -72,22 +72,22 @@ class ModelsTest extends \PHPUnit_Framework_TestCase {
 
 
     public function testGetErrors2() {
-        $order = [
+        $order = array(
             "id"           => "Order-18462",
-            "customer" => [
+            "customer" => array(
                 "id"     => "Customer-n2936",
                 "name"   => "Steve Matteson",
                 "tax_id" => "SJ183650"
-            ],
-            "payment" => [
-                [
+            ),
+            "payment" => array(
+                array(
                     "type" => "credit",
                     "bin" => "490172",
                     "last4"=> "0012",
                     "expiration_date" => "072015"
-                ]
-            ]
-        ];
+                )
+            )
+        );
 
         $orderObj = new KondutoModels\Order($order);
 
@@ -105,35 +105,35 @@ class ModelsTest extends \PHPUnit_Framework_TestCase {
      * @depends                 testCustomer
      */
     public function testFullOrderWithArray() {
-        $o = new KondutoModels\Order([
+        $o = new KondutoModels\Order(array(
             "id"           => "Order-90125",
             "total_amount"  => 312.71,
             "ip"           => "221.102.39.19",
             "customer"     =>
-            [
+            array(
                 "id"    => "Customer n03",
                 "name"  => "Hiroyuki Endo",
                 "email" => "endo.hiroyuki@yahoo.jp"
-            ],
+            ),
             "payment"      =>
-            [
-                [
+            array(
+                array(
                     "type" => "credit",
                     "bin" => "490172",
                     "last4"=> "0012",
                     "expiration_date" => "072015",
                     "status" => "approved"
-                ],
-                [
+                ),
+                array(
                     "type" => "credit",
                     "status" => "declined",
                     "bin" => "490231",
                     "last4"=> "0231",
                     "expiration_date" => "082016"
-                ]
-            ],
+                )
+            ),
             "billing"      =>
-            [
+            array(
                 "name" => "Mary Jane",
                 "address1" => "123 Main St.",
                 "address2" => "Apartment 4",
@@ -141,9 +141,9 @@ class ModelsTest extends \PHPUnit_Framework_TestCase {
                 "state" => "NY",
                 "zip" => "10460",
                 "country" => "US"
-            ],
+            ),
             "shipping"     =>
-            [
+            array(
                 "name" => "Mary Jane",
                 "address1" => "123 Main St.",
                 "address2" => "Apartment 4",
@@ -151,10 +151,10 @@ class ModelsTest extends \PHPUnit_Framework_TestCase {
                 "state" => "NY",
                 "zip" => "10460",
                 "country" => "US"
-            ],
+            ),
             "shopping_cart" =>
-            [
-                [
+            array(
+                array(
                     "sku" => "9919023",
                     "product_code" => 1231,
                     "category" => 201,
@@ -162,8 +162,8 @@ class ModelsTest extends \PHPUnit_Framework_TestCase {
                     "description" => "Male Green T-Shirt V Neck",
                     "unit_cost" => 1999.99,
                     "quantity" => 1
-                ],
-                [
+                ),
+                array(
                     "sku" => "0017273",
                     "category" => 1231,
                     "name" => "Yellow Socks",
@@ -171,9 +171,9 @@ class ModelsTest extends \PHPUnit_Framework_TestCase {
                     "unit_cost" => 29.90,
                     "quantity" => 2,
                     "discount" => 5.00
-                ]
-            ]
-        ]);
+                )
+            )
+        ));
 
         if (!$o->is_valid()) {
             ob_start();
@@ -238,7 +238,7 @@ class ModelsTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testShoppingCart() {
-        $item = new KondutoModels\Item([
+        $item = new KondutoModels\Item(array(
             "sku"           => "9919023",
             "product_code"   => "123456789999",
             "category"      => 201,
@@ -246,9 +246,9 @@ class ModelsTest extends \PHPUnit_Framework_TestCase {
             "description"   => "Male Green T-Shirt V Neck",
             "unit_cost"      => 199.99,
             "quantity"      => 1
-        ]);
+        ));
 
-        $item2 = new KondutoModels\Item([
+        $item2 = new KondutoModels\Item(array(
             "sku"           => "0017273",
             "category"      => 202,
             "name"          => "Yellow Socks",
@@ -256,7 +256,7 @@ class ModelsTest extends \PHPUnit_Framework_TestCase {
             "unit_cost"     => 29.99,
             "discount"      => 5.0,
             "quantity"      => 2
-        ]);
+        ));
 
         $o = new KondutoModels\Order();
         $o->add_item($item);
@@ -274,7 +274,7 @@ class ModelsTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testNavigation() {
-        $navInfo = [
+        $navInfo = array(
             "referrer"              => "http://www.google.com?q=buy+shirt",
             "session_time"          => 12,
             "time_site_1d"          => 13,
@@ -290,7 +290,7 @@ class ModelsTest extends \PHPUnit_Framework_TestCase {
             "sales_declined_7d"     => 9,
             "sessions_7d"           => 10,
             "time_since_last_sale"  => 11
-        ];
+        );
 
         $navModel = new KondutoModels\Navigation($navInfo);
 
@@ -311,18 +311,18 @@ class ModelsTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testGetStatus1() {
-        $order = [
+        $order = array(
             "id"          => "Pedido100001834",
             "visitor"     => "da39a3ee5e6b4b0d3255bfef95601890afd80709",
             "total_amount" => 312.71,
             "currency"    => "BRL",
-            "customer"    => [
+            "customer"    => array(
                 "id"     => "Customer n03",
                 "name"   => "Hiroyuki Endo",
                 "email"  => "endo.hiroyuki@yahoo.jp"
-            ],
+            ),
             "recommendation" => KondutoModels\RECOMMENDATION_APPROVE
-        ];
+        );
 
         $orderObj = new KondutoModels\Order($order);
         $orderObj->status();
@@ -335,35 +335,35 @@ class ModelsTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testGetStatus2() {
-        $order = [
+        $order = array(
             "id"          => "Pedido100001834",
             "visitor"     => "da39a3ee5e6b4b0d3255bfef95601890afd80709",
             "total_amount" => 312.71,
             "currency"    => "BRL",
-            "customer"    => [
+            "customer"    => array(
                 "id"     => "Customer n03",
                 "name"   => "Hiroyuki Endo",
                 "email"  => "endo.hiroyuki@yahoo.jp"
-            ],
-            "payment" => [
-                [
+            ),
+            "payment" => array(
+                array(
                     "type" => "credit",
                     "bin" => "490172",
                     "last4"=> "0012",
                     "expiration_date" => "072015",
                     "status" => "approved"
-                ],
-                [
+                ),
+                array(
                     "type" => "credit",
                     "status" => "approved",
                     "bin" => "490231",
                     "last4"=> "0231",
                     "expiration_date" => "082016",
                     "status" => "declined"
-                ]
-            ],
+                )
+            ),
             "recommendation" => KondutoModels\RECOMMENDATION_APPROVE
-        ];
+        );
 
         $orderObj = new KondutoModels\Order($order);
 
@@ -377,7 +377,7 @@ class ModelsTest extends \PHPUnit_Framework_TestCase {
     public function testBoleto1() {
         // Has a valid date
         $boletoObj = new KondutoModels\Boleto(
-            ["expiration_date" => "2014-12-05"]
+            array("expiration_date" => "2014-12-05")
         );
 
         $this->assertTrue($boletoObj->is_valid(), "boleto->is_valid should ".
@@ -385,7 +385,7 @@ class ModelsTest extends \PHPUnit_Framework_TestCase {
 
         // Has an invalid date
         $boletoObj = new KondutoModels\Boleto(
-            ["expiration_date" => "8917236"]
+            array("expiration_date" => "8917236")
         );
         $this->assertFalse($boletoObj->is_valid(), "boleto->is_valid should ".
             "be false here because the expiration_date is not okay.");
@@ -396,42 +396,42 @@ class ModelsTest extends \PHPUnit_Framework_TestCase {
         $boletoObj = new KondutoModels\Boleto();
         $boletoObj->expiration_date("2014-12-05");
 
-        $boletoArray = [
+        $boletoArray = array(
             "type" => "boleto",
             "expiration_date" => "2014-12-05"
-        ];
+        );
 
         $this->assertEquals($boletoArray, $boletoObj->to_array(),
             "Both provided and generated arrays should be equal.");
     }
 
     public function testToArray() {
-        $order = [
+        $order = array(
             "id"           => "Order-18462",
             "total_amount"  => 1367.00,
-            "customer" => [
+            "customer" => array(
                 "id"     => "Customer-n2936",
                 "name"   => "Steve Matteson",
                 "email"  => "matesson@typeface.com",
                 "tax_id" => "SJ183650"
-            ],
-            "payment" => [
-                [
+            ),
+            "payment" => array(
+                array(
                     "type" => "credit",
                     "bin" => "490172",
                     "last4"=> "0012",
                     "expiration_date" => "072015",
                     "status" => "approved"
-                ],
-                [
+                ),
+                array(
                     "type" => "credit",
                     "bin" => "490231",
                     "last4"=> "0231",
                     "expiration_date" => "082016",
                     "status" => "declined"
-                ]
-            ]
-        ];
+                )
+            )
+        );
 
         $orderObj = new KondutoModels\Order($order);
 
@@ -439,12 +439,14 @@ class ModelsTest extends \PHPUnit_Framework_TestCase {
                 $orderObj->customer(), "Customer obj should
                         be of Customer instance");
 
+        $payment_arr = $orderObj->payment();
+
         $this->assertInstanceOf("Konduto\Models\Payment",
-                $orderObj->payment()[0], "Payment obj should
+                $payment_arr[0], "Payment obj should
                         be of Payment instance");
 
         $this->assertInstanceOf("Konduto\Models\Payment",
-                $orderObj->payment()[1], "Payment obj should
+                $payment_arr[1], "Payment obj should
                         be of Payment instance");
 
         $this->assertEquals($order, $orderObj->to_array(),
@@ -454,23 +456,23 @@ class ModelsTest extends \PHPUnit_Framework_TestCase {
 
     public function testCreatedAt() {
         $order = new KondutoModels\Order();
-        $order->set(["created_at" => "2014-12-09 12:26:40"]);
+        $order->set(array("created_at" => "2014-12-09 12:26:40"));
         $this->assertEquals($order->created_at(), "2014-12-09 12:26:40");
     }
 
     public function testPaymentInstantiate() {
-        $credit_card = KondutoModels\Payment::instantiate([
+        $credit_card = KondutoModels\Payment::instantiate(array(
             "type"            => "credit",
             "bin"             => "490172",
             "last4"           => "0012",
             "expiration_date" => "072015",
             "status"          => "approved"
-        ]);
+        ));
 
-        $boleto = KondutoModels\Payment::instantiate([
+        $boleto = KondutoModels\Payment::instantiate(array(
             "type"            => "boleto",
             "expiration_date" => "2014-12-11"
-        ]);
+        ));
 
         $this->assertInstanceOf("Konduto\Models\CreditCard", $credit_card);
         $this->assertInstanceOf("Konduto\Models\Boleto", $boleto);

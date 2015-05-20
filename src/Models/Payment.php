@@ -9,7 +9,7 @@ abstract class Payment extends Model {
     const TYPE_CARD = "credit";
     const TYPE_BOLETO = "boleto";
 
-    protected $available_types = [self::TYPE_CARD, self::TYPE_BOLETO];
+    protected $available_types = array(self::TYPE_CARD, self::TYPE_BOLETO);
 
     /**
      * Given an array, instantiates a payment among the possible
@@ -19,7 +19,7 @@ abstract class Payment extends Model {
      * @return a CreditCard or Boleto object
      */
     public static function instantiate($array_of_args) {
-        if (is_array($array_of_args) 
+        if (is_array($array_of_args)
             && array_key_exists("type", $array_of_args)) {
             $type = $array_of_args["type"];
             unset($array_of_args["type"]);
@@ -31,7 +31,7 @@ abstract class Payment extends Model {
                 case Payment::TYPE_BOLETO:
                     return new Boleto($array_of_args);
                     break;
-                
+
                 default:
                     return null;
             }

@@ -5,11 +5,11 @@ require_once "vendor/autoload.php";
 class TravelTest extends \PHPUnit_Framework_TestCase {
 
     public function testBusTravelLeg() {
-        $bus_info = new Konduto\Models\BusTravelLeg([
+        $bus_info = new Konduto\Models\BusTravelLeg(array(
             "origin_city" => "São Paulo",
             "destination_city" => "São Francisco",
             "date" => "2018-12-25T18:00Z"
-        ]);
+        ));
         $this->assertInstanceOf("Konduto\Models\TravelLeg", $bus_info);
         $this->assertInstanceOf("Konduto\Models\BusTravelLeg", $bus_info);
         $this->assertTrue($bus_info->is_valid());
@@ -23,7 +23,7 @@ class TravelTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testFlightLeg() {
-        $flight_info = new Konduto\Models\FlightLeg([
+        $flight_info = new Konduto\Models\FlightLeg(array(
             "origin_city" => "São Paulo",
             "origin_airport" => "GRU",
             "destination_city" => "São Francisco",
@@ -31,7 +31,7 @@ class TravelTest extends \PHPUnit_Framework_TestCase {
             "number_of_connections" => 1,
             "class" => "economy",
             "fare_basis" => "Y"
-        ]);
+        ));
         $this->assertInstanceOf("Konduto\Models\TravelLeg", $flight_info);
         $this->assertInstanceOf("Konduto\Models\FlightLeg", $flight_info);
 
@@ -62,7 +62,7 @@ class TravelTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testPassenger() {
-        $passenger = new Konduto\Models\Passenger([
+        $passenger = new Konduto\Models\Passenger(array(
             "name" => "Júlia da Silva",
             "document" => "A1B2C3D4",
             "document_type" => "id",
@@ -70,11 +70,11 @@ class TravelTest extends \PHPUnit_Framework_TestCase {
             "nationality" => "US",
             "frequent_traveler" => true,
             "special_needs" => false,
-            "loyalty" => [
+            "loyalty" => array(
               "program" => "advantage",
               "category" => "gold"
-            ]
-        ]);
+            )
+        ));
         $this->assertInstanceOf("Konduto\Models\Passenger", $passenger);
         $this->assertInstanceOf("Konduto\Models\Loyalty", $passenger->loyalty());
         $this->assertEquals("Júlia da Silva", $passenger->name());
@@ -106,8 +106,8 @@ class TravelTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testFlight1() {
-        $flight = new Konduto\Models\Flight([
-            "departure" => [
+        $flight = new Konduto\Models\Flight(array(
+            "departure" => array(
                 "origin_city" => "São Paulo",
                 "origin_airport" => "GRU",
                 "destination_city" => "São Francisco",
@@ -116,8 +116,8 @@ class TravelTest extends \PHPUnit_Framework_TestCase {
                 "number_of_connections" => 1,
                 "class" => "economy",
                 "fare_basis" => "Y"
-            ],
-            "return" => [
+            ),
+            "return" => array(
                 "origin_city" => "São Paulo",
                 "origin_airport" => "GRU",
                 "destination_city" => "São Francisco",
@@ -125,9 +125,9 @@ class TravelTest extends \PHPUnit_Framework_TestCase {
                 "date" => "2018-12-30T18:00Z",
                 "number_of_connections" => 1,
                 "class" => "business"
-            ],
-            "passengers" => [
-                [
+            ),
+            "passengers" => array(
+                array(
                     "name" => "Júlia da Silva",
                     "document" => "A1B2C3D4",
                     "document_type" => "id",
@@ -135,12 +135,12 @@ class TravelTest extends \PHPUnit_Framework_TestCase {
                     "nationality" => "US",
                     "frequent_flyer" => true,
                     "special_needs" => false,
-                    "loyalty" => [
+                    "loyalty" => array(
                         "program" => "aadvantage",
                         "category" => "gold"
-                    ]
-                ],
-                [
+                    )
+                ),
+                array(
                     "name" => "Carlos Siqueira",
                     "document" => "AB11223344",
                     "document_type" => "passport",
@@ -148,75 +148,76 @@ class TravelTest extends \PHPUnit_Framework_TestCase {
                     "nationality" => "US",
                     "frequent_flyer" => false,
                     "special_needs" => true,
-                    "loyalty" => [
+                    "loyalty" => array(
                         "program" => "skymiles",
                         "category" => "silver"
-                    ]
-                ]
-            ]
-        ]);
+                    )
+                )
+            )
+        ));
         $this->assertInstanceOf("Konduto\Models\Flight", $flight);
         $this->assertInstanceOf("Konduto\Models\Travel", $flight);
         $this->assertInstanceOf("Konduto\Models\TravelLeg", $flight->departure());
         $this->assertInstanceOf("Konduto\Models\TravelLeg", $flight->return_leg());
-        $this->assertInstanceOf("Konduto\Models\Passenger", $flight->passengers()[0]);
+        $passengers = $flight->passengers();
+        $this->assertInstanceOf("Konduto\Models\Passenger", $passengers[0]);
     }
 
     public function testFlight2() {
-        $flight = Konduto\Models\Travel::instantiate([
+        $flight = Konduto\Models\Travel::instantiate(array(
             "type" => "flight",
-            "departure" => [
+            "departure" => array(
                 "origin_airport" => "GRU",
                 "destination_airport" => "SFO",
                 "date" => "2018-12-25T18:00Z"
-            ]
-        ]);
+            )
+        ));
         $this->assertInstanceOf("Konduto\Models\Flight", $flight);
         $this->assertInstanceOf("Konduto\Models\FlightLeg", $flight->departure());
     }
 
     public function testBusTravel() {
-        $bus_travel = Konduto\Models\Travel::instantiate([
+        $bus_travel = Konduto\Models\Travel::instantiate(array(
             "type" => "bus",
-            "departure" => [
+            "departure" => array(
                 "origin_city" => "Campinas",
                 "destination_city" => "São José dos Campos",
                 "date" => "2018-12-25T18:00Z"
-            ]
-        ]);
+            )
+        ));
         $this->assertInstanceOf("Konduto\Models\BusTravel", $bus_travel);
         $this->assertInstanceOf("Konduto\Models\BusTravelLeg", $bus_travel->departure());
     }
 
     public function testOrderTravel() {
-        $order_arr = [
+        $order_arr = array(
             "id"          => "Pedido100001834",
             "visitor"     => "da39a3ee5e6b4b0d3255bfef95601890afd80709",
             "total_amount" => 312.71,
             "currency"    => "BRL",
-            "customer"    => [
+            "customer"    => array(
                 "id"     => "Customer n03",
                 "name"   => "Hiroyuki Endo",
                 "email"  => "endo.hiroyuki@yahoo.jp"
-            ],
-            "payment" => [
-                [
+            ),
+            "payment" => array(
+                array(
                     "type" => "credit",
                     "bin" => "490172",
                     "last4"=> "0012",
                     "expiration_date" => "072015",
                     "status" => "approved"
-                ]
-            ],
-            "travel" => [
+                )
+            ),
+            "travel" => array(
                 "type" => "flight",
-                "departure" => [
+                "departure" => array(
                     "origin_airport" => "GRU",
                     "destination_airport" => "YYZ",
                     "date" => "2016-11-10T23:00Z"
-                ]
-            ]
-        ];
+                )
+            )
+        );
         $order = new Konduto\Models\Order($order_arr);
         $this->assertInstanceOf("Konduto\Models\Travel", $order->travel());
         $this->assertInstanceOf("Konduto\Models\Flight", $order->travel());
@@ -225,15 +226,15 @@ class TravelTest extends \PHPUnit_Framework_TestCase {
         $this->assertArrayHasKey("travel", $order->get_errors());
         $this->assertArrayHasKey("passengers", $order->travel()->get_errors());
 
-        $a_passenger = [
+        $a_passenger = array(
             "name" => "Júlia da Silva",
             "document" => "A1B2C3D4",
             "document_type" => "id",
             "nationality" => "BR"
-        ];
-        $order->travel()->passengers([$a_passenger]);
+        );
+        $order->travel()->passengers(array($a_passenger));
 
-        $order_arr["travel"]["passengers"] = [$a_passenger];
+        $order_arr["travel"]["passengers"] = array($a_passenger);
         $this->assertEquals($order_arr, $order->to_array());
 
         $this->assertTrue($order->is_valid());

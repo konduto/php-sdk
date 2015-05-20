@@ -14,7 +14,7 @@ class Order extends Model {
 
     protected $_schema_key = "order";
 
-    protected $_properties = [
+    protected $_properties = array(
         "id" => null,
         "visitor" => null,
         "total_amount" => null,
@@ -23,15 +23,15 @@ class Order extends Model {
         "currency" => null,
         "installments" => null,
         "ip" => null,
-        "payment" => [],
+        "payment" => array(),
         "customer" => null,
         "billing" => null,
         "shipping" => null,
-        "shopping_cart" => [],
+        "shopping_cart" => array(),
         "travel" => null
-    ];
+    );
 
-    protected $_mandatory_fields = ["id", "total_amount", "customer"];
+    protected $_mandatory_fields = array("id", "total_amount", "customer");
 
     protected $timestamp;
     protected $status;
@@ -42,8 +42,8 @@ class Order extends Model {
     protected $navigation;
     protected $created_at;
 
-    protected $available_status = [STATUS_PENDING, STATUS_APPROVED,
-             STATUS_DECLINED, STATUS_FRAUD, STATUS_NOT_AUTHORIZED];
+    protected $available_status = array(STATUS_PENDING, STATUS_APPROVED,
+             STATUS_DECLINED, STATUS_FRAUD, STATUS_NOT_AUTHORIZED);
 
     public function customer($value = null) {
         return $this->set_get_object("customer", $value, "Konduto\Models\Customer");

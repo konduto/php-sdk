@@ -9,18 +9,18 @@ abstract class Model implements Entity {
      * The fields provided are the ones used in
      * json message posted to server.
      */
-    protected $_properties = [];
+    protected $_properties = array();
 
     /**
      * Array of fields that are mandatory when posting an order.
      */
-    protected $_mandatory_fields = [];
+    protected $_mandatory_fields = array();
 
     /**
      * Contains values of properties that haven't succeded
      * validation.
      */
-    protected $_errors = [];
+    protected $_errors = array();
 
     /**
      * Informs the key containing the validation
@@ -40,7 +40,7 @@ abstract class Model implements Entity {
      * Clean all errors detected. (is_valid method will recreate them)
      */
     public function clean_errors() {
-        $this->_errors = [];
+        $this->_errors = array();
     }
 
     /**
@@ -157,7 +157,7 @@ abstract class Model implements Entity {
                 else if (is_array($value)) {
                     $this->_properties[$property] =
                         method_exists($class, "instantiate") ?
-                            call_user_func([$class, "instantiate"], $value) :
+                            call_user_func(array($class, "instantiate"), $value) :
                             new $class($value);
                 }
                 else {
@@ -196,7 +196,7 @@ abstract class Model implements Entity {
             else if (is_array($object)) {
                 $this->_properties[$property][] =
                     method_exists($class, "instantiate") ?
-                        call_user_func([$class, "instantiate"], $object) :
+                        call_user_func(array($class, "instantiate"), $object) :
                         new $class($object);
             }
             else {

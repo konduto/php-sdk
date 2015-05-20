@@ -5,13 +5,13 @@ use \Konduto\Exceptions as Exceptions;
 
 /**
  * Konduto SDK core component
- * 
+ *
  * This class performs Konduto API functions as described in Konduto documentation
  * at http://docs.konduto.com/.
  * Behind the static methods, it uses php cURL library to perform HTTP requests
  * to Konduto API endpoint. It automatically generates and parses messages exchanged
  * with the API, leaving only to the client code SDK models objects.
- * 
+ *
  * The available methods are:
  * - setApiKey
  * - setVersion
@@ -40,9 +40,9 @@ abstract class Konduto extends ApiControl {
 
     /**
      * Sets an API key to be used for authenticating Konduto API in requests.
-     * 
+     *
      * @param key API key
-     * 
+     *
      * @throws InvalidAPIKeyException if key is not valid
      */
     public static function setApiKey($key) {
@@ -68,10 +68,10 @@ abstract class Konduto extends ApiControl {
         }
 
         $order_array = self::sendRequest(null, METHOD_GET, "/orders/{$id}");
-        
+
         // Do a check in the response for an error 404.
         self::was_order_found($order_array, $id);
-        
+
         return new Models\Order(array_key_exists("order", $order_array) ? $order_array["order"] : $order_array);
     }
 
@@ -101,12 +101,12 @@ abstract class Konduto extends ApiControl {
             $order_array["analyze"] = false;
         }
 
-        $response = self::sendRequest(json_encode($order_array), 
+        $response = self::sendRequest(json_encode($order_array),
                         METHOD_POST, '/orders');
 
-        if (self::check_post_response($response, $order->id()) 
+        if (self::check_post_response($response, $order->id())
             and $analyze === true) {
-            $orderAssoc = array_key_exists("order", $response) 
+            $orderAssoc = array_key_exists("order", $response)
                             ? $response["order"] : $response;
             $order->set($orderAssoc);
         }
@@ -118,7 +118,7 @@ abstract class Konduto extends ApiControl {
      * Persists an order without analyzing it
      *
      * It is an alias for Konduto::analyze($order, false)
-     */ 
+     */
     public static function sendOrder(Models\Order &$order) {
         return self::analyze($order, false);
     }
@@ -139,7 +139,7 @@ abstract class Konduto extends ApiControl {
      */
     public static function updateOrderStatus($order_id, $status, $comments = "") {
 
-        if (!in_array($status, [Models\STATUS_APPROVED, Models\STATUS_DECLINED, Models\STATUS_FRAUD])) {
+        if (!in_array($status, array(Models\STATUS_APPROVED, Models\STATUS_DECLINED, Models\STATUS_FRAUD))) {
             throw new Exceptions\InvalidOrderException("status");
         }
 
@@ -147,10 +147,10 @@ abstract class Konduto extends ApiControl {
             throw new Exceptions\InvalidOrderException("id");
         }
 
-        $json_msg = [
+        $json_msg = array(
             "status" => $status,
             "comments" => "$comments"
-        ];
+        );
 
         $json_msg = json_encode($json_msg);
 

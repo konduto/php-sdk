@@ -50,19 +50,19 @@ class ApiTest extends \PHPUnit_Framework_TestCase {
     public function testSimplePost() {
         Konduto::setApiKey(SANDBOX_API_KEY);
 
-        $c = new KondutoModels\Customer([
+        $c = new KondutoModels\Customer(array(
             "id"    => "Customer n01",
             "name"  => "Homer Simpson",
             "email" => "h.simpson@gmail.com"
-        ]);
+        ));
 
-        $o = new KondutoModels\Order([
+        $o = new KondutoModels\Order(array(
             "id"           => self::generateUniqueID(),
             "total_amount"  => 100.50,
             "customer"     => $c,
             "ip"           => "95.31.110.43",   // We need to provide an IP for having a geolocation returned
             "visitor"      => "1234567890123456789012345678901234567890" // We need to provide visitor for having navigation info returned
-        ]);
+        ));
 
         // Save this order for later...
         self::$testOrder_1 = $o;
@@ -167,17 +167,17 @@ class ApiTest extends \PHPUnit_Framework_TestCase {
      * Test sendOrder method. Just send an order with analyze=false flag.
      */
     public function testSendOrder() {
-        $c = new KondutoModels\Customer([
+        $c = new KondutoModels\Customer(array(
             "id"    => "Customer n02",
             "name"  => "Bart Simpson",
             "email" => "bart.simpson@gmail.com"
-        ]);
+        ));
 
-        $o = new KondutoModels\Order([
+        $o = new KondutoModels\Order(array(
             "id"           => self::generateUniqueID(),
             "total_amount" => 139.22,
             "customer"     => $c
-        ]);
+        ));
 
         self::$testOrder_2 = $o;
 
@@ -211,7 +211,7 @@ class ApiTest extends \PHPUnit_Framework_TestCase {
      * @depends                 testSimplePost
      */
     public function testFullPost() {
-        $o = new KondutoModels\Order([
+        $o = new KondutoModels\Order(array(
             "id"           => self::generateUniqueID(),
             "visitor"      => "da39a3ee5e6b4b0d3255bfef95601890afd80709",
             "total_amount"  => 312.71,
@@ -220,7 +220,7 @@ class ApiTest extends \PHPUnit_Framework_TestCase {
             "currency"     => "USD",
             "installments" => 2,
             "ip"           => "221.102.39.19",
-            "customer" => [
+            "customer" => array(
                 "id"     => "Customer n03",
                 "name"   => "Hiroyuki Endo",
                 "email"  => "endo.hiroyuki@yahoo.jp",
@@ -229,24 +229,24 @@ class ApiTest extends \PHPUnit_Framework_TestCase {
                 "phone2" => "151721295",
                 "is_new"    => true,
                 "vip"    => true
-            ],
-            "payment" => [
-                [
+            ),
+            "payment" => array(
+                array(
                     "type" => "credit",
                     "bin" => "490172",
                     "last4"=> "0012",
                     "expiration_date" => "072015",
                     "status" => "approved"
-                ],
-                [
+                ),
+                array(
                     "type" => "credit",
                     "bin" => "490231",
                     "last4"=> "0231",
                     "expiration_date" => "082016",
                     "status" => "declined"
-                ]
-            ],
-            "billing" => [
+                )
+            ),
+            "billing" => array(
                 "name" => "Mary Jane",
                 "address1" => "123 Main St.",
                 "address2" => "Apartment 4",
@@ -254,8 +254,8 @@ class ApiTest extends \PHPUnit_Framework_TestCase {
                 "state" => "NY",
                 "zip" => "10460",
                 "country" => "US"
-            ],
-            "shipping" => [
+            ),
+            "shipping" => array(
                 "name" => "Charlotte Fitzroy",
                 "address1" => "123 Main St.",
                 "address2" => "Apartment 6",
@@ -263,9 +263,9 @@ class ApiTest extends \PHPUnit_Framework_TestCase {
                 "state" => "NY",
                 "zip" => "10460",
                 "country" => "US"
-            ],
-            "shopping_cart" => [
-                [
+            ),
+            "shopping_cart" => array(
+                array(
                     "sku" => "9919023",
                     "product_code" => "1231",
                     "category" => 201,
@@ -273,8 +273,8 @@ class ApiTest extends \PHPUnit_Framework_TestCase {
                     "description" => "Male Green T-Shirt V Neck",
                     "unit_cost" => 1999.99,
                     "quantity" => 1
-                ],
-                [
+                ),
+                array(
                     "sku" => "0017273",
                     "category" => 1231,
                     "name" => "Yellow Socks",
@@ -282,9 +282,9 @@ class ApiTest extends \PHPUnit_Framework_TestCase {
                     "unit_cost" => 29.90,
                     "quantity" => 2,
                     "discount" => 5.00
-                ]
-            ]
-        ]);
+                )
+            )
+        ));
 
         $this->assertTrue($o->is_valid(), "Order object is not valid order.");
 
@@ -315,77 +315,77 @@ class ApiTest extends \PHPUnit_Framework_TestCase {
 
         //This example is from the README.md
 
-        $o = new KondutoModels\Order([
-          "id"              => uniqid(),
-          "visitor"         => "4738d516f09cab3a2c1ee973bec88a5a367a59e4",
-          "total_amount"    => 100.00,
-          "shipping_amount" => 20.00,
-          "tax_amount"      => 3.45,
-          "currency"        => "USD",
-          "installments"    => 1,
-          "ip"              => "170.149.100.10",
-          "customer"        => [
-            "id"     => "28372",
-            "name"   => "Mary Jane",
-            "tax_id" => "6253407",
-            "phone1" => "212-555-1234",
-            "phone2" => "202-555-6789",
-            "email"  => "mary.jane@example.com",
-            "is_new" => true,
-            "vip"    => false
-          ],
-          "payment" => [
-            [
-              "type"            => "credit",  // Add payment 'type'
-              "bin"             => "490172",
-              "last4"           => "0012",
-              "expiration_date" => "072015",
-              "status"          => "approved"
-            ],
-            [
-              "type"            => "boleto",  // Add payment 'type'
-              "expiration_date" => "2014-12-09"
-            ]
-          ],
-          "billing" => [
-            "name"     => "Mary Jane",
-            "address1" => "123 Main St.",
-            "address2" => "Apartment 4",
-            "city"     => "New York City",
-            "state"    => "NY",
-            "zip"      => "10460",
-            "country"  => "US"
-          ],
-          "shipping" => [
-            "name"     => "Mary Jane",
-            "address1" => "123 Main St.",
-            "address2" => "Apartment 4",
-            "city"     => "New York City",
-            "state"    => "NY",
-            "zip"      => "10460",
-            "country"  => "US"
-          ],
-          "shopping_cart" => [
-            [
-              "sku"          => "9919023",
-              "product_code" => "123456789999",
-              "category"     => 201,
-              "name"         => "Green T-Shirt",
-              "description"  => "Male Green T-Shirt V Neck",
-              "unit_cost"    => 1999.99,
-              "quantity"     => 1
-            ],
-            [
-              "sku"         => "0017273",
-              "category"    => 202,
-              "name"        => "Yellow Socks",
-              "description" => "Pair of Yellow Socks",
-              "unit_cost"   => 29.90,
-              "quantity"    => 2,
-              "discount"    => 5.00
-            ]
-          ]
-        ]);
+        $o = new KondutoModels\Order(array(
+            "id"              => uniqid(),
+            "visitor"         => "4738d516f09cab3a2c1ee973bec88a5a367a59e4",
+            "total_amount"    => 100.00,
+            "shipping_amount" => 20.00,
+            "tax_amount"      => 3.45,
+            "currency"        => "USD",
+            "installments"    => 1,
+            "ip"              => "170.149.100.10",
+            "customer"        => array(
+                "id"     => "28372",
+                "name"   => "Mary Jane",
+                "tax_id" => "6253407",
+                "phone1" => "212-555-1234",
+                "phone2" => "202-555-6789",
+                "email"  => "mary.jane@example.com",
+                "is_new" => true,
+                "vip"    => false
+            ),
+            "payment" => array(
+                array(
+                  "type"            => "credit",  // Add payment 'type'
+                  "bin"             => "490172",
+                  "last4"           => "0012",
+                  "expiration_date" => "072015",
+                  "status"          => "approved"
+                ),
+                array(
+                  "type"            => "boleto",  // Add payment 'type'
+                  "expiration_date" => "2014-12-09"
+                )
+            ),
+            "billing" => array(
+                "name"     => "Mary Jane",
+                "address1" => "123 Main St.",
+                "address2" => "Apartment 4",
+                "city"     => "New York City",
+                "state"    => "NY",
+                "zip"      => "10460",
+                "country"  => "US"
+            ),
+            "shipping" => array(
+                "name"     => "Mary Jane",
+                "address1" => "123 Main St.",
+                "address2" => "Apartment 4",
+                "city"     => "New York City",
+                "state"    => "NY",
+                "zip"      => "10460",
+                "country"  => "US"
+            ),
+            "shopping_cart" => array(
+                array(
+                  "sku"          => "9919023",
+                  "product_code" => "123456789999",
+                  "category"     => 201,
+                  "name"         => "Green T-Shirt",
+                  "description"  => "Male Green T-Shirt V Neck",
+                  "unit_cost"    => 1999.99,
+                  "quantity"     => 1
+                ),
+                array(
+                  "sku"         => "0017273",
+                  "category"    => 202,
+                  "name"        => "Yellow Socks",
+                  "description" => "Pair of Yellow Socks",
+                  "unit_cost"   => 29.90,
+                  "quantity"    => 2,
+                  "discount"    => 5.00
+                )
+            )
+        ));
 
         $this->assertTrue($o->is_valid(), "Order object is not valid order.");
 

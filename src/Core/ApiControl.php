@@ -41,13 +41,13 @@ const HTTP_INTERNAL_ERROR = 500;
 
 /**
  * API specific control methods
- *  
+ *
  * This class describes details of the API functioning, such as use of curl library.
  * It provides auxiliary methods to be used by the public methods.
- * All its methods are protected. 
+ * All its methods are protected.
  *
  * @ignore
- */ 
+ */
 abstract class ApiControl {
 
     protected static $version = CURRENT_VERSION;  // Version of Konduto API to be used
@@ -85,10 +85,10 @@ abstract class ApiControl {
 
         $curlSession = curl_init($url);
 
-        $headers = [
-            "Authorization: Basic " . base64_encode(self::$key),            
+        $headers = array(
+            "Authorization: Basic " . base64_encode(self::$key),
             "X-Requested-With: Konduto SDK PHP " . self::$version
-        ];
+        );
 
         // Add additional headers
         if ($data_length = strlen($data)) {
@@ -96,13 +96,13 @@ abstract class ApiControl {
             $headers[] = "Content-Type: application/json";
         }
 
-        $options = [
+        $options = array(
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_CONNECTTIMEOUT => API_TIMEOUT,
             CURLOPT_FAILONERROR    => false,
             CURLOPT_HTTPHEADER     => $headers,
             CURLOPT_SSL_VERIFYPEER => self::is_production_key(self::$key)
-        ];
+        );
 
         // Add method-specific options
         switch ($method) {
@@ -149,7 +149,7 @@ abstract class ApiControl {
         self::$lastResponse = $response;
 
         switch ($http_status) {
-            case HTTP_INTERNAL_ERROR:           
+            case HTTP_INTERNAL_ERROR:
                 throw new Exceptions\KondutoAPIErrorException();
                 break;
             case HTTP_UNAUTHORIZED:
@@ -175,7 +175,7 @@ abstract class ApiControl {
      * @todo  This function needs to be updated when new versions of the API get available.
      *
      * @param version a string containing the version to be set
-     * 
+     *
      * @throws InvalidVersionException if the version cannot be recognized
      */
     protected static function validate_version($version) {
@@ -189,7 +189,7 @@ abstract class ApiControl {
 
     /**
      * Check if the response was successful, throw Exceptions in case of errors.
-     * 
+     *
      * @throws DuplicateOrderException there is a message indicating the order being persisted is duplicate
      * @throws KonduoAPIErrorException when the API responds nor error neither OK
      *
@@ -212,12 +212,12 @@ abstract class ApiControl {
 
     /**
      * Check an HTTP response to order found.
-     * 
+     *
      * @param response HTTP
      * @param order id, to properly build exception if error happens
      *
      * @throws OrderNotFoundException if http status is 404
-     * 
+     *
      * @return true if success
      */
     protected static function was_order_found($response, $order_id = null) {
@@ -237,7 +237,7 @@ abstract class ApiControl {
      * Check whether the provided key is a production key.
      *
      * @param key
-     * 
+     *
      * @return true if provided keys is a production key
      */
     protected static function is_production_key($key) {
