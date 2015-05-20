@@ -289,7 +289,7 @@ The object `travel` can be populated with 2 different types of object: `Flight`
 or `BusTravel`. Both classes inherit from a common `Travel` class.
 
 ```php
-$flight = new Konduto\Models\Flight(array(
+$flight = new KondutoModels\Flight(array(
     "departure" => array(
         "origin_city" => "São Paulo",
         "origin_airport" => "GRU",
@@ -339,7 +339,7 @@ $flight = new Konduto\Models\Flight(array(
     )
 ));
 
-$bus_travel = new Konduto\Models\BusTravel(array(
+$bus_travel = new KondutoModels\BusTravel(array(
     "departure" => array(
         "origin_city" => "Campinas",
         "destination_city" => "Ponta Grossa",
@@ -364,7 +364,7 @@ Optionally, you may instead use the *static* method `Travel::instantiate` to bui
 a `BusTravel` or `Flight` object. Additionally you must provide the property `type`, that can assume the values `flight` or `bus`.
 
 ```
-$bus_travel = Konduto\Models\Travel::instantiate(array(
+$bus_travel = KondutoModels\Travel::instantiate(array(
     "type" => "bus",   // or "flight"
     "departure" => array(
         "origin_city" => "Campinas",
