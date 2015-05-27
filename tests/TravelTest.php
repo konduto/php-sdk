@@ -189,11 +189,57 @@ class TravelTest extends \PHPUnit_Framework_TestCase {
         $this->assertInstanceOf("Konduto\Models\BusTravelLeg", $bus_travel->departure());
     }
 
+
+    public function testBusTravelWithReturn() {
+        $bus_travel = new Konduto\Models\BusTravel(array(
+            "departure" => array(
+                "origin_city" => "Campinas",
+                "destination_city" => "São José dos Campos",
+                "date" => "2018-12-25T18:00Z"
+            ),
+            "return_leg" => array(
+                "origin_city" => "São José dos Campos",
+                "destination_city" => "Campinas",
+                "date" => "2018-12-30T12:10Z"
+            )
+        ));
+
+        $this->assertEquals(array(
+            "type" => "bus",
+            "departure" => array(
+                "origin_city" => "Campinas",
+                "destination_city" => "São José dos Campos",
+                "date" => "2018-12-25T18:00Z"
+            ),
+            "return" => array(
+                "origin_city" => "São José dos Campos",
+                "destination_city" => "Campinas",
+                "date" => "2018-12-30T12:10Z"
+            )
+        ), $bus_travel->to_array());
+
+        $bus_travel->return_leg()->date("2018-12-30T15:30Z");
+
+        $this->assertEquals(array(
+            "type" => "bus",
+            "departure" => array(
+                "origin_city" => "Campinas",
+                "destination_city" => "São José dos Campos",
+                "date" => "2018-12-25T18:00Z"
+            ),
+            "return" => array(
+                "origin_city" => "São José dos Campos",
+                "destination_city" => "Campinas",
+                "date" => "2018-12-30T15:30Z"
+            )
+        ), $bus_travel->to_array());
+    }
+
     public function testOrderTravel() {
         $order_arr = array(
             "id"          => "Pedido100001834",
             "visitor"     => "da39a3ee5e6b4b0d3255bfef95601890afd80709",
-            "total_amount" => 312.71,
+            "total_amount" => 4312.71,
             "currency"    => "BRL",
             "customer"    => array(
                 "id"     => "Customer n03",
@@ -215,6 +261,11 @@ class TravelTest extends \PHPUnit_Framework_TestCase {
                     "origin_airport" => "GRU",
                     "destination_airport" => "YYZ",
                     "date" => "2016-11-10T23:00Z"
+                ),
+                "return" => array(
+                    "origin_airport" => "YYZ",
+                    "destination_airport" => "GRU",
+                    "date" => "2017-02-02T19:20Z"
                 )
             )
         );

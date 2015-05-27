@@ -15,11 +15,3 @@ class TravelLeg extends Model {
         "fare_basis" => null
     );
 }
-
-class BusTravelLeg extends TravelLeg {
-    protected $_mandatory_fields = array("origin_city", "destination_city", "date");
-}
-
-class FlightLeg extends TravelLeg {
-    protected $_mandatory_fields = array("origin_airport", "destination_airport", "date");
-}
