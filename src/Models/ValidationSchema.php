@@ -15,8 +15,9 @@ const REGEX_LETTERS        = "/^[a-zA-Z]+\z/";
 const REGEX_UPPERCASE      = "/^[A-Z]+\z/";
 const REGEX_DIGITS         = "/^[0-9]+\z/";
 const REGEX_HEXA_DIGITS    = "/^[a-fA-F0-9]+\z/";
-const REGEX_FULL_DATE      = "/^\d{4}-\d{2}-\d{2}\z/";
+const REGEX_DATE           = "/^\d{4}-\d{2}-\d{2}\z/";
 const REGEX_DATETIME       = "/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}Z\z/";
+const REGEX_DATETIME_SECS  = "/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z\z/";
 const REGEX_IPv4           = "/^(?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\.){3}(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]?|[0-9])\z/";
 const REGEX_CREDIT         = "/^credit\z/";
 const REGEX_BOLETO         = "/^boleto\z/";
@@ -41,14 +42,17 @@ abstract class ValidationSchema {
      */
     private static $validation = array(
         "order" => array(
-            "id"              => array(TYPE_STRING,  1,     100, REGEX_LETTERS_DIGITS),
-            "visitor"         => array(TYPE_STRING,  0,     100, REGEX_LETTERS_DIGITS),
-            "total_amount"    => array( TYPE_FLOAT,  0, 9999999),
-            "shipping_amount" => array( TYPE_FLOAT,  0, 9999999),
-            "tax_amount"      => array( TYPE_FLOAT,  0, 9999999),
-            "currency"        => array(TYPE_STRING,  3,       3, REGEX_UPPERCASE),
-            "installments"    => array(   TYPE_INT,  1,     999),
-            "ip"              => array(TYPE_STRING,  7,      15, REGEX_IPv4)
+            "id"                 => array(TYPE_STRING,  1,     100, REGEX_LETTERS_DIGITS),
+            "visitor"            => array(TYPE_STRING,  0,     100, REGEX_LETTERS_DIGITS),
+            "total_amount"       => array( TYPE_FLOAT,  0, 9999999),
+            "shipping_amount"    => array( TYPE_FLOAT,  0, 9999999),
+            "tax_amount"         => array( TYPE_FLOAT,  0, 9999999),
+            "currency"           => array(TYPE_STRING,  3,       3, REGEX_UPPERCASE),
+            "installments"       => array(   TYPE_INT,  1,     999),
+            "ip"                 => array(TYPE_STRING,  7,      15, REGEX_IPv4),
+            "first_message"      => array(TYPE_STRING,  1,      20, REGEX_DATETIME_SECS),
+            "purchased_at"       => array(TYPE_STRING,  1,      20, REGEX_DATETIME_SECS),
+            "messages_exchanged" => array(   TYPE_INT,  0, 9999999)
         ),
         "customer" => array(
             "id"              => array(TYPE_STRING,  0,     100),
@@ -59,7 +63,8 @@ abstract class ValidationSchema {
             "email"           => array(TYPE_STRING,  0,     100),
             "new"             => array(TYPE_BOOL),
             "vip"             => array(TYPE_BOOL),
-            "dob"             => array(TYPE_STRING,  8,      10, REGEX_FULL_DATE)
+            "dob"             => array(TYPE_STRING,  8,      10, REGEX_DATE),
+            "created_at"      => array(TYPE_STRING,  8,      10, REGEX_DATE)
         ),
         "address" => array(
             "name"            => array(TYPE_STRING,  0,     100),
@@ -80,7 +85,7 @@ abstract class ValidationSchema {
         ),
         "boleto" => array(
             "type"            => array(TYPE_STRING,  0,       8, REGEX_BOLETO),
-            "expiration_date" => array(TYPE_STRING, 10,      10, REGEX_FULL_DATE)
+            "expiration_date" => array(TYPE_STRING, 10,      10, REGEX_DATE)
         ),
         "item" => array(
             "sku"             => array(TYPE_STRING,  0,     100),
@@ -90,7 +95,8 @@ abstract class ValidationSchema {
             "description"     => array(TYPE_STRING,  0,     100),
             "unit_cost"       => array( TYPE_FLOAT,  0, 9999999),
             "quantity"        => array(   TYPE_INT,  0, 9999999),
-            "discount"        => array( TYPE_FLOAT,  0, 9999999)
+            "discount"        => array( TYPE_FLOAT,  0, 9999999),
+            "created_at"      => array(TYPE_STRING,  8,      10, REGEX_DATE)
         ),
         "travel" => array(
             "type"            => array(TYPE_STRING,  1,     10, REGEX_TRAVEL_TYPE)
@@ -99,7 +105,7 @@ abstract class ValidationSchema {
             "name"            => array(TYPE_STRING,  0,    100),
             "document"        => array(TYPE_STRING,  0,    100),
             "document_type"   => array(TYPE_STRING,  0,      8, REGEX_DOCUMENT_TYPE),
-            "dob"             => array(TYPE_STRING, 10,     10, REGEX_FULL_DATE),
+            "dob"             => array(TYPE_STRING, 10,     10, REGEX_DATE),
             "nationality"     => array(TYPE_STRING,  2,      2, REGEX_LETTERS),
             "frequent_traveler" => array(TYPE_BOOL),
             "special_needs"   => array(TYPE_BOOL)

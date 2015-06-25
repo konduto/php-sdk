@@ -10,14 +10,16 @@ class ModelsTest extends \PHPUnit_Framework_TestCase {
 
     public function testCustomer() {
         $customer = array(
-            "id"     => "Customer-n03",
-            "name"   => "Hiroyuki Endo",
-            "email"  => "endo.hiroyuki@yahoo.jp",
-            "tax_id" => "XJ0000JX",
-            "phone1" => "151520030",
-            "phone2" => "151721295",
-            "is_new" => true,
-            "vip"    => true
+            "id"         => "Customer-n03",
+            "name"       => "Hiroyuki Endo",
+            "email"      => "endo.hiroyuki@yahoo.jp",
+            "tax_id"     => "XJ0000JX",
+            "phone1"     => "151520030",
+            "phone2"     => "151721295",
+            "is_new"     => true,
+            "vip"        => true,
+            "dob"        => "1991-05-12",
+            "created_at" => "2014-12-01"
         );
 
         $customerObj = new KondutoModels\Customer($customer);
@@ -31,6 +33,8 @@ class ModelsTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($customerObj->phone2(), $customer['phone2'], 'phone2');
         $this->assertEquals($customerObj->is_new(), $customer['is_new'], 'is_new');
         $this->assertEquals($customerObj->vip(), $customer['vip'], 'vip');
+        $this->assertEquals($customerObj->dob(), $customer['dob'], 'dob');
+        $this->assertEquals($customerObj->created_at(), $customer['created_at'], 'created_at');
     }
 
     public function testGetSetObject() {

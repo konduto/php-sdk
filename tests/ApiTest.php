@@ -212,14 +212,17 @@ class ApiTest extends \PHPUnit_Framework_TestCase {
      */
     public function testFullPost() {
         $o = new KondutoModels\Order(array(
-            "id"           => self::generateUniqueID(),
-            "visitor"      => "da39a3ee5e6b4b0d3255bfef95601890afd80709",
-            "total_amount"  => 312.71,
+            "id" => self::generateUniqueID(),
+            "visitor" => "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+            "total_amount" => 312.71,
             "shipping_amount" => 20.00,
-            "tax_amount"     => 9.50,
-            "currency"     => "USD",
+            "tax_amount" => 9.50,
+            "currency" => "USD",
             "installments" => 2,
-            "ip"           => "221.102.39.19",
+            "ip" => "221.102.39.19",
+            "purchased_at" => "2015-04-25T22:29:14Z",
+            "first_message" => "2015-04-22T18:01:02Z",
+            "messages_exchanged" => 2,
             "customer" => array(
                 "id"     => "Customer n03",
                 "name"   => "Hiroyuki Endo",
@@ -228,7 +231,9 @@ class ApiTest extends \PHPUnit_Framework_TestCase {
                 "phone1" => "151520030",
                 "phone2" => "151721295",
                 "is_new"    => true,
-                "vip"    => true
+                "vip"    => true,
+                "dob"        => "1988-10-02",
+                "created_at" => "2015-03-29"
             ),
             "payment" => array(
                 array(
@@ -272,7 +277,8 @@ class ApiTest extends \PHPUnit_Framework_TestCase {
                     "name" => "Green T-Shirt",
                     "description" => "Male Green T-Shirt V Neck",
                     "unit_cost" => 1999.99,
-                    "quantity" => 1
+                    "quantity" => 1,
+                    "created_at" => "2013-01-02"
                 ),
                 array(
                     "sku" => "0017273",
@@ -281,7 +287,8 @@ class ApiTest extends \PHPUnit_Framework_TestCase {
                     "description" => "Pair of Yellow Socks",
                     "unit_cost" => 29.90,
                     "quantity" => 2,
-                    "discount" => 5.00
+                    "discount" => 5.00,
+                    "created_at" => "2013-01-02"
                 )
             )
         ));

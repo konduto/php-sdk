@@ -28,7 +28,10 @@ class Order extends Model {
         "billing" => null,
         "shipping" => null,
         "shopping_cart" => array(),
-        "travel" => null
+        "travel" => null,
+        "purchased_at" => null,
+        "first_message" => null,
+        "messages_exchanged" => null
     );
 
     protected $_mandatory_fields = array("id", "total_amount", "customer");

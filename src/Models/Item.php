@@ -12,7 +12,8 @@ class Item extends Model {
         "description" => null,
         "unit_cost" => null,
         "quantity" => null,
-        "discount" => null
+        "discount" => null,
+        "created_at" => null
     );
 
 }

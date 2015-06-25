@@ -67,12 +67,16 @@ abstract class Konduto extends ApiControl {
             throw new Exceptions\InvalidOrderException("id");
         }
 
-        $order_array = self::sendRequest(null, METHOD_GET, "/orders/{$id}");
+        $message_array = self::sendRequest(null, METHOD_GET, "/orders/{$id}");
 
         // Do a check in the response for an error 404.
-        self::was_order_found($order_array, $id);
+        self::was_order_found($message_array, $id);
 
-        return new Models\Order(array_key_exists("order", $order_array) ? $order_array["order"] : $order_array);
+        if (!array_key_exists("order", $message_array)) {
+            throw new Exceptions\KondutoSDKError();
+        }
+
+        return new Models\Order($message_array["order"]);
     }
 
     /**
@@ -105,10 +109,8 @@ abstract class Konduto extends ApiControl {
                         METHOD_POST, '/orders');
 
         if (self::check_post_response($response, $order->id())
-            and $analyze === true) {
-            $orderAssoc = array_key_exists("order", $response)
-                            ? $response["order"] : $response;
-            $order->set($orderAssoc);
+                and $analyze === true) {
+            $order->set($response["order"]);
         }
 
         return true;

@@ -121,6 +121,39 @@ abstract class Model implements Entity {
     }
 
     /**
+     * Builds an array representation of this object using $_properties.
+     */
+    public function to_array() {
+        $array = $this->_properties;
+
+        foreach ($array as $key => $value) {
+            if (empty($value)) {
+                unset($array[$key]);
+            }
+            else if (is_array($value)) {
+                foreach ($value as $sub_key => $sub_value) {
+                    if (is_a($sub_value, "Konduto\Models\Model")) {
+                        $array[$key][$sub_key] = $sub_value->to_array();
+                    }
+                }
+            }
+            else if (is_a($value, "Konduto\Models\Model")) {
+                $array[$key] = $value->to_array();
+            }
+        }
+
+        return $array;
+    }
+
+    /**
+     * List the names of the properties allowed for this object.
+     * @return array with properties' names
+     */
+    public function get_properties() {
+        return array_keys($this->_properties);
+    }
+
+    /**
      * Does the validation according to ValidationSchema rules.
      * If the parameter passed is valid,
      * sets the property and returns true. Returns false otherwise.
@@ -220,31 +253,6 @@ abstract class Model implements Entity {
             return "return";
         }
         return $field_name;
-    }
-
-    /**
-     * Builds an array representation of this object using $_properties.
-     */
-    public function to_array() {
-        $array = $this->_properties;
-
-        foreach ($array as $key => $value) {
-            if (empty($value)) {
-                unset($array[$key]);
-            }
-            else if (is_array($value)) {
-                foreach ($value as $sub_key => $sub_value) {
-                    if (is_a($sub_value, "Konduto\Models\Model")) {
-                        $array[$key][$sub_key] = $sub_value->to_array();
-                    }
-                }
-            }
-            else if (is_a($value, "Konduto\Models\Model")) {
-                $array[$key] = $value->to_array();
-            }
-        }
-
-        return $array;
     }
 
     /**

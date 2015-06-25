@@ -12,7 +12,9 @@ class Customer extends Model {
         "phone2" => null,
         "email" => null,
         "is_new" => null,
-        "vip" => null
+        "vip" => null,
+        "dob" => null,
+        "created_at" => null
     );
 
     protected $_mandatory_fields = array("id", "name", "email");
