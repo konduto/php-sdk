@@ -83,20 +83,23 @@ The request consists of a root object containing information related to the orde
 
 ```php
 $order = new KondutoModels\Order(array(
-  "id"                => uniqid(),
-  "visitor"           => "4738d516f09cab3a2c1ee973bec88a5a367a59e4",
-  "total_amount"      => 100.00,
-  "shipping_amount"   => 20.00,
-  "tax_amount"        => 3.45,
-  "currency"          => "USD",
-  "installments"      => 1,
-  "ip"                => "170.149.100.10",
-  "customer"          => $customer,
-  "payment"           => array($credit_card, $boleto),
-  "billing"           => $billing,
-  "shipping"          => $shipping,
-  "shopping_cart"     => array($item1, $item2),
-  "travel"            => $travel
+  "id"                 => uniqid(),
+  "visitor"            => "4738d516f09cab3a2c1ee973bec88a5a367a59e4",
+  "total_amount"       => 100.00,
+  "shipping_amount"    => 20.00,
+  "tax_amount"         => 3.45,
+  "currency"           => "USD",
+  "installments"       => 1,
+  "ip"                 => "170.149.100.10",
+  "purchased_at"       => "2015-04-25T22:29:14Z",
+  "first_message"      => "2015-04-22T18:01:02Z",
+  "messages_exchanged" => 2,
+  "customer"           => $customer,
+  "payment"            => array($credit_card, $boleto),
+  "billing"            => $billing,
+  "shipping"           => $shipping,
+  "shopping_cart"      => array($item1, $item2),
+  "travel"             => $travel
 ));
 ```
 
@@ -108,9 +111,12 @@ visitor | _(required)_ Visitor identifier obtained from our JavaScript snippet.
 total_amount | _(required)_ Total order amount.
 shipping_amount | _(optional)_ Shipping and handling amount.
 tax_amount | _(optional)_ Taxes amount.
+ip | _(optional)_ Customer's IPv4 address.
 currency | _(optional)_ Currency code with 3 letters (ISO-4712).
 installments | _(optional)_ Number of installments in the payment plan.
-ip | _(optional)_ Customer's IPv4 address.
+first_message | _(optional)_  In Marketplaces, it’s the date and time of the first message exchanged between buyer and seller. YYYY-MM-DDTHH:mm:ssZ format (ISO 8601).
+purchased_at | _(optional)_ In Marketplaces, it’s the date and time the order was closed. YYYY-MM-DDTHH:mm:ssZ format (ISO 8601).
+messages_exchanged | _(optional)_ In Marketplaces, should contain the number of messages exchanged between buyer and seller up until the order was placed.
 customer | _(required)_ [Customer object](#Customer) containing the customer details.
 payment | _(optional)_ Array containing [Payment objects](#Payment).
 billing | _(optional)_ [Address object](#Billing) containing billing information.
@@ -123,14 +129,16 @@ travel | _(optional)_ [Travel object](#Travel) containing travel information
 
 ```php
 $customer = new KondutoModels\Customer(array(
-    "id"      => "28372",
-    "name"    => "Mary Jane",
-    "tax_id"  => "6253407",
-    "phone1"  => "212-555-1234",
-    "phone2"  => "202-555-6789",
-    "email"   => "mary.jane@example.com",
-    "is_new"  => true,
-    "vip"     => false
+    "id"         => "28372",
+    "name"       => "Mary Jane",
+    "tax_id"     => "6253407",
+    "phone1"     => "212-555-1234",
+    "phone2"     => "202-555-6789",
+    "email"      => "mary.jane@example.com",
+    "is_new"     => true,
+    "vip"        => false,
+    "dob"        => "1988-10-02",
+    "created_at" => "2015-03-29"
 ));
 ```
 * OBS: Differently from API's naming, here we use `is_new` instead of simply `new` because `new` is a reserved word in PHP.
@@ -146,6 +154,8 @@ phone1 | _(optional)_ Customer's primary phone number
 phone2 | _(optional)_ Customer's secondary phone number
 is_new | _(optional)_ Boolean indicating if the customer is using a newly created account for this purchase.
 vip | _(optional)_ Boolean indicating if the customer is a VIP or frequent buyer.
+dob | _(optional)_ Date of birth (YYYY-MM-DD).
+created_at | _(optional)_ Date of creation of customer account (YYYY-MM-DD).
 
 
 ### <a name="Payment"></a>Payment information
@@ -257,7 +267,8 @@ $item1 = new KondutoModels\Item(array(
     "name"          => "Green T-Shirt",
     "description"   => "Male Green T-Shirt V Neck",
     "unit_cost"     => 1999.99,
-    "quantity"      => 1
+    "quantity"      => 1,
+    "created_at"    => "2015-02-28"
 ));
 
 $item2 = new KondutoModels\Item(array(
@@ -267,7 +278,8 @@ $item2 = new KondutoModels\Item(array(
     "description" => "Pair of Yellow Socks",
     "unit_cost"   => 29.90,
     "quantity"    => 2,
-    "discount"    => 5.00
+    "discount"    => 5.00,
+    "created_at"  => "2015-02-28"
 ));
 ```
 
@@ -281,6 +293,7 @@ description | _(optional)_ Detailed description of the item.
 unit_cost | _(optional)_ Cost of a single unit of this item.
 quantity | _(optional)_ Number of units purchased.
 discount | _(optional)_ Discounted amount for this item.
+created_at | _(optional)_ Date of creation of item in the system (YYYY-MM-DD).
 
 
 ### <a name="Travel"></a>Travel
@@ -430,23 +443,28 @@ category | _(optional)_ Category of loyalty program.
 
 ```php
 $order = new KondutoModels\Order(array(
-  "id"              => uniqid(),
-  "visitor"         => "4738d516f09cab3a2c1ee973bec88a5a367a59e4",
-  "total_amount"    => 100.00,
-  "shipping_amount" => 20.00,
-  "tax_amount"      => 3.45,
-  "currency"        => "USD",
-  "installments"    => 1,
-  "ip"              => "170.149.100.10",
-  "customer"        => array(
-    "id"     => "28372",
-    "name"   => "Mary Jane",
-    "tax_id" => "6253407",
-    "phone1" => "212-555-1234",
-    "phone2" => "202-555-6789",
-    "email"  => "mary.jane@example.com",
-    "is_new" => true,
-    "vip"    => false
+  "id"                 => uniqid(),
+  "visitor"            => "4738d516f09cab3a2c1ee973bec88a5a367a59e4",
+  "total_amount"       => 100.00,
+  "shipping_amount"    => 20.00,
+  "tax_amount"         => 3.45,
+  "currency"           => "USD",
+  "installments"       => 1,
+  "ip"                 => "170.149.100.10",
+  "purchased_at"       => "2015-04-25T22:29:14Z",
+  "first_message"      => "2015-04-22T18:01:02Z",
+  "messages_exchanged" => 2,
+  "customer"           => array(
+    "id"         => "28372",
+    "name"       => "Mary Jane",
+    "tax_id"     => "6253407",
+    "phone1"     => "212-555-1234",
+    "phone2"     => "202-555-6789",
+    "email"      => "mary.jane@example.com",
+    "is_new"     => true,
+    "vip"        => false,
+    "dob"        => "1988-10-02",
+    "created_at" => "2015-03-29"
   ),
   "payment" => array(
     array(
@@ -487,7 +505,8 @@ $order = new KondutoModels\Order(array(
       "name"         => "Green T-Shirt",
       "description"  => "Male Green T-Shirt V Neck",
       "unit_cost"    => 1999.99,
-      "quantity"     => 1
+      "quantity"     => 1,
+      "created_at"  => "2015-02-28"
     ),
     array(
       "sku"         => "0017273",
@@ -496,7 +515,8 @@ $order = new KondutoModels\Order(array(
       "description" => "Pair of Yellow Socks",
       "unit_cost"   => 29.90,
       "quantity"    => 2,
-      "discount"    => 5.00
+      "discount"    => 5.00,
+      "created_at"  => "2015-02-28"
     )
   )
 ));
