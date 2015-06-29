@@ -16,7 +16,7 @@ This document refers to the **PHP SDK** used for our API.
 ```json
 {
   "require": {
-    "konduto/sdk": "v1.3.1"
+    "konduto/sdk": "v1.3.2"
   }
 }
 ```
