@@ -16,7 +16,7 @@ This document refers to the **PHP SDK** used for our API.
 ```json
 {
   "require": {
-    "konduto/sdk": "v1.3.2"
+    "konduto/sdk": "v1.3.3"
   }
 }
 ```
@@ -99,7 +99,8 @@ $order = new KondutoModels\Order(array(
   "billing"            => $billing,
   "shipping"           => $shipping,
   "shopping_cart"      => array($item1, $item2),
-  "travel"             => $travel
+  "travel"             => $travel,
+  "seller"             => $seller
 ));
 ```
 
@@ -123,6 +124,7 @@ billing | _(optional)_ [Address object](#Billing) containing billing information
 shipping | _(optional)_ [Address object](#Shipping) containing shipping information.
 shopping_cart | _(optional)_ Array containing the [Item objects](#Item).
 travel | _(optional)_ [Travel object](#Travel) containing travel information
+seller | _(optional)_ [Seller object](#Seller) Used by Marketplaces to indicate information about the seller.
 
 
 ### <a name="Customer"></a>Customer information
@@ -438,6 +440,22 @@ Parameter | Description
 program | _(optional)_ Name of loyalty program.
 category | _(optional)_ Category of loyalty program.
 
+
+#### <a name="Seller"></a>Seller
+
+Parameter | Description
+--- | ---
+id | _(required)_ Id of the seller.
+name | _(optional)_ Name of the seller.
+created_at | _(optional)_ Seller creation date within the Marketplace, in YYYY-MM-DD format (ISO 8601).
+
+```php
+$seller = new KondutoModels\Seller(array(
+    "id" => "A000003",
+    "name" => "Daniel Marinus Kan",
+    "created_at" => "2015-03-25"
+));
+```
 
 ### Creating an order with all fields at once
 
