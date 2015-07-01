@@ -220,8 +220,8 @@ class ApiTest extends \PHPUnit_Framework_TestCase {
             "currency" => "USD",
             "installments" => 2,
             "ip" => "221.102.39.19",
-            "purchased_at" => "2015-04-25T22:29:14Z",
-            "first_message" => "2015-04-22T18:01:02Z",
+            // "purchased_at" => "2015-04-25T22:29:00Z",
+            // "first_message" => "2015-04-22T18:01:02Z",
             "messages_exchanged" => 2,
             "customer" => array(
                 "id"     => "Customer n03",
@@ -290,6 +290,11 @@ class ApiTest extends \PHPUnit_Framework_TestCase {
                     "discount" => 5.00,
                     "created_at" => "2013-01-02"
                 )
+            ),
+            "seller" => array(
+                "id" => "LOJA55",
+                "name" => "Loja de roupas 55",
+                "created_at" => "2015-01-29"
             )
         ));
 

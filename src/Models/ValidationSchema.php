@@ -17,7 +17,7 @@ const REGEX_DIGITS         = "/^[0-9]+\z/";
 const REGEX_HEXA_DIGITS    = "/^[a-fA-F0-9]+\z/";
 const REGEX_DATE           = "/^\d{4}-\d{2}-\d{2}\z/";
 const REGEX_DATETIME       = "/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}Z\z/";
-const REGEX_DATETIME_SECS  = "/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z\z/";
+const REGEX_DATETIME_SECS  = "/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?Z\z/";
 const REGEX_IPv4           = "/^(?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\.){3}(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]?|[0-9])\z/";
 const REGEX_CREDIT         = "/^credit\z/";
 const REGEX_BOLETO         = "/^boleto\z/";
@@ -119,6 +119,11 @@ abstract class ValidationSchema {
             "date"            => array(TYPE_STRING, 17,     17, REGEX_DATETIME),
             "class"           => array(TYPE_STRING,  1,      8, REGEX_TRAVEL_CLASS),
             "fare_basis"      => array(TYPE_STRING,  0,     20)
+        ),
+        "seller" => array(
+            "id"         => array(TYPE_STRING, 0, 100),
+            "name"       => array(TYPE_STRING, 0, 100),
+            "created_at" => array(TYPE_STRING, 8,  10, REGEX_DATE)
         )
     );
 

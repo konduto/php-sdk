@@ -31,7 +31,8 @@ class Order extends Model {
         "travel" => null,
         "purchased_at" => null,
         "first_message" => null,
-        "messages_exchanged" => null
+        "messages_exchanged" => null,
+        "seller" => null
     );
 
     protected $_mandatory_fields = array("id", "total_amount", "customer");
@@ -62,6 +63,10 @@ class Order extends Model {
 
     public function travel($value = null) {
         return $this->set_get_object("travel", $value, "Konduto\Models\Travel");
+    }
+
+    public function seller($value = null) {
+        return $this->set_get_object("seller", $value, "Konduto\Models\Seller");
     }
 
     public function payment($payment_array = null) {

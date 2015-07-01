@@ -5,8 +5,6 @@ use Konduto\Models as KondutoModels;
 use Konduto\Exceptions as KondutoExceptions;
 
 class ModelsTest extends \PHPUnit_Framework_TestCase {
-    public static $testOrder_2 = null;
-
 
     public function testCustomer() {
         $customer = array(
@@ -113,14 +111,12 @@ class ModelsTest extends \PHPUnit_Framework_TestCase {
             "id"           => "Order-90125",
             "total_amount"  => 312.71,
             "ip"           => "221.102.39.19",
-            "customer"     =>
-            array(
+            "customer"     => array(
                 "id"    => "Customer n03",
                 "name"  => "Hiroyuki Endo",
                 "email" => "endo.hiroyuki@yahoo.jp"
             ),
-            "payment"      =>
-            array(
+            "payment" => array(
                 array(
                     "type" => "credit",
                     "bin" => "490172",
@@ -136,8 +132,7 @@ class ModelsTest extends \PHPUnit_Framework_TestCase {
                     "expiration_date" => "082016"
                 )
             ),
-            "billing"      =>
-            array(
+            "billing" => array(
                 "name" => "Mary Jane",
                 "address1" => "123 Main St.",
                 "address2" => "Apartment 4",
@@ -146,8 +141,7 @@ class ModelsTest extends \PHPUnit_Framework_TestCase {
                 "zip" => "10460",
                 "country" => "US"
             ),
-            "shipping"     =>
-            array(
+            "shipping" => array(
                 "name" => "Mary Jane",
                 "address1" => "123 Main St.",
                 "address2" => "Apartment 4",
@@ -156,8 +150,7 @@ class ModelsTest extends \PHPUnit_Framework_TestCase {
                 "zip" => "10460",
                 "country" => "US"
             ),
-            "shopping_cart" =>
-            array(
+            "shopping_cart" => array(
                 array(
                     "sku" => "9919023",
                     "product_code" => 1231,
@@ -176,6 +169,11 @@ class ModelsTest extends \PHPUnit_Framework_TestCase {
                     "quantity" => 2,
                     "discount" => 5.00
                 )
+            ),
+            "seller" => array(
+                "id"         => "Loja-A023",
+                "name"       => "Loja de especiarias do Chileno",
+                "created_at" => "2014-12-15"
             )
         ));
 
@@ -189,6 +187,67 @@ class ModelsTest extends \PHPUnit_Framework_TestCase {
         else {
             $this->assertTrue(TRUE);
         }
+    }
+
+    public function test_instances() {
+        $mary_jane_address = array(
+            "name" => "Mary Jane",
+            "address1" => "123 Main St.",
+            "address2" => "Apartment 4",
+            "city" => "New York City",
+            "state" => "NY",
+            "zip" => "10460",
+            "country" => "US"
+        );
+
+        $o = new KondutoModels\Order(array(
+            "id"           => "Order-90125",
+            "total_amount"  => 312.71,
+            "ip"           => "221.102.39.19",
+            "customer"     => array(
+                "id"    => "Customer n03",
+                "name"  => "Hiroyuki Endo",
+                "email" => "endo.hiroyuki@yahoo.jp"
+            ),
+            "payment" => array(
+                array(
+                    "type" => "credit",
+                    "bin" => "490172",
+                    "last4"=> "0012",
+                    "expiration_date" => "072015",
+                    "status" => "approved"
+                ),
+                array(
+                    "type" => "boleto"
+                )
+            ),
+            "billing" => $mary_jane_address,
+            "shipping" => $mary_jane_address,
+            "shopping_cart" => array(
+                array(
+                    "sku" => "9919023",
+                    "product_code" => 1231,
+                    "category" => 201,
+                    "name" => "Green T-Shirt",
+                    "description" => "Male Green T-Shirt V Neck",
+                    "unit_cost" => 1999.99,
+                    "quantity" => 1
+                )
+            ),
+            "seller" => array(
+                "id"         => "Loja-A023",
+                "name"       => "Loja de especiarias do Chileno",
+                "created_at" => "2014-12-15"
+            )
+        ));
+
+        $this->assertInstanceOf("Konduto\Models\Customer", $o->customer());
+        $this->assertInstanceOf("Konduto\Models\CreditCard", $o->payment()[0]);
+        $this->assertInstanceOf("Konduto\Models\Boleto", $o->payment()[1]);
+        $this->assertInstanceOf("Konduto\Models\Address", $o->billing());
+        $this->assertInstanceOf("Konduto\Models\Address", $o->shipping());
+        $this->assertInstanceOf("Konduto\Models\Item", $o->shopping_cart()[0]);
+        $this->assertInstanceOf("Konduto\Models\Seller", $o->seller());
     }
 
 

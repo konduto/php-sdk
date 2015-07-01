@@ -19,6 +19,7 @@ require_once "src/Models/ValidationSchema.php";
 require_once "src/Models/Entity.php";
 require_once "src/Models/Model.php";
 require_once "src/Models/Customer.php";
+require_once "src/Models/Seller.php";
 require_once "src/Models/Loyalty.php";
 require_once "src/Models/Passenger.php";
 require_once "src/Models/TravelLeg.php";
