@@ -6,7 +6,7 @@ use \Konduto\Exceptions as Exceptions;
 /*
  * Current version of this library
  */
-const SDK_VERSION = "v1.3.2";
+const SDK_VERSION = "v1.3.3";
 
 /*
  * Defines what URL to communicate with.
