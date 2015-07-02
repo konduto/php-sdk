@@ -4,6 +4,11 @@ use \Konduto\Models as Models;
 use \Konduto\Exceptions as Exceptions;
 
 /*
+ * Current version of this library
+ */
+const SDK_VERSION = "v1.3.2";
+
+/*
  * Defines what URL to communicate with.
  */
 const ENDPOINT = "https://api.konduto.com/";
@@ -11,7 +16,7 @@ const ENDPOINT = "https://api.konduto.com/";
 /*
  * Current version of the API.
  */
-const CURRENT_VERSION = "v1";
+const API_VERSION = "v1";
 
 /*
  * Number of seconds before giving up of waiting for a response from Konduto API
@@ -50,7 +55,7 @@ const HTTP_INTERNAL_ERROR = 500;
  */
 abstract class ApiControl {
 
-    protected static $version = CURRENT_VERSION;  // Version of Konduto API to be used
+    protected static $version = API_VERSION;  // Version of Konduto API to be used
     protected static $key;                        // Secret key used for Konduto API
     protected static $lastResponse;               // String containing last response from a request to Konduto API
 
@@ -87,7 +92,7 @@ abstract class ApiControl {
 
         $headers = array(
             "Authorization: Basic " . base64_encode(self::$key),
-            "X-Requested-With: Konduto SDK PHP " . self::$version
+            "X-Requested-With: Konduto SDK PHP " . SDK_VERSION
         );
 
         // Add additional headers
@@ -179,7 +184,7 @@ abstract class ApiControl {
      * @throws InvalidVersionException if the version cannot be recognized
      */
     protected static function validate_version($version) {
-        if ($version != CURRENT_VERSION) {
+        if ($version != API_VERSION) {
             throw new Exceptions\InvalidVersionException($version);
         }
     }
