@@ -37,5 +37,5 @@ require_once "src/Models/Item.php";
 require_once "src/Models/Navigation.php";
 require_once "src/Models/Boleto.php";
 require_once "src/Models/Order.php";
-require_once "src/Core/ApiControl.php";
+require_once "src/Core/HttpRequest.php";
 require_once "src/Core/Konduto.php";
