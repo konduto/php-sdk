@@ -1,18 +1,21 @@
 <?php namespace Konduto\Models;
 
+use Konduto\Parsers\ModelParser;
+
 class Flight extends Travel {
 
-    public function __construct() {
-        parent::__construct(func_num_args() == 1 ? func_get_arg(0) : func_get_args());
-        // Set 'flight' to type
-        $this->set(array("type" => Travel::TYPE_FLIGHT));
+    public function __construct($args) {
+        parent::__construct($args);
+        $this->setType(self::TYPE_FLIGHT);
     }
 
-    public function departure($value = null) {
-        return $this->set_get_object("departure", $value, "Konduto\Models\FlightLeg");
-    }
-
-    public function return_leg($value = null) {
-        return $this->set_get_object("return", $value, "Konduto\Models\FlightLeg");
+    /**
+     * @inheritdoc
+     */
+    protected function parsers() {
+        return array(
+            "departure" => new ModelParser('Konduto\Models\FlightLeg'),
+            "return" => new ModelParser('Konduto\Models\FlightLeg'),
+        );
     }
 }

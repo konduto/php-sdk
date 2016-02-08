@@ -1,43 +1,70 @@
 <?php namespace Konduto\Models;
 
-const PAYMENT_APPROVED = "approved";
-const PAYMENT_DECLINED = "declined";
-const PAYMENT_PENDING  = "pending";
+class Payment extends BaseModel {
 
-abstract class Payment extends Model {
-
-    const TYPE_CARD = "credit";
+    const TYPE_CREDIT = "credit";
     const TYPE_BOLETO = "boleto";
+    const TYPE_DEBIT = "debit";
+    const TYPE_TRANSFER = "transfer";
+    const TYPE_VOUCHER = "voucher";
 
-    protected $available_types = array(self::TYPE_CARD, self::TYPE_BOLETO);
+    const STATUS_APPROVED = "approved";
+    const STATUS_DECLINED = "declined";
+    const STATUS_PENDING  = "pending";
+
+    public static $available_types = array(self::TYPE_CREDIT, self::TYPE_BOLETO,
+        self::TYPE_DEBIT, self::TYPE_TRANSFER, self::TYPE_VOUCHER);
+
+    /**
+     * @inheritdoc
+     */
+    protected function fields() {
+        return array("type", "status");
+    }
 
     /**
      * Given an array, instantiates a payment among the possible
      * types of payments. The decision of what Model to use is made
-     * with field 'type'
-     * @param $array_of_args: array containing fields of the Payment
-     * @return a CreditCard or Boleto object
+     * by field 'type'
+     * @param $array: array containing fields of the Payment
+     * @return Payment CreditCard or Boleto object
      */
-    public static function instantiate($array_of_args) {
-        if (is_array($array_of_args)
-            && array_key_exists("type", $array_of_args)) {
-            $type = $array_of_args["type"];
-            unset($array_of_args["type"]);
-            switch ($type) {
-                case Payment::TYPE_CARD:
-                    return new CreditCard($array_of_args);
+    public static function build(array $array) {
+        if (array_key_exists("type", $array) && in_array($array["type"], self::$available_types)) {
+            switch ($array["type"]) {
+                case Payment::TYPE_CREDIT:
+                    return new CreditCard($array);
                     break;
 
                 case Payment::TYPE_BOLETO:
-                    return new Boleto($array_of_args);
+                    return new Boleto($array);
                     break;
 
-                default:
-                    return null;
+                case Payment::TYPE_DEBIT:
+                case Payment::TYPE_TRANSFER:
+                case Payment::TYPE_VOUCHER:
+                    return new Payment($array);
+                    break;
+
+                default:  // Exception
             }
         }
-        else {
-            return null;
-        }
+        throw new \InvalidArgumentException("Array must contain a valid 'type' field");
+    }
+
+    public function getType() {
+        return $this->get("type");
+    }
+
+    public function getStatus() {
+        return $this->get("status");
+    }
+
+    public function setType($value) {
+        $this->set("type", $value);
+    }
+
+    public function setStatus($value) {
+        $this->set("status", $value);
     }
 }

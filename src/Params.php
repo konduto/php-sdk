@@ -1,6 +1,6 @@
 <?php namespace Konduto;
 
-class Params {
+abstract class Params {
     /*
      * Current version of this library
      */

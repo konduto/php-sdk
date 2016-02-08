@@ -2,6 +2,7 @@
 
 class TimeoutException extends KondutoException {
 
-    public $message = "Communication timeout for Konduto API";
-    public function __construct() {}
+    public function __construct() {
+        parent::__construct("Communication timeout for Konduto API");
+    }
 }

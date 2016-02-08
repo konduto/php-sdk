@@ -1,9 +1,7 @@
 <?php namespace Konduto\Exceptions;
 
-class OrderNotFoundException extends KondutoException {
+use Konduto\Core\HttpResponse;
 
-    public function __construct($order_id) {
-        $message = "Order '$order_id' not found.";
-        parent::__construct($message);
-    }
+class OrderNotFoundException extends KondutoException {
+    static protected $httpCode = HttpResponse::HTTP_STATUS_NOT_FOUND;
 }

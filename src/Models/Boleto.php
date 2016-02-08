@@ -2,17 +2,23 @@
 
 class Boleto extends Payment {
 
-    protected $_schema_key = "boleto";
+    public function __construct(array $args) {
+        parent::__construct($args);
+        $this->setType(self::TYPE_BOLETO);
+    }
 
-    protected $_properties = array(
-        "type" => Payment::TYPE_BOLETO,
-        "expiration_date" => null,
-        "status" => null
-    );
+    /**
+     * @inheritdoc
+     */
+    protected function fields() {
+        return array_merge(parent::fields(), array("expiration_date"));
+    }
 
-    protected $_mandatory_fields = array("type");
+    public function getExpirationDate() {
+        return $this->get("expiration_date");
+    }
 
-    public function status() {
-        return null;
+    public function setExpirationDate($value) {
+        $this->set("expiration_date", $value);
     }
 }

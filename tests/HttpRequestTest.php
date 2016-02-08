@@ -31,4 +31,11 @@ class HttpRequestTest extends \PHPUnit_Framework_TestCase {
         $this->assertArrayHasKey("X-Requested-With", $headers);
         $this->assertEquals($headers["X-Requested-With"], "Konduto php-sdk " . Parameters::SDK_VERSION);
     }
+
+//    function test_getJson() {
+//        $req = new HttpRequest("get", "/uri");
+//        $headers = $req->getHeaders();
+//        $this->assertArrayHasKey("X-Requested-With", $headers);
+//        $this->assertEquals($headers["X-Requested-With"], "Konduto php-sdk " . Parameters::SDK_VERSION);
+//    }
 }

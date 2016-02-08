@@ -1,7 +1,7 @@
 <?php namespace Konduto\Exceptions;
 
-class KondutoAPIErrorException extends KondutoException {
+use Konduto\Core\HttpResponse;
 
-    public $message = "API internal error. Please, contact bugs@konduto.com";
-    public function __construct() {}
+class KondutoAPIErrorException extends KondutoException {
+    static protected $httpCode = HttpResponse::HTTP_STATUS_INTERNAL_ERROR;
 }

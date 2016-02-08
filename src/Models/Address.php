@@ -2,15 +2,42 @@
 
 class Address extends Geolocation {
 
-    protected $_schema_key = 'address';
+    /**
+     * @inheritdoc
+     */
+    protected function fields() {
+        return array_merge(parent::fields(), array("name", "address1", "address2", "zip"));
+    }
 
-    protected $_properties = array(
-        "name" => null,
-        "address1" => null,
-        "address2" => null,
-        "city" => null,
-        "state" => null,
-        "zip" => null,
-        "country" => null
-    );
+    public function getName() {
+        return $this->get("name");
+    }
+
+    public function getAddress1() {
+        return $this->get("address1");
+    }
+
+    public function getAddress2() {
+        return $this->get("address2");
+    }
+
+    public function getZip() {
+        return $this->get("zip");
+    }
+
+    public function setName($value) {
+        $this->set("zip", $value);
+    }
+
+    public function setAddress1($value) {
+        $this->set("address1", $value);
+    }
+
+    public function setAddress2($value) {
+        $this->set("address2", $value);
+    }
+
+    public function setZip($value) {
+        $this->set("zip", $value);
+    }
 }

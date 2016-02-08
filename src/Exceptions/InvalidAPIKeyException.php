@@ -1,14 +1,7 @@
 <?php namespace Konduto\Exceptions;
 
-/**
- * This exception is thrown when the provided key is not a base64,
- * or, when trying to perform a transaction, the API responds with "invalid key" error.
- */
+use Konduto\Core\HttpResponse;
 
 class InvalidAPIKeyException extends KondutoException {
-
-    public function __construct($key) {
-        $message = "Provided API key '{$key}' is not valid";
-        parent::__construct($message);
-    }
+    static protected $httpCode = HttpResponse::HTTP_STATUS_UNAUTHORIZED;
 }

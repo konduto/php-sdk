@@ -12,13 +12,13 @@ use \Konduto\Params as Parameters;
  */
 class HttpRequest {
 
-    public static $available_methods = array("get", "post", "put");
+    public static $availableMethods = array("get", "post", "put");
 
     protected $method;
     protected $uri;
     protected $verifySSL;
     protected $headers = array();
-    protected $body = null;
+    protected $body = "";
 
     /**
      * HttpRequest constructor.
@@ -27,8 +27,8 @@ class HttpRequest {
      * @param $verifySSL bool
      */
     public function __construct($method, $uri, $verifySSL=true) {
-        if (!in_array($method, self::$available_methods))
-            throw new \InvalidArgumentException("Method must be one of: " . implode(", ", self::$available_methods));
+        if (!in_array($method, self::$availableMethods))
+            throw new \InvalidArgumentException("Method must be one of: " . implode(", ", self::$availableMethods));
         $this->uri = $uri;
         $this->method = $method;
         $this->verifySSL = $verifySSL;
@@ -49,8 +49,9 @@ class HttpRequest {
         $this->setHeader("Content-length", strlen($body));
     }
 
-    public function setJsonBody($body) {
-        $this->setBody($body);
+    public function setBodyAsJson(array $body) {
+        $bodyStr = json_encode($body);
+        $this->setBody($bodyStr);
         $this->setContentType("application/json; charset=utf-8");
     }
 
@@ -60,25 +61,23 @@ class HttpRequest {
 
     public function send() {
         $curlSession = new CurlSession($this->uri);
-        $headers = $this->headers;
-        $headersKeys = array_keys($this->headers);
-        $headersArray = array_map(function ($key) use ($headers) {return "$key: $headers[$key]";}, $headersKeys);
+
         $options = array(
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_CONNECTTIMEOUT => Parameters::API_TIMEOUT,
             CURLOPT_FAILONERROR    => false,
-            CURLOPT_HTTPHEADER     => $headersArray,
+            CURLOPT_HTTPHEADER     => $this->buildHeadersArray(),
             CURLOPT_SSL_VERIFYPEER => $this->verifySSL
         );
 
         switch ($this->method) {
             case "post":
                 $options[CURLOPT_POST] = true;
-                $options[CURLOPT_POSTFIELDS] = $this->body;
+                $options[CURLOPT_POSTFIELDS] = $this->getBody();
                 break;
             case "put":
                 $options[CURLOPT_CUSTOMREQUEST] = 'PUT';
-                $options[CURLOPT_POSTFIELDS] = $this->body;
+                $options[CURLOPT_POSTFIELDS] = $this->getBody();
                 break;
             case "get":
             default:  // GET is curl's default method: Do nothing.
@@ -90,6 +89,14 @@ class HttpRequest {
         $curlSession->close();
 
         return $response;
+    }
+
+    private function buildHeadersArray() {
+        $headers = $this->headers;
+        $headersKeys = array_keys($headers);
+        $headersArray = array_map(function ($key) use ($headers) {return "$key: $headers[$key]";},
+            $headersKeys);
+        return $headersArray;
     }
 
     public function getMethod() {

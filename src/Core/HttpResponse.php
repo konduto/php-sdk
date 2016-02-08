@@ -5,14 +5,16 @@ use Konduto\Exceptions as Exceptions;
 class HttpResponse {
 
     const HTTP_STATUS_OK = 200;
+    const HTTP_STATUS_BAD_REQUEST = 400;
     const HTTP_STATUS_UNAUTHORIZED = 401;
     const HTTP_STATUS_FORBIDDEN = 403;
     const HTTP_STATUS_NOT_FOUND = 404;
+    const HTTP_TOO_MANY_REQUESTS = 429;
     const HTTP_STATUS_INTERNAL_ERROR = 500;
 
-    public $body;
-    public $httpStatus;
-    public $curlCode;
+    protected $body;
+    protected $httpStatus;
+    protected $curlCode;
 
     public function __construct(CurlSession $curlSession) {
         $this->httpStatus = $curlSession->getInfo(CURLINFO_HTTP_CODE);
@@ -20,7 +22,7 @@ class HttpResponse {
         $this->body = $curlSession->getResponseBody();
     }
 
-    public function checkResponse() {
+    public function checkCurlResponse() {
         // Treat curl errors
         switch ($this->curlCode) {
             case CURLE_OK:  // No errors.
@@ -32,27 +34,13 @@ class HttpResponse {
             default:
                 throw new Exceptions\CommunicationErrorException($this->curlCode);
         }
-
-        // Treat http status code
-        switch ($this->httpStatus) {
-            case self::HTTP_STATUS_INTERNAL_ERROR:
-                throw new Exceptions\KondutoAPIErrorException();
-                break;
-            case self::HTTP_STATUS_UNAUTHORIZED:
-                throw new Exceptions\InvalidAPIKeyException("");
-                break;
-            case self::HTTP_STATUS_FORBIDDEN:
-                throw new Exceptions\OperationNotAllowedException();
-                break;
-            default: // Do nothing.
-        }
     }
 
     public function getBody() {
         return $this->body;
     }
 
-    public function getBodyAssocArray() {
+    public function getBodyAsJson() {
         return json_decode($this->getBody(), true);
     }
 
@@ -62,5 +50,9 @@ class HttpResponse {
 
     public function getHttpStatus() {
         return $this->httpStatus;
+    }
+
+    public function isOk() {
+        return $this->httpStatus == self::HTTP_STATUS_OK;
     }
 }

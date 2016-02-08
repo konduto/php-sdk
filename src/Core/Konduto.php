@@ -1,7 +1,8 @@
 <?php namespace Konduto\Core;
 
-use \Konduto\Models as Models;
-use \Konduto\Exceptions as Exceptions;
+use \Konduto\Models\Order;
+use \Konduto\Exceptions;
+use \Konduto\Params;
 
 /**
  * Konduto SDK core component
@@ -14,7 +15,6 @@ use \Konduto\Exceptions as Exceptions;
  *
  * The available methods are:
  * - setApiKey
- * - setVersion
  * - sendOrder
  * - analyze
  * - updateOrderStatus
@@ -24,140 +24,60 @@ use \Konduto\Exceptions as Exceptions;
  *
  * @version v2
  */
-abstract class Konduto extends ApiControl {
+abstract class Konduto {
 
-    /**
-     * Sets the version of Konduto API that will be used for performing requests.
-     *
-     * @param ver version
-     *
-     * @throws InvalidVersionException if version is not existent
-     */
-    public static function setVersion($ver = CURRENT_VERSION) {
-        self::validate_version($ver);
-        self::$version = $ver;
-    }
+    public static $key = "";
+    private static $useSSL = true;
 
-    /**
-     * Sets an API key to be used for authenticating Konduto API in requests.
-     *
-     * @param key API key
-     *
-     * @throws InvalidAPIKeyException if key is not valid
-     */
     public static function setApiKey($key) {
         if (is_string($key) and strlen($key) == 21 and ($key[0] == 'T' or $key[0] == 'P')) {
             self::$key = $key;
+            self::$useSSL = $key[0] == 'P';
             return true;
         }
-        throw new Exceptions\InvalidAPIKeyException($key);
+        throw new Exceptions\InvalidAPIKeyException("Invalid API key: $key");
     }
 
-    /**
-     * Queries an order previously analyzed by Konduto API given its id
-     *
-     * @param id
-     *
-     * @throws InvalidOrderException if param id is not a valid id
-     *
-     * @return order \Konduto\Models\Order object with order data
-     */
-    public static function getOrder($id) {
-        if (!Models\ValidationSchema::validateField('order' ,'id', $id)) {
-            throw new Exceptions\InvalidOrderException("id");
-        }
-
-        $message_array = self::sendRequest(null, METHOD_GET, "/orders/{$id}");
-
-        // Do a check in the response for an error 404.
-        self::was_order_found($message_array, $id);
-
-        if (!array_key_exists("order", $message_array)) {
-            throw new Exceptions\KondutoSDKError();
-        }
-
-        return new Models\Order($message_array["order"]);
+    public static function getOrder($orderId) {
+        $response = self::requestApi("get", null, $orderId);
+        $order = new Order($response->getBodyAsJson());
+        return $order;
     }
 
-    /**
-     * Sends an order for analysis using Konduto and returns a recomnendation
-     *
-     * When an order is sent for analysis, the property 'recommendation' inside order param is populated
-     * with the recommendation returned by Konduto.
-     *
-     * @param order a valid \Konduto\Models\Order object
-     * @param analyze boolean. If set to false, just send order to Konduto, but do not analyse it.
-     *
-     * @throws InvalidOrderException if the provided order does not contain all valid fields.
-     *
-     * @return true if success
-     */
-    public static function analyze(Models\Order &$order, $analyze = true) {
-
-        if (!$order->is_valid()) {
-            throw new Exceptions\InvalidOrderException($order->get_errors());
-            return;
-        }
-
-        $order_array = $order->to_array();
-
-        if ($analyze === false) {
-            $order_array["analyze"] = false;
-        }
-
-        $response = self::sendRequest(json_encode($order_array),
-                        METHOD_POST, '/orders');
-
-        if (self::check_post_response($response, $order->id())
-                and $analyze === true) {
-            $order->set($response["order"]);
-        }
-
-        return true;
+    public static function analyze(Order $order) {
+        $orderJson = $order->toJsonArray();
+        $response = self::requestApi("post", $orderJson);
+        $responseJson = $response->getBodyAsJson();
+        $newOrder = new Order(array_merge($orderJson, $responseJson));
+        return $newOrder;
     }
 
-    /**
-     * Persists an order without analyzing it
-     *
-     * It is an alias for Konduto::analyze($order, false)
-     */
-    public static function sendOrder(Models\Order &$order) {
-        return self::analyze($order, false);
+    public static function sendOrder(Order $order) {
+        $order->setAnalyzeFlag(false);
+        return self::analyze($order);
     }
 
-    /**
-     * Updates the status of an existing order
-     *
-     * Sends to Konduto system the information regarding the outcome of this order. This action
-     * is required to improve Konduto recommendation algorithm.
-     *
-     * @param order_id id of the order being updated
-     * @param status string containing 'approved', 'declined' or 'fraud'
-     * @param comments string containing comments of why the status is being updated as so
-     *
-     * @throws InvalidOrderException if the provided order_id or status are not valid
-     *
-     * @return boolean whether the operation is successfull
-     */
-    public static function updateOrderStatus($order_id, $status, $comments = "") {
+    public static function updateOrderStatus($orderId, $status, $comments) {
+        $body = array("status" => $status, "comments" => $comments);
+        $response = self::requestApi("put", $body, $orderId);
+        return $response->isOk();
+    }
 
-        if (!in_array($status, array(Models\STATUS_APPROVED, Models\STATUS_DECLINED, Models\STATUS_FRAUD))) {
-            throw new Exceptions\InvalidOrderException("status");
+    protected static function requestApi($method, $body=null, $id=null) {
+        $uri = Params::ENDPOINT;
+        if (in_array($method, array("get", "put"))) $uri .= "/$id";
+        $request = new HttpRequest($method, $uri, self::$useSSL);
+        $request->setBasicAuthorization(self::$key);
+        if ($body != null) $request->setBodyAsJson($body);
+
+        $response = $request->send();
+        $response->checkCurlResponse();
+        if (!$response->isOk()) {
+            $respBody = $response->getBody();
+            $httpStatus = $response->getHttpStatus();
+            throw Exceptions\KondutoException::buildFromHttpStatus($respBody, $httpStatus);
         }
 
-        if (!Models\ValidationSchema::validateField("order", 'id', $order_id)) {
-            throw new Exceptions\InvalidOrderException("id");
-        }
-
-        $json_msg = array(
-            "status" => $status,
-            "comments" => "$comments"
-        );
-
-        $json_msg = json_encode($json_msg);
-
-        $response = self::sendRequest($json_msg, METHOD_PUT, "/orders/$order_id");
-
-        return self::was_order_found($response, $order_id);
+        return $response;
     }
 }
