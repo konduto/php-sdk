@@ -4,20 +4,20 @@ use \Konduto\Exceptions as Exceptions;
 use \Konduto\Params as Parameters;
 
 /**
- * API specific control methods
- *
- * This class describes details of the API functioning, such as use of curl library.
- * It provides auxiliary methods to be used by the public methods.
- * All its methods are protected.
+ * Class HttpRequest
+ * Simple model for HTTP requests using cURL
+ * @package Konduto\Core
  */
 class HttpRequest {
 
-    public static $availableMethods = array("get", "post", "put");
+    protected static $availableMethods = array("get", "post", "put");
 
     protected $method;
     protected $uri;
     protected $verifySSL;
+    protected $curlSession = null;
     protected $headers = array();
+    protected $additionalCurlOptions = array();
     protected $body = "";
 
     /**
@@ -25,13 +25,16 @@ class HttpRequest {
      * @param $method string one of the $available_methods
      * @param $uri string uri to be requested
      * @param $verifySSL bool
+     * @param $additionCurlOpts array
      */
-    public function __construct($method, $uri, $verifySSL=true) {
+    public function __construct($method, $uri, $verifySSL=true,
+                                array $additionCurlOpts = array()) {
         if (!in_array($method, self::$availableMethods))
-            throw new \InvalidArgumentException("Method must be one of: " . implode(", ", self::$availableMethods));
+            throw new \InvalidArgumentException("Method must be one of: ".implode(", ", self::$availableMethods));
         $this->uri = $uri;
         $this->method = $method;
         $this->verifySSL = $verifySSL;
+        $this->additionalCurlOptions = $additionCurlOpts;
         $this->setHeader("X-Requested-With", "Konduto php-sdk " . Parameters::SDK_VERSION);
     }
 
@@ -60,15 +63,15 @@ class HttpRequest {
     }
 
     public function send() {
-        $curlSession = new CurlSession($this->uri);
+        $curlSession = $this->startCurlSession();
 
-        $options = array(
+        $options = array_replace(array(
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_CONNECTTIMEOUT => Parameters::API_TIMEOUT,
             CURLOPT_FAILONERROR    => false,
             CURLOPT_HTTPHEADER     => $this->buildHeadersArray(),
-            CURLOPT_SSL_VERIFYPEER => $this->verifySSL
-        );
+            CURLOPT_SSL_VERIFYPEER => $this->verifySSL),
+            $this->additionalCurlOptions);
 
         switch ($this->method) {
             case "post":
@@ -99,6 +102,10 @@ class HttpRequest {
         return $headersArray;
     }
 
+    private function startCurlSession() {
+        return $this->curlSession != null ? $this->curlSession : new CurlSession($this->uri);
+    }
+
     public function getMethod() {
         return $this->method;
     }
@@ -113,6 +120,14 @@ class HttpRequest {
 
     public function getHeaders() {
         return $this->headers;
+    }
+
+    public function getCurlSession() {
+        return $this->curlSession;
+    }
+
+    public function setCurlSession($curlSession) {
+        $this->curlSession = $curlSession;
     }
 }
 

@@ -1,11 +1,24 @@
 <?php namespace Konduto\Models;
 
+use Konduto\Parsers\DateTimeParser;
+
 class Item extends BaseModel {
 
+    /**
+     * @inheritdoc
+     */
     protected function fields() {
         return array("sku", "product_code", "category", "description",
             "name", "unit_cost", "quantity", "discount", "created_at");
     }
+
+    /**
+     * @inheritDoc
+     */
+    protected function parsers() {
+        return array("created_at", new DateTimeParser('date(\'Y-m-d H:i:s\')'));
+    }
+
 
     public function getSku() {
         return $this->get("sku");

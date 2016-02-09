@@ -1,5 +1,10 @@
 <?php namespace Konduto\Core;
 
+/**
+ * Models curl lib calls in a object-oriented way
+ * Easier for testing.
+ * @package Konduto\Core
+ */
 class CurlSession {
 
     private $handle;

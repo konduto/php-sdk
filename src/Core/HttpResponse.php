@@ -16,10 +16,10 @@ class HttpResponse {
     protected $httpStatus;
     protected $curlCode;
 
-    public function __construct(CurlSession $curlSession) {
-        $this->httpStatus = $curlSession->getInfo(CURLINFO_HTTP_CODE);
-        $this->curlCode = $curlSession->getErrorNo();
-        $this->body = $curlSession->getResponseBody();
+    public function __construct(CurlSession $openCurlSession) {
+        $this->httpStatus = $openCurlSession->getInfo(CURLINFO_HTTP_CODE);
+        $this->curlCode = $openCurlSession->getErrorNo();
+        $this->body = $openCurlSession->getResponseBody();
     }
 
     public function checkCurlResponse() {

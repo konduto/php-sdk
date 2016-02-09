@@ -28,6 +28,7 @@ abstract class Konduto {
 
     public static $key = "";
     private static $useSSL = true;
+    protected static $additionCurlOpts = array();
 
     public static function setApiKey($key) {
         if (is_string($key) and strlen($key) == 21 and ($key[0] == 'T' or $key[0] == 'P')) {
@@ -65,8 +66,8 @@ abstract class Konduto {
 
     protected static function requestApi($method, $body=null, $id=null) {
         $uri = Params::ENDPOINT;
-        if (in_array($method, array("get", "put"))) $uri .= "/$id";
-        $request = new HttpRequest($method, $uri, self::$useSSL);
+        if ($method == "get" || $method == "put") $uri .= "/$id";
+        $request = new HttpRequest($method, $uri, self::$useSSL, self::$additionCurlOpts);
         $request->setBasicAuthorization(self::$key);
         if ($body != null) $request->setBodyAsJson($body);
 
@@ -79,5 +80,9 @@ abstract class Konduto {
         }
 
         return $response;
+    }
+
+    protected static function setCurlOptions(array $optionsArray) {
+        self::$additionCurlOpts = $optionsArray;
     }
 }

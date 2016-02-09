@@ -22,7 +22,7 @@ class KondutoException extends \Exception {
     }
 
     static public function buildFromHttpStatus($body, $code) {
-        if (self::isDuplicateOrder($code, $body))  // Only way of discovering duplicate order
+        if (self::isDuplicateOrder($code, $body))  // Only way of discovering a duplicate order
             return new DuplicateOrderException($body);
         foreach (get_declared_classes() as $ExceptionClass) {
             if ($ExceptionClass instanceof KondutoException

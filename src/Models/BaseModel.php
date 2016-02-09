@@ -1,12 +1,14 @@
 <?php namespace Konduto\Models;
 
 use Konduto\Parsers\DefaultParser as DefaultParser;
+use Konduto\Parsers\IParser;
 
 abstract class BaseModel {
 
     // Internal properties
     private $_properties;
     protected $defaultParser;
+    protected static $customParsers = array();
 
     /**
      * Return an array with names of the default fields accepted
@@ -25,22 +27,6 @@ abstract class BaseModel {
         $this->defaultParser = new DefaultParser();
         foreach ($args as $key => $val)
             $this->set($key, $val);
-    }
-
-    /**
-     * Return an associative array with names of fields as
-     * keys and parsers as values.
-     * Example:
-     *
-     * array(
-     *    "field_a" => new CustomParser(),
-     *    "field_b" => new DateParser()
-     * )
-     *
-     * @return array
-     */
-    protected function parsers() {
-        return array();
     }
 
     /**
@@ -73,6 +59,32 @@ abstract class BaseModel {
     }
 
     /**
+     * Return an associative array with names of fields as
+     * keys and parsers as values.
+     * Example:
+     *
+     * array(
+     *    "field_a" => new CustomParser(),
+     *    "field_b" => new DateParser()
+     * )
+     *
+     * @see BaseModel::toJsonArray , BaseModel::set
+     *
+     * @return array
+     */
+    protected function parsers() {
+        return array();
+    }
+
+    public static function addCustomParser($field, IParser $parser) {
+        self::$customParsers[$field] = $parser;
+    }
+
+    public static function removeCustomParser($field) {
+        unset(self::$customParsers[$field]);
+    }
+
+    /**
      * Build an array representation of this object using $_properties
      * that can be encoded as json.
      * The parsers are responsible to unparse the values into
@@ -96,7 +108,7 @@ abstract class BaseModel {
     }
 
     protected function getParser($field) {
-        $parsers = $this->parsers();
-        return (in_array($field, $parsers)) ? $parsers[$field] : $this->defaultParser;
+        $parsers = array_replace($this->parsers(), self::$customParsers);
+        return (key_exists($field, $parsers)) ? $parsers[$field] : $this->defaultParser;
     }
 }

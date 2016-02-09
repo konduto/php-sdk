@@ -5,7 +5,7 @@
  * require_once "konduto/sdk/konduto.php";
  */
 require_once "src/Exceptions/KondutoException.php";
-require_once "src/Exceptions/CommunicationErrorException.php";
+require_once "src/Exceptions/CommunicationError.php";
 require_once "src/Exceptions/DuplicateOrderException.php";
 require_once "src/Exceptions/InvalidAPIKeyException.php";
 require_once "src/Exceptions/InvalidOrderException.php";

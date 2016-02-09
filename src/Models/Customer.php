@@ -1,5 +1,7 @@
 <?php namespace Konduto\Models;
 
+use Konduto\Parsers\DateTimeParser;
+
 class Customer extends BaseModel {
 
     /**
@@ -9,6 +11,17 @@ class Customer extends BaseModel {
         return array("id", "name", "tax_id", "phone1", "phone2",
             "email", "new", "vip", "dob", "created_at");
     }
+
+    /**
+     * @inheritDoc
+     */
+    protected function parsers() {
+        return array(
+            "dob" => new DateTimeParser('Y-m-d'),
+            "created_at" => new DateTimeParser('Y-m-d')
+        );
+    }
+
 
     public function getId() {
         return $this->get("id");
