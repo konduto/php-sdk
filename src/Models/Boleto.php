@@ -1,6 +1,6 @@
 <?php namespace Konduto\Models;
 
-use Konduto\Parsers\DateTimeParser;
+use Konduto\Parsers\DateParser;
 
 class Boleto extends Payment {
 
@@ -20,7 +20,7 @@ class Boleto extends Payment {
      * @inheritDoc
      */
     protected function initParsers() {
-        return array("expiration_date" => new DateTimeParser('Y-m-d'));
+        return array("expiration_date" => new DateParser());
     }
 
 

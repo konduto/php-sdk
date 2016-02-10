@@ -25,16 +25,15 @@ class HttpRequest {
      * @param $method string one of the $available_methods
      * @param $uri string uri to be requested
      * @param $verifySSL bool
-     * @param $additionCurlOpts array
+     * @param $additionalCurlOpts array
      */
-    public function __construct($method, $uri, $verifySSL=true,
-                                array $additionCurlOpts = array()) {
+    public function __construct($method, $uri, $verifySSL=true, array $additionalCurlOpts = array()) {
         if (!in_array($method, self::$availableMethods))
             throw new \InvalidArgumentException("Method must be one of: ".implode(", ", self::$availableMethods));
         $this->uri = $uri;
         $this->method = $method;
         $this->verifySSL = $verifySSL;
-        $this->additionalCurlOptions = $additionCurlOpts;
+        $this->additionalCurlOptions = $additionalCurlOpts;
         $this->setHeader("X-Requested-With", "Konduto php-sdk " . Parameters::SDK_VERSION);
     }
 

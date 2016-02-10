@@ -2,6 +2,6 @@
 
 use Konduto\Core\HttpResponse;
 
-class OperationNotAllowedException extends KondutoException {
+class OperationNotAllowedException extends HttpCodedException {
     static protected $httpCode = HttpResponse::HTTP_STATUS_FORBIDDEN;
 }

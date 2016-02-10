@@ -3,9 +3,6 @@
 use Konduto\Parsers\ArrayModelParser;
 use Konduto\Parsers\DateTimeParser;
 use Konduto\Parsers\ModelParser;
-use Konduto\Parsers\NullDateTimeUnparser;
-use Konduto\Parsers\NullModelUnparser;
-use Konduto\Parsers\NullUnparser;
 use Konduto\Parsers\PaymentArrayParser;
 
 class Order extends BaseModel {
@@ -37,9 +34,9 @@ class Order extends BaseModel {
     protected function initParsers() {
         return array(
             "customer" => new ModelParser('Konduto\Models\Customer'),
-            "payment" => new PaymentArrayParser(),
             "billing" => new ModelParser('Konduto\Models\Address'),
             "shipping" => new ModelParser('Konduto\Models\Address'),
+            "payment" => new PaymentArrayParser(),
             "shopping_cart" => new ArrayModelParser('Konduto\Models\Item'),
             "purchased_at" => new DateTimeParser('Y-m-d\TH:i:s\Z'),
             "first_message" => new DateTimeParser('Y-m-d\TH:i:s\Z'),

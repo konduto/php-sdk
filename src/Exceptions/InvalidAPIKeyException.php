@@ -2,6 +2,6 @@
 
 use Konduto\Core\HttpResponse;
 
-class InvalidAPIKeyException extends KondutoException {
+class InvalidAPIKeyException extends HttpCodedException {
     static protected $httpCode = HttpResponse::HTTP_STATUS_UNAUTHORIZED;
 }

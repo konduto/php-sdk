@@ -13,6 +13,7 @@ class HttpResponse {
     const HTTP_STATUS_INTERNAL_ERROR = 500;
 
     protected $body;
+    protected $jsonBody = null;
     protected $httpStatus;
     protected $curlCode;
 
@@ -41,7 +42,9 @@ class HttpResponse {
     }
 
     public function getBodyAsJson() {
-        return json_decode($this->getBody(), true);
+        if (is_null($this->jsonBody))
+            $this->jsonBody = json_decode($this->getBody(), true);
+        return $this->jsonBody;
     }
 
     public function getCurlCode() {

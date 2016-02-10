@@ -1,6 +1,6 @@
 <?php namespace Konduto\Models;
 
-use Konduto\Parsers\DateTimeParser;
+use Konduto\Parsers\DateParser;
 
 class Customer extends BaseModel {
 
@@ -17,8 +17,8 @@ class Customer extends BaseModel {
      */
     protected function initParsers() {
         return array(
-            "dob" => new DateTimeParser('Y-m-d'),
-            "created_at" => new DateTimeParser('Y-m-d')
+            "dob" => new DateParser(),
+            "created_at" => new DateParser()
         );
     }
 
