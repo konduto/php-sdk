@@ -12,10 +12,10 @@ class Flight extends Travel {
     /**
      * @inheritdoc
      */
-    protected function parsers() {
-        return array(
+    protected function initParsers() {
+        return array_replace(parent::initParsers(), array(
             "departure" => new ModelParser('Konduto\Models\FlightLeg'),
             "return" => new ModelParser('Konduto\Models\FlightLeg'),
-        );
+        ));
     }
 }

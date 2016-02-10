@@ -2,7 +2,7 @@
 
 use Konduto\Models\Payment;
 
-class PaymentParser extends DefaultParser {
+class PaymentArrayParser extends DefaultParser {
 
     public function parse($value) {
         if (!is_array($value))

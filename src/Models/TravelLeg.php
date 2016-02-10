@@ -1,5 +1,7 @@
 <?php namespace Konduto\Models;
 
+use Konduto\Parsers\DateTimeParser;
+
 class TravelLeg extends BaseModel {
 
     /**
@@ -7,6 +9,13 @@ class TravelLeg extends BaseModel {
      */
     protected function fields() {
         return array("date", "number_of_connections", "class", "fare_basis");
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function initParsers() {
+        return array("date" => new DateTimeParser('Y-m-d\TH:i\Z'));
     }
 
     public function getDate() {

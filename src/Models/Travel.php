@@ -17,7 +17,7 @@ abstract class Travel extends BaseModel {
     /**
      * @inheritDoc
      */
-    protected function parsers() {
+    protected function initParsers() {
         return array("passengers" => new ArrayModelParser('Konduto\Models\Passenger'));
     }
 
@@ -72,7 +72,7 @@ abstract class Travel extends BaseModel {
         return $this->get("passengers");
     }
 
-    public function setPassengers($value) {
+    public function setPassengers(array $value) {
         $this->set("passengers", $value);
         return $this;
     }

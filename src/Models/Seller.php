@@ -1,5 +1,7 @@
 <?php namespace Konduto\Models;
 
+use Konduto\Parsers\DateTimeParser;
+
 class Seller extends BaseModel {
 
     /**
@@ -7,6 +9,13 @@ class Seller extends BaseModel {
      */
     protected function fields() {
         return array("id", "name", "created_at");
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function initParsers() {
+        return array("created_at" => new DateTimeParser('Y-m-d'));
     }
 
     public function getId() {

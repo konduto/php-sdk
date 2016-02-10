@@ -1,5 +1,7 @@
 <?php namespace Konduto\Models;
 
+use Konduto\Parsers\DateTimeParser;
+
 class CreditCard extends Payment {
 
     /**
@@ -15,6 +17,13 @@ class CreditCard extends Payment {
      */
     protected function fields() {
         return array_merge(parent::fields(), array("bin", "last4", "expiration_date"));
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function initParsers() {
+        return array("expiration_date" => new DateTimeParser('mY'));
     }
 
     public function getBin() {

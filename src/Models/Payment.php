@@ -12,7 +12,7 @@ class Payment extends BaseModel {
     const STATUS_DECLINED = "declined";
     const STATUS_PENDING  = "pending";
 
-    public static $available_types = array(self::TYPE_CREDIT, self::TYPE_BOLETO,
+    public static $availableTypes = array(self::TYPE_CREDIT, self::TYPE_BOLETO,
         self::TYPE_DEBIT, self::TYPE_TRANSFER, self::TYPE_VOUCHER);
 
     /**
@@ -30,7 +30,7 @@ class Payment extends BaseModel {
      * @return Payment CreditCard or Boleto object
      */
     public static function build(array $array) {
-        if (array_key_exists("type", $array) && in_array($array["type"], self::$available_types)) {
+        if (array_key_exists("type", $array) && in_array($array["type"], self::$availableTypes)) {
             switch ($array["type"]) {
                 case Payment::TYPE_CREDIT:
                     return new CreditCard($array);

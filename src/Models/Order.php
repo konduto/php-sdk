@@ -1,10 +1,12 @@
 <?php namespace Konduto\Models;
 
 use Konduto\Parsers\ArrayModelParser;
+use Konduto\Parsers\DateTimeParser;
 use Konduto\Parsers\ModelParser;
+use Konduto\Parsers\NullDateTimeUnparser;
 use Konduto\Parsers\NullModelUnparser;
 use Konduto\Parsers\NullUnparser;
-use Konduto\Parsers\PaymentParser;
+use Konduto\Parsers\PaymentArrayParser;
 
 class Order extends BaseModel {
 
@@ -32,19 +34,20 @@ class Order extends BaseModel {
     /**
      * @inheritdoc
      */
-    protected function parsers() {
+    protected function initParsers() {
         return array(
             "customer" => new ModelParser('Konduto\Models\Customer'),
-            "payment" => new PaymentParser(),
+            "payment" => new PaymentArrayParser(),
             "billing" => new ModelParser('Konduto\Models\Address'),
             "shipping" => new ModelParser('Konduto\Models\Address'),
-            "item" => new ArrayModelParser('Konduto\Models\Item'),
-            "status" => new NullUnparser(),
-            "recommendation" => new NullUnparser(),
-            "timestamp" => new NullUnparser(),
-            "navigation" => new NullModelUnparser('Konduto\Models\Navigation'),
-            "geolocation" => new NullModelUnparser('Konduto\Models\Geolocation'),
-            "device" => new NullModelUnparser('Konduto\Models\Device')
+            "shopping_cart" => new ArrayModelParser('Konduto\Models\Item'),
+            "purchased_at" => new DateTimeParser('Y-m-d\TH:i:s\Z'),
+            "first_message" => new DateTimeParser('Y-m-d\TH:i:s\Z'),
+            "navigation" => new ModelParser('Konduto\Models\Navigation'),
+            "geolocation" => new ModelParser('Konduto\Models\Geolocation'),
+            "device" => new ModelParser('Konduto\Models\Device'),
+            "created_at" => new DateTimeParser('Y-m-d\TH:i:s\Z'),
+            "updated_at" => new DateTimeParser('Y-m-d\TH:i:s\Z')
         );
     }
 
@@ -279,6 +282,15 @@ class Order extends BaseModel {
 
     public function setCreatedAt($value) {
         $this->set("created_at", $value);
+        return $this;
+    }
+
+    public function getUpdatedAt() {
+        return $this->get("updated_at");
+    }
+
+    public function setUpdatedAt($value) {
+        $this->set("updated_at", $value);
         return $this;
     }
 

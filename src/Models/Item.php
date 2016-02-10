@@ -15,8 +15,8 @@ class Item extends BaseModel {
     /**
      * @inheritDoc
      */
-    protected function parsers() {
-        return array("created_at", new DateTimeParser('date(\'Y-m-d H:i:s\')'));
+    protected function initParsers() {
+        return array("created_at", new DateTimeParser('Y-m-d'));
     }
 
 

@@ -14,6 +14,7 @@ class DateTimeParser implements IParser {
 
     public function unparse($value) {
         if (is_a($value, 'DateTime')) {
+            $value->setTimezone(new \DateTimeZone('UTC'));
             $value = date_format($value, $this->outputFormat);
         }
         return $value;

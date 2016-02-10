@@ -6,8 +6,10 @@ use Konduto\Parsers\IParser;
 abstract class BaseModel {
 
     // Internal properties
-    private $_properties;
+    private $_properties = array();
     protected $defaultParser;
+    protected $fields;
+    protected $parsers;
     protected static $customParsers = array();
 
     /**
@@ -23,7 +25,8 @@ abstract class BaseModel {
      * @param $args array
      */
     public function __construct(array $args=array()) {
-        $this->initProperties();
+        $this->parsers = $this->initParsers();
+        $this->fields = $this->fields();
         $this->defaultParser = new DefaultParser();
         foreach ($args as $key => $val)
             $this->set($key, $val);
@@ -42,7 +45,7 @@ abstract class BaseModel {
 
     /**
      * Return the value of the field.
-     * @param $field string
+     * @param string $field
      * @return mixed
      */
     public function get($field) {
@@ -50,12 +53,14 @@ abstract class BaseModel {
     }
 
     /**
-     * Initialize _properties associative array according to the names
-     * of fields indicated by an array returned by 'values' method.
+     * Add a new field that can be enter in the json array representation
+     * of the model.
+     * @param string $field name of the field
+     * @param mixed $value a value to be set
      */
-    private function initProperties() {
-        foreach ($this->fields() as $fieldName)
-            $this->_properties[$fieldName] = null;
+    public function addField($field, $value=null) {
+        $this->fields[] = $field;
+        if ($value != null) $this->set($field, $value);
     }
 
     /**
@@ -65,14 +70,14 @@ abstract class BaseModel {
      *
      * array(
      *    "field_a" => new CustomParser(),
-     *    "field_b" => new DateParser()
+     *    "field_b" => new DateTimeParser()
      * )
      *
      * @see BaseModel::toJsonArray , BaseModel::set
      *
      * @return array
      */
-    protected function parsers() {
+    protected function initParsers() {
         return array();
     }
 
@@ -94,7 +99,7 @@ abstract class BaseModel {
     public function toJsonArray() {
         $array = $this->_properties;
         foreach ($array as $key => $value) {
-            if (!empty($value)) {
+            if (in_array($key, $this->fields) && !is_null($value)) {
                 $parser = $this->getParser($key);
                 $array[$key] = $parser->unparse($value);
             }
@@ -108,7 +113,7 @@ abstract class BaseModel {
     }
 
     protected function getParser($field) {
-        $parsers = array_replace($this->parsers(), self::$customParsers);
+        $parsers = array_replace($this->parsers, self::$customParsers);
         return (key_exists($field, $parsers)) ? $parsers[$field] : $this->defaultParser;
     }
 }

@@ -15,13 +15,12 @@ class Customer extends BaseModel {
     /**
      * @inheritDoc
      */
-    protected function parsers() {
+    protected function initParsers() {
         return array(
             "dob" => new DateTimeParser('Y-m-d'),
             "created_at" => new DateTimeParser('Y-m-d')
         );
     }
-
 
     public function getId() {
         return $this->get("id");

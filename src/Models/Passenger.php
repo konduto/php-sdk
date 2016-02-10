@@ -1,5 +1,8 @@
 <?php namespace Konduto\Models;
 
+use Konduto\Parsers\DateTimeParser;
+use Konduto\Parsers\ModelParser;
+
 class Passenger extends BaseModel {
 
     /**
@@ -8,6 +11,16 @@ class Passenger extends BaseModel {
     protected function fields() {
         return array("name", "document", "document_type", "dob",
             "nationality", "loyalty", "frequent_traveler", "special_needs");
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function initParsers() {
+        return array(
+            "dob" => new DateTimeParser('Y-m-d'),
+            "loyalty" => new ModelParser('Konduto\Models\Loyalty')
+        );
     }
 
     public function getName() {
