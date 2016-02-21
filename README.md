@@ -552,7 +552,7 @@ $update = Konduto::updateOrderStatus("ORD1237163", "approved", "Comments about t
 
 Parameter | Description
 --- | ---
-status | _(required)_ New status for this transaction. Either `approved`, `declined` or `fraud`, when you have identified a fraud or chargeback.
+status | _(required)_ New status for this transaction. Either `approved`, `declined`, `fraud`, `canceled` or `not_authorized`, when you have identified a fraud or chargeback.
 comments | _(required)_ Reason or comments about the status update.
 
 ## Query an order

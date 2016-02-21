@@ -4,6 +4,7 @@ const STATUS_PENDING         = "pending";
 const STATUS_APPROVED        = "approved";
 const STATUS_DECLINED        = "declined";
 const STATUS_FRAUD           = "fraud";
+const STATUS_CANCELED        = "canceled";
 const STATUS_NOT_AUTHORIZED  = "not_authorized";
 
 const RECOMMENDATION_APPROVE = "approve";
