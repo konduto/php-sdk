@@ -1,6 +1,6 @@
 <?php
-require_once "konduto.php";
 require_once "vendor/autoload.php";
+
 use Konduto\Core\Konduto as Konduto;
 use Konduto\Models as KondutoModels;
 use Konduto\Exceptions as KondutoExceptions;
@@ -52,7 +52,7 @@ class ApiTest extends \PHPUnit_Framework_TestCase {
 
         $c = new KondutoModels\Customer(array(
             "id"    => "Customer n01",
-            "name"  => "Homer Simpson",
+            "name"  => "Homer Símpson",
             "email" => "h.simpson@gmail.com"
         ));
 
@@ -78,7 +78,7 @@ class ApiTest extends \PHPUnit_Framework_TestCase {
             $this->assertNotNull($o->recommendation(), 'recommendation');
             // $this->assertNotNull($o->navigation(), 'navigation');
             $this->assertInstanceOf('Konduto\Models\Geolocation', $o->geolocation());
-            $this->assertInstanceOf('Konduto\Models\Navigation', $o->navigation());
+            // $this->assertInstanceOf('Konduto\Models\Navigation', $o->navigation());
             // $this->assertInstanceOf('Konduto\models\device', $o->device());
         }
         catch (Exception $e) {
@@ -137,9 +137,6 @@ class ApiTest extends \PHPUnit_Framework_TestCase {
         $this->assertNotNull($o2->recommendation(), 'recommendation');
         $this->assertNotNull($o2->geolocation(), 'Geolocation');
         $this->assertInstanceOf('Konduto\models\Geolocation', $o2->geolocation());
-        // These 2 lines are commented because we cannot generate a device without providing a visitor id with behaviour
-        // $this->assertNotNull($o2->device(), 'Device');
-        // $this->assertInstanceOf('Konduto\models\Device', $o2->device());
     }
 
 
@@ -220,8 +217,8 @@ class ApiTest extends \PHPUnit_Framework_TestCase {
             "currency" => "USD",
             "installments" => 2,
             "ip" => "221.102.39.19",
-            "purchased_at" => "2015-04-25T22:29:00Z",
-            "first_message" => "2015-04-22T18:01:02Z",
+            "purchased_at" => "2015-04-25T22:00:00Z",
+            "first_message" => "2015-04-22T18:00:00Z",
             "messages_exchanged" => 2,
             "customer" => array(
                 "id" => "Customer n03",
@@ -306,11 +303,8 @@ class ApiTest extends \PHPUnit_Framework_TestCase {
             $this->assertNotNull($o->geolocation(), 'geolocation');
             $this->assertNotNull($o->status(), 'status');
             $this->assertNotNull($o->recommendation(), 'recommendation');
-            $this->assertNotNull($o->navigation(), 'navigation');
             $this->assertInstanceOf('Konduto\Models\Geolocation', $o->geolocation(),
                     "Geolocation obj is not instance of Geolocation class");
-            $this->assertInstanceOf('Konduto\Models\Navigation', $o->navigation(),
-                    "Navigation obj is not instance of Navigation class");
 
             self::$testOrder_3 = $o;
         }
@@ -338,7 +332,7 @@ class ApiTest extends \PHPUnit_Framework_TestCase {
             "ip"              => "170.149.100.10",
             "customer"        => array(
                 "id"     => "28372",
-                "name"   => "Mary Jane",
+                "name"   => "José González",
                 "tax_id" => "6253407",
                 "phone1" => "212-555-1234",
                 "phone2" => "202-555-6789",
@@ -401,31 +395,19 @@ class ApiTest extends \PHPUnit_Framework_TestCase {
 
         $this->assertTrue($o->is_valid(), "Order object is not valid order.");
 
-        // try {
-            Konduto::analyze($o);
+        Konduto::analyze($o);
 
-            $this->assertNotNull($o->geolocation(), 'geolocation');
-            $this->assertNotNull($o->status(), 'status');
-            $this->assertNotNull($o->recommendation(), 'recommendation');
-            $this->assertNotNull($o->navigation(), 'navigation');
-            $this->assertInstanceOf('Konduto\Models\Geolocation', $o->geolocation(),
-                    "Geolocation obj is not instance of Geolocation class");
-            $this->assertInstanceOf('Konduto\Models\Customer', $o->customer(),
-                    "Customer obj is not instance of Customer class");
-            $this->assertInstanceOf('Konduto\Models\Address', $o->billing(),
-                    "Billing obj is not instance of Address class");
-            $this->assertInstanceOf('Konduto\Models\Address', $o->shipping(),
-                    "shipping obj is not instance of Address class");
-            $this->assertInstanceOf('Konduto\Models\Navigation', $o->navigation(),
-                    "Navigation obj is not instance of Navigation class");
-
-            // self::$testOrder_3 = $o;
-        // }
-        // catch (Exception $e) {
-        //     echo "\n-- Exception message: " . $e->getMessage();
-        //     echo "\n-- Last response: " . Konduto::getLastResponse();
-        //     $this->fail("No exception should be thrown.");
-        // }
+        $this->assertNotNull($o->geolocation(), 'geolocation');
+        $this->assertNotNull($o->status(), 'status');
+        $this->assertNotNull($o->recommendation(), 'recommendation');
+        $this->assertInstanceOf('Konduto\Models\Geolocation', $o->geolocation(),
+                "Geolocation obj is not instance of Geolocation class");
+        $this->assertInstanceOf('Konduto\Models\Customer', $o->customer(),
+                "Customer obj is not instance of Customer class");
+        $this->assertInstanceOf('Konduto\Models\Address', $o->billing(),
+                "Billing obj is not instance of Address class");
+        $this->assertInstanceOf('Konduto\Models\Address', $o->shipping(),
+                "shipping obj is not instance of Address class");
     }
 
     /**

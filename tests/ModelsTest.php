@@ -56,7 +56,7 @@ class ModelsTest extends \PHPUnit_Framework_TestCase {
     public function testGetErrors1() {
         $customer = array(
             "id"     => "Customer-n2936",
-            "name"   => "Jose da Silva",
+            "name"   => "José da Silva",
             "tax_id" => "SJ183650",
             "vip" => 25
         );
