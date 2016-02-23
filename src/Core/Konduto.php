@@ -132,7 +132,7 @@ abstract class Konduto extends ApiControl {
      * is required to improve Konduto recommendation algorithm.
      *
      * @param order_id id of the order being updated
-     * @param status string containing 'approved', 'declined' or 'fraud'
+     * @param status string containing 'approved', 'declined', 'fraud', 'canceled' or 'not_authorized'
      * @param comments string containing comments of why the status is being updated as so
      *
      * @throws InvalidOrderException if the provided order_id or status are not valid
@@ -141,7 +141,7 @@ abstract class Konduto extends ApiControl {
      */
     public static function updateOrderStatus($order_id, $status, $comments = "") {
 
-        if (!in_array($status, array(Models\STATUS_APPROVED, Models\STATUS_DECLINED, Models\STATUS_FRAUD))) {
+        if (!in_array($status, array(Models\STATUS_APPROVED, Models\STATUS_DECLINED, Models\STATUS_FRAUD, Models\STATUS_CANCELED, Models\STATUS_NOT_AUTHORIZED))) {
             throw new Exceptions\InvalidOrderException("status");
         }
 
