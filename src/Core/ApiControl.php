@@ -1,7 +1,7 @@
 <?php namespace Konduto\Core;
 
-use \Konduto\Models as Models;
-use \Konduto\Exceptions as Exceptions;
+use Konduto\Models;
+use Konduto\Exceptions;
 
 /*
  * Current version of this library

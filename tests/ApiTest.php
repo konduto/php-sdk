@@ -70,16 +70,10 @@ class ApiTest extends \PHPUnit_Framework_TestCase {
         try {
             $success = Konduto::analyze($o);
             $this->assertTrue($success, "Order posted successfully.");
-
             $this->assertNotNull($o->geolocation(), 'Geolocation');
-            // $this->assertNotNull($o->device(), 'Device');
-
-            $this->assertNotNull($o->status(), 'Status');
+            $this->assertNotNull($o->device(), 'Device');
             $this->assertNotNull($o->recommendation(), 'recommendation');
-            // $this->assertNotNull($o->navigation(), 'navigation');
             $this->assertInstanceOf('Konduto\Models\Geolocation', $o->geolocation());
-            // $this->assertInstanceOf('Konduto\Models\Navigation', $o->navigation());
-            // $this->assertInstanceOf('Konduto\models\device', $o->device());
         }
         catch (Exception $e) {
             echo "\n-- Exception message: " . $e->getMessage();
@@ -133,7 +127,6 @@ class ApiTest extends \PHPUnit_Framework_TestCase {
         $this->assertInstanceOf('Konduto\models\Order', $o2);
 
         // Assert the objects for geolocation, status, recommendation and device are populated
-        $this->assertNotNull($o2->status(), 'Status');
         $this->assertNotNull($o2->recommendation(), 'recommendation');
         $this->assertNotNull($o2->geolocation(), 'Geolocation');
         $this->assertInstanceOf('Konduto\models\Geolocation', $o2->geolocation());
@@ -299,13 +292,10 @@ class ApiTest extends \PHPUnit_Framework_TestCase {
 
         try {
             Konduto::analyze($o);
-
             $this->assertNotNull($o->geolocation(), 'geolocation');
-            $this->assertNotNull($o->status(), 'status');
             $this->assertNotNull($o->recommendation(), 'recommendation');
             $this->assertInstanceOf('Konduto\Models\Geolocation', $o->geolocation(),
                     "Geolocation obj is not instance of Geolocation class");
-
             self::$testOrder_3 = $o;
         }
         catch (Exception $e) {
@@ -394,11 +384,8 @@ class ApiTest extends \PHPUnit_Framework_TestCase {
         ));
 
         $this->assertTrue($o->is_valid(), "Order object is not valid order.");
-
         Konduto::analyze($o);
-
         $this->assertNotNull($o->geolocation(), 'geolocation');
-        $this->assertNotNull($o->status(), 'status');
         $this->assertNotNull($o->recommendation(), 'recommendation');
         $this->assertInstanceOf('Konduto\Models\Geolocation', $o->geolocation(),
                 "Geolocation obj is not instance of Geolocation class");
@@ -416,14 +403,12 @@ class ApiTest extends \PHPUnit_Framework_TestCase {
     public function testFullGet() {
         $o = self::$testOrder_3;
         $o2 = Konduto::getOrder($o->id());
-
         // Let's forget about created_at field for now...
         $o->created_at("2014-12-09 12:26:40");
         $o2->created_at("2014-12-09 12:26:40");
-
+        $o->status("not_authorized");  // Status will be set by Konduto api as not authorized
         $this->assertEquals($o, $o2, "All the fields of both objects should contain the same values.");
     }
-
 
     private function generateUniqueID() {
         $id = str_replace(" ", "", "TestOrder" . microtime());

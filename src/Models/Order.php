@@ -214,33 +214,6 @@ class Order extends Model {
      * @return status string
      */
     protected function get_status() {
-        if (is_string($this->status)) {
-            return $this->status;
-        }
-
-        $this->status = null;
-
-        // If a payment has 'declined' status, status of the order
-        // is 'not_autorized'
-        foreach ($this->payment() as $payment) {
-            if ($payment->status() === PAYMENT_DECLINED) {
-                $this->status = STATUS_NOT_AUTHORIZED;
-                return $this->status;
-            }
-        }
-
-        switch ($this->recommendation()) {
-            case RECOMMENDATION_REVIEW:
-                $this->status = STATUS_PENDING;
-                break;
-            case RECOMMENDATION_APPROVE:
-                $this->status = STATUS_APPROVED;
-                break;
-            case RECOMMENDATION_DECLINE:
-                $this->status = STATUS_DECLINED;
-                break;
-        }
-
         return $this->status;
     }
 }
