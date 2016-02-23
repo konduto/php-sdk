@@ -1,17 +1,16 @@
 <?php namespace Konduto\Models;
 
-const STATUS_PENDING         = "pending";
-const STATUS_APPROVED        = "approved";
-const STATUS_DECLINED        = "declined";
-const STATUS_FRAUD           = "fraud";
-const STATUS_CANCELED        = "canceled";
-const STATUS_NOT_AUTHORIZED  = "not_authorized";
-
-const RECOMMENDATION_APPROVE = "approve";
-const RECOMMENDATION_DECLINE = "decline";
-const RECOMMENDATION_REVIEW  = "review";
-
 class Order extends Model {
+
+    const STATUS_PENDING = "pending";
+    const STATUS_APPROVED = "approved";
+    const STATUS_DECLINED = "declined";
+    const STATUS_FRAUD = "fraud";
+    const STATUS_CANCELED = "canceled";
+    const STATUS_NOT_AUTHORIZED = "not_authorized";
+    const RECOMMENDATION_APPROVE = "approve";
+    const RECOMMENDATION_DECLINE = "decline";
+    const RECOMMENDATION_REVIEW = "review";
 
     protected $_schema_key = "order";
 
@@ -47,52 +46,51 @@ class Order extends Model {
     protected $navigation;
     protected $created_at;
 
-    protected $available_status = array(STATUS_PENDING, STATUS_APPROVED,
-             STATUS_DECLINED, STATUS_FRAUD, STATUS_NOT_AUTHORIZED);
+    public static $AVAILABLE_STATUS = array(self::STATUS_PENDING, self::STATUS_APPROVED,
+            self::STATUS_DECLINED, self::STATUS_FRAUD, self::STATUS_NOT_AUTHORIZED,
+            self::STATUS_CANCELED);
 
     public function customer($value = null) {
-        return $this->set_get_object("customer", $value, "Konduto\Models\Customer");
+        return $this->set_get_object("customer", $value, 'Konduto\Models\Customer');
     }
 
     public function billing($value = null) {
-        return $this->set_get_object("billing", $value, "Konduto\Models\Address");
+        return $this->set_get_object("billing", $value, 'Konduto\Models\Address');
     }
 
     public function shipping($value = null) {
-        return $this->set_get_object("shipping", $value, "Konduto\Models\Address");
+        return $this->set_get_object("shipping", $value, 'Konduto\Models\Address');
     }
 
     public function travel($value = null) {
-        return $this->set_get_object("travel", $value, "Konduto\Models\Travel");
+        return $this->set_get_object("travel", $value, 'Konduto\Models\Travel');
     }
 
     public function seller($value = null) {
-        return $this->set_get_object("seller", $value, "Konduto\Models\Seller");
+        return $this->set_get_object("seller", $value, 'Konduto\Models\Seller');
     }
 
     public function payment($payment_array = null) {
-        return $this->set_get_array_object("payment",
-                 $payment_array, "Konduto\Models\Payment");
+        return $this->set_get_array_object("payment", $payment_array, 'Konduto\Models\Payment');
     }
 
     public function shopping_cart($item_array = null) {
-        return $this->set_get_array_object("shopping_cart",
-                 $item_array, "Konduto\Models\Item");
+        return $this->set_get_array_object("shopping_cart", $item_array, 'Konduto\Models\Item');
     }
 
     /**
      * Adds an item that will be purchased in this order.
-     * @param a Konduto\Models\Item object
+     * @param an Item object
      */
-    public function add_item(\Konduto\Models\Item $item) {
+    public function add_item(Item $item) {
         $this->_properties["shopping_cart"][] = $item;
     }
 
     /**
      * Adds a credit card used to pay for this order.
-     * @param a Konduto\Models\CreditCard object
+     * @param a Payment object
      */
-    public function add_payment(\Konduto\Models\Payment $pmt) {
+    public function add_payment(Payment $pmt) {
         $this->_properties["payment"][] = $pmt;
     }
 
@@ -105,7 +103,7 @@ class Order extends Model {
         if (!isset($status)) {
             return $this->get_status();
         }
-        else if (in_array($status, $this->available_status)) {
+        else if (in_array($status, self::$AVAILABLE_STATUS)) {
             $this->status = $status;
         }
     }
@@ -132,7 +130,7 @@ class Order extends Model {
      * If this order was already subject to analysis by Konduto,
      * returns information
      * about the device used by the customer that submitted order.
-     * @return a Konduto\Models\Device object
+     * @return Device object
      */
     public function device($device = null) {
         if (!isset($device)) {
@@ -150,7 +148,7 @@ class Order extends Model {
      * If this order was already subject to analysis by Konduto,
      * returns information
      * about the geolocation of the order.
-     * @return a Konduto\Models\Geolocation object
+     * @return Geolocation object
      */
     public function geolocation($geo = null) {
         if (!isset($geo)) {
@@ -167,8 +165,7 @@ class Order extends Model {
     /**
      * If this order was already subject to analysis by Konduto,
      * returns the recommendation
-     * @return one of three possible recommendations: 'approve',
-     * 'decline' or 'review'
+     * @return string 'approve', 'decline' or 'review'
      */
     public function recommendation($reco = null) {
         if (!isset($reco)) {
@@ -192,7 +189,7 @@ class Order extends Model {
      * If this order was already subject to analysis by Konduto,
      * returns navigation
      * information regarding the customer who performer this order.
-     * @return a Konduto\Models\Navigation object
+     * @return Navigation object
      */
     public function navigation($nav = null) {
         if (!isset($nav)) {
@@ -217,3 +214,17 @@ class Order extends Model {
         return $this->status;
     }
 }
+
+/**
+ * Namespace-level constants are here due to backward compatibility
+ * @deprecated
+ */
+const STATUS_PENDING = "pending";
+const STATUS_APPROVED = "approved";
+const STATUS_DECLINED  = "declined";
+const STATUS_FRAUD = "fraud";
+const STATUS_CANCELED = "canceled";
+const STATUS_NOT_AUTHORIZED = "not_authorized";
+const RECOMMENDATION_APPROVE = "approve";
+const RECOMMENDATION_DECLINE = "decline";
+const RECOMMENDATION_REVIEW = "review";

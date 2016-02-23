@@ -1,6 +1,5 @@
 <?php namespace Konduto\Core;
 
-use Konduto\Models;
 use Konduto\Exceptions;
 
 /*
@@ -67,9 +66,9 @@ abstract class ApiControl {
      * adding the API version and a relative path provided in the arguments.
      * The body of the request is specified by the parameter data.
      *
-     * @param $data a string containing the body of the request.
-     * @param $method accepts one of the numerical constants METHOD_* defined above.
-     * @param $relative_url the url to be constructed using ENDPOINT and the set version.
+     * @param $data string string containing the body of the request.
+     * @param $method string one of the numerical constants METHOD_* defined above.
+     * @param $relative_url string url to be constructed using ENDPOINT and the set version.
      *
      * @throws InvalidAPIKeyException if an API key was not set (with setApiKey method) or if Konduto API could not recognize the set key as a valid API key
      * @throws CommunicationErrorException if there it could not reach the API
@@ -77,7 +76,7 @@ abstract class ApiControl {
      * @throws KondutoAPIErrorException if the API responds with a message with http status 500 (internal error)
      * @throws OperationNotAllowedException the operation being performed is not allowed for the set API key
      *
-     * @return An associative array with the response of the api and the returned status code.
+     * @return array associative array with the response of the api and the returned status code.
      */
     protected static function sendRequest($data, $method, $relative_url) {
 
@@ -218,7 +217,7 @@ abstract class ApiControl {
     /**
      * Check an HTTP response to order found.
      *
-     * @param response HTTP
+     * @param response string HTTP
      * @param order id, to properly build exception if error happens
      *
      * @throws OrderNotFoundException if http status is 404

@@ -1,7 +1,8 @@
 <?php namespace Konduto\Core;
 
-use \Konduto\Models as Models;
-use \Konduto\Exceptions as Exceptions;
+use Konduto\Models\Order;
+use Konduto\Models\ValidationSchema;
+use Konduto\Exceptions;
 
 /**
  * Konduto SDK core component
@@ -60,10 +61,10 @@ abstract class Konduto extends ApiControl {
      *
      * @throws InvalidOrderException if param id is not a valid id
      *
-     * @return order \Konduto\Models\Order object with order data
+     * @return order Konduto\Models\Order object with order data
      */
     public static function getOrder($id) {
-        if (!Models\ValidationSchema::validateField('order' ,'id', $id)) {
+        if (!ValidationSchema::validateField('order' ,'id', $id)) {
             throw new Exceptions\InvalidOrderException("id");
         }
 
@@ -76,7 +77,7 @@ abstract class Konduto extends ApiControl {
             throw new Exceptions\KondutoSDKError();
         }
 
-        return new Models\Order($message_array["order"]);
+        return new Order($message_array["order"]);
     }
 
     /**
@@ -92,11 +93,10 @@ abstract class Konduto extends ApiControl {
      *
      * @return true if success
      */
-    public static function analyze(Models\Order &$order, $analyze = true) {
+    public static function analyze(Order &$order, $analyze = true) {
 
         if (!$order->is_valid()) {
             throw new Exceptions\InvalidOrderException($order->get_errors());
-            return;
         }
 
         $order_array = $order->to_array();
@@ -121,7 +121,7 @@ abstract class Konduto extends ApiControl {
      *
      * It is an alias for Konduto::analyze($order, false)
      */
-    public static function sendOrder(Models\Order &$order) {
+    public static function sendOrder(Order &$order) {
         return self::analyze($order, false);
     }
 
@@ -141,11 +141,11 @@ abstract class Konduto extends ApiControl {
      */
     public static function updateOrderStatus($order_id, $status, $comments = "") {
 
-        if (!in_array($status, array(Models\STATUS_APPROVED, Models\STATUS_DECLINED, Models\STATUS_FRAUD, Models\STATUS_CANCELED, Models\STATUS_NOT_AUTHORIZED))) {
+        if (!in_array($status, Order::$AVAILABLE_STATUS)) {
             throw new Exceptions\InvalidOrderException("status");
         }
 
-        if (!Models\ValidationSchema::validateField("order", 'id', $order_id)) {
+        if (!ValidationSchema::validateField("order", 'id', $order_id)) {
             throw new Exceptions\InvalidOrderException("id");
         }
 
