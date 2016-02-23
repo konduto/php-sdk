@@ -1,11 +1,10 @@
 <?php namespace Konduto\Models;
 
-const PAYMENT_APPROVED = "approved";
-const PAYMENT_DECLINED = "declined";
-const PAYMENT_PENDING  = "pending";
-
 abstract class Payment extends Model {
 
+    const PAYMENT_APPROVED = "approved";
+    const PAYMENT_DECLINED = "declined";
+    const PAYMENT_PENDING  = "pending";
     const TYPE_CARD = "credit";
     const TYPE_BOLETO = "boleto";
 
@@ -41,3 +40,11 @@ abstract class Payment extends Model {
         }
     }
 }
+
+/**
+ * @deprecated
+ */
+const PAYMENT_APPROVED = "approved";
+const PAYMENT_DECLINED = "declined";
+const PAYMENT_PENDING  = "pending";
+

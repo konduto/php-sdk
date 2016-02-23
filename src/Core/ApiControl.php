@@ -5,7 +5,7 @@ use Konduto\Exceptions;
 /*
  * Current version of this library
  */
-const SDK_VERSION = "v1.3.3";
+const SDK_VERSION = "v1.4.0";
 
 /*
  * Defines what URL to communicate with.
@@ -142,7 +142,7 @@ abstract class ApiControl {
             case CURLE_OK:
                 // No errors.
                 break;
-            case CURLE_OPERATION_TIMEDOUT:
+            case CURLE_OPERATION_TIMEOUTED:
                 throw new Exceptions\TimeoutException();
                 break;
             case CURLE_COULDNT_CONNECT:

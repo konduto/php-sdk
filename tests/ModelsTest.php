@@ -241,13 +241,15 @@ class ModelsTest extends \PHPUnit_Framework_TestCase {
             )
         ));
 
-        $this->assertInstanceOf("Konduto\Models\Customer", $o->customer());
-        $this->assertInstanceOf("Konduto\Models\CreditCard", $o->payment()[0]);
-        $this->assertInstanceOf("Konduto\Models\Boleto", $o->payment()[1]);
-        $this->assertInstanceOf("Konduto\Models\Address", $o->billing());
-        $this->assertInstanceOf("Konduto\Models\Address", $o->shipping());
-        $this->assertInstanceOf("Konduto\Models\Item", $o->shopping_cart()[0]);
-        $this->assertInstanceOf("Konduto\Models\Seller", $o->seller());
+        $payment = $o->payment();
+        $shopping_cart = $o->shopping_cart();
+        $this->assertInstanceOf('Konduto\Models\Customer', $o->customer());
+        $this->assertInstanceOf('Konduto\Models\CreditCard', $payment[0]);
+        $this->assertInstanceOf('Konduto\Models\Boleto', $payment[1]);
+        $this->assertInstanceOf('Konduto\Models\Address', $o->billing());
+        $this->assertInstanceOf('Konduto\Models\Address', $o->shipping());
+        $this->assertInstanceOf('Konduto\Models\Item', $shopping_cart[0]);
+        $this->assertInstanceOf('Konduto\Models\Seller', $o->seller());
     }
 
 
