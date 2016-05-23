@@ -4,6 +4,7 @@ use Konduto\Parsers\ArrayModelParser;
 use Konduto\Parsers\DateTimeParser;
 use Konduto\Parsers\ModelParser;
 use Konduto\Parsers\PaymentArrayParser;
+use Konduto\Parsers\TravelParser;
 
 class Order extends BaseModel {
 
@@ -46,7 +47,8 @@ class Order extends BaseModel {
             "device" => new ModelParser('Konduto\Models\Device'),
             "created_at" => new DateTimeParser('Y-m-d\TH:i:s\Z'),
             "updated_at" => new DateTimeParser('Y-m-d\TH:i:s\Z'),
-            "seller" => new ModelParser('Konduto\Models\Seller')
+            "seller" => new ModelParser('Konduto\Models\Seller'),
+            "travel" => new TravelParser()
         );
     }
 

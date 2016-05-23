@@ -16,23 +16,37 @@ class GetOrderTest extends \PHPUnit_Framework_TestCase {
 
     function test_getOrderSimple() {
         $order = $this->buildOrder();
-        Konduto::analyze($order);
-        $order = Konduto::getOrder($order->getId());
+        $order = $this->analyzeAndQuery($order);
         $this->assertOrderFields($order);
     }
 
     function test_getOrderWithShoppingCart() {
         $order = $this->buildOrderWithShoppingCart();
-        Konduto::analyze($order);
-        $order = Konduto::getOrder($order->getId());
+        $order = $this->analyzeAndQuery($order);
         $this->assertOrderWithShoppingCart($order);
     }
 
     function test_getOrderWithSeller() {
         $order = $this->buildOrderWithSeller();
-        Konduto::analyze($order);
-        $order = Konduto::getOrder($order->getId());
+        $order = $this->analyzeAndQuery($order);
         $this->assertOrderWithSeller($order);
+    }
+
+    function test_getFlightOrder() {
+        $order = $this->buildFlightOrder();
+        $order = $this->analyzeAndQuery($order);
+        $this->assertFlightOrder($order);
+    }
+
+    function test_getBusOrder() {
+        $order = $this->buildBusOrder();
+        $order = $this->analyzeAndQuery($order);
+        $this->assertBusOrder($order);
+    }
+
+    function analyzeAndQuery(Order $order) {
+        Konduto::analyze($order);
+        return Konduto::getOrder($order->getId());
     }
 
     /**
@@ -135,6 +149,83 @@ class GetOrderTest extends \PHPUnit_Framework_TestCase {
         ));
     }
 
+    function buildFlightOrder() {
+        return $this->buildOrder(array(
+            "travel" => array(
+                "type" => "flight",
+                "departure" => array(
+                    "origin_airport" => "GRU",
+                    "destination_airport" => "SFO",
+                    "date" => "2018-12-25T18:00Z",
+                    "number_of_connections" => 1,
+                    "class" => "economy",
+                    "fare_basis" => "Y"
+                ),
+                "return" => array(
+                    "origin_airport" => "SFO",
+                    "destination_airport" => "GRU",
+                    "date" => "2018-12-30T18:00Z",
+                    "number_of_connections" => 1,
+                    "class" => "business"
+                ),
+                "passengers" => array(
+                    array(
+                        "name" => "Júlia da Silva",
+                        "document" => "12345678909",
+                        "document_type" => "id",
+                        "dob" => "1970-01-01",
+                        "nationality" => "BR",
+                        "loyalty" => array(
+                            "program" => "smiles",
+                            "category" => "gold"
+                        ),
+                        "frequent_traveler" => true,
+                        "special_needs" => false
+                    ),
+                    array(
+                        "name" => "Carlos Siqueira",
+                        "document" => "XYZ1234",
+                        "document_type" => "passport",
+                        "dob" => "1970-12-01",
+                        "nationality" => "US",
+                        "loyalty" => array(
+                            "program" => "multiplus",
+                            "category" => "silver"
+                        ),
+                        "frequent_traveler" => false,
+                        "special_needs" => true
+                    )
+                )
+            )
+        ));
+    }
+
+    function buildBusOrder() {
+        return $this->buildOrder(array(
+            "travel" => array(
+                "type" => "bus",
+                "departure" => array(
+                    "origin_city" => "São Paulo",
+                    "destination_city" => "Campinas",
+                    "date" => "2018-12-25T18:00Z"
+                ),
+                "passengers" => array(
+                    array(
+                        "name" => "Júlia da Silva",
+                        "document" => "12345678909",
+                        "document_type" => "id",
+                        "dob" => "1970-01-01",
+                        "nationality" => "BR",
+                        "loyalty" => array(
+                            "program" => "smiles",
+                            "category" => "gold"
+                        )
+                    )
+                )
+            )
+        ));
+    }
+
     function assertOrderFields(Order $order) {
         $this->assertEquals($this->uniqueId, $order->getId());
         $this->assertEquals("da39a3ee5e6b4b0d3255bfef95601890afd80709", $order->getVisitor());
@@ -214,6 +305,40 @@ class GetOrderTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals("012", $seller->getId());
         $this->assertEquals("Vendedor", $seller->getName());
         $this->assertEquals(new \DateTime("2015-03-31"), $seller->getCreatedAt());
+    }
+
+    function assertFlightOrder(Order $order) {
+        $travel = $order->getTravel();
+        $this->assertInstanceOf('Konduto\Models\Flight', $travel);
+        $this->assertInstanceOf('Konduto\Models\FlightLeg', $travel->getDeparture());
+        $this->assertInstanceOf('Konduto\Models\FlightLeg', $travel->getReturn());
+        $passengers = $travel->getPassengers();
+        $this->assertEquals(2, count($passengers));
+        $pass0 = $passengers[0];
+        $pass1 = $passengers[1];
+        $this->assertInstanceOf('Konduto\Models\Passenger', $pass0);
+        $this->assertInstanceOf('Konduto\Models\Passenger', $pass1);
+        $this->assertEquals("Carlos Siqueira", $pass1->getName());
+        $this->assertEquals("XYZ1234", $pass1->getDocument());
+        $this->assertEquals("passport", $pass1->getDocumentType());
+        $this->assertEquals(new \DateTime("1970-12-01"), $pass1->getDob());
+        $this->assertEquals("US", $pass1->getNationality());
+        $this->assertInstanceOf('\Konduto\Models\Loyalty', $pass1->getLoyalty());
+        $this->assertEquals("multiplus", $pass1->getLoyalty()->getProgram());
+        $this->assertFalse($pass1->getFrequentTraveler());
+        $this->assertTrue($pass1->getSpecialNeeds());
+    }
+
+    function assertBusOrder(Order $order) {
+        $travel = $order->getTravel();
+        $this->assertInstanceOf('Konduto\Models\BusTravel', $travel);
+        $this->assertInstanceOf('Konduto\Models\BusTravelLeg', $travel->getDeparture());
+        $passengers = $travel->getPassengers();
+        $this->assertEquals(1, count($passengers));
+        $pass0 = $passengers[0];
+        $this->assertInstanceOf('Konduto\Models\Passenger', $pass0);
+        $this->assertEquals("Campinas", $travel->getDeparture()->getDestinationCity());
+        $this->assertEquals("São Paulo", $travel->getDeparture()->getOriginCity());
     }
 
     function assertShoppingCartItem(Item $item, $createdAt, $sku, $productCode, $category,

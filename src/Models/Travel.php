@@ -49,6 +49,9 @@ abstract class Travel extends BaseModel {
         return $this;
     }
 
+    /**
+     * @return \Konduto\Models\TravelLeg
+     */
     public function getDeparture() {
         return $this->get("departure");
     }
@@ -58,6 +61,9 @@ abstract class Travel extends BaseModel {
         return $this;
     }
 
+    /**
+     * @return \Konduto\Models\TravelLeg
+     */
     public function getReturn() {
         return $this->get("return");
     }
@@ -67,6 +73,9 @@ abstract class Travel extends BaseModel {
         return $this;
     }
 
+    /**
+     * @return \Konduto\Models\Passenger[]
+     */
     public function getPassengers() {
         return $this->get("passengers");
     }

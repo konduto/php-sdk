@@ -11,7 +11,7 @@ class PaymentTest extends \PHPUnit_Framework_TestCase {
             "type" => "credit",
             "bin" => "531234",
             "last4" => "1123",
-            "expiration_date" => '2018-12-23 02:30:00'
+            "expiration_date" => '122018'
         ));
         $ccArr = $cc->toJsonArray();
         $this->assertInstanceOf('Konduto\Models\CreditCard', $cc);

@@ -148,8 +148,7 @@ class PostOrderTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals("122020", $pay1->getExpirationDate());
         $this->assertEquals("approved", $pay1->getStatus());
         $this->assertInstanceOf('Konduto\Models\Boleto', $pay2);
-         $this->assertEquals(new \DateTime("2016-05-23"), $pay2->getExpirationDate());
-        $this->assertEquals("pending", $pay2->getStatus());
+        $this->assertEquals(new \DateTime("2016-05-23"), $pay2->getExpirationDate());
         $this->assertOrder1Fields($order);
     }
 }
