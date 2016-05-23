@@ -1,4 +1,4 @@
-<?php namespace Konduto\Tests;
+<?php namespace Konduto\Tests\Integration;
 
 use Konduto\Core\Konduto;
 use Konduto\Models\Order;
@@ -11,37 +11,54 @@ class PostOrderTest extends \PHPUnit_Framework_TestCase {
         Konduto::setApiKey("T738D516F09CAB3A2C1EE");
     }
 
-    function test_simplePostApprove() {
-        $order = $this->buildOrder1(array("total_amount" => 100));
+    function test_expectRecommendationApprove() {
+        $order = $this->buildOrderSimple(array("total_amount" => 100));
         $order = Konduto::analyze($order);
         $this->assertOrderResponse($order, 'APPROVE', 0);
     }
 
-    function test_simplePostReview() {
-        $order = $this->buildOrder1(array("total_amount" => 100.31));
+    function test_expectRecommendationReview() {
+        $order = $this->buildOrderSimple(array("total_amount" => 100.31));
         $order = Konduto::analyze($order);
         $this->assertOrderResponse($order, 'REVIEW', 0.31);
     }
 
-    function test_simplePostDecline() {
-        $order = $this->buildOrder1(array("total_amount" => 100.61));
+    function test_expectRecommendationDecline() {
+        $order = $this->buildOrderSimple(array("total_amount" => 100.61));
         $order = Konduto::analyze($order);
         $this->assertOrderResponse($order, 'DECLINE', 0.61);
     }
 
+    function test_flagAnalyzeFalse() {
+        $order = $this->buildOrderSimple(array("analyze" => false));
+        $order = Konduto::analyze($order);
+        $this->assertOrderResponse($order, 'NONE', -1);
+    }
+
+    function test_payments() {
+        $order = $this->buildOrderPayments();
+        $order = Konduto::analyze($order);
+        $this->assertOrderPayments($order);
+    }
+
     function test_simplePostBadRequest() {
-        $order = $this->buildOrder1(array("total_amount" => "bad_value"));
+        $order = $this->buildOrderSimple(array("total_amount" => "bad_value"));
         $this->setExpectedException('Konduto\Exceptions\BadRequestError');
         Konduto::analyze($order);
     }
 
     function test_assertAllFields() {
-        $order = $this->buildOrder1();
+        $order = $this->buildOrderSimple();
         $order = Konduto::analyze($order);
         $this->assertOrder1Fields($order);
     }
 
-    function buildOrder1(array $info = array()) {
+    /**
+     * Builds a simple order with a Customer
+     * @param array $info array to merge onto array passed to constructor
+     * @return Order
+     */
+    function buildOrderSimple(array $info = array()) {
         $this->uniqueId = "PhpSdkOrder1-" . uniqid();
         $order = new Order(array_replace(array(
             "id" => $this->uniqueId,
@@ -68,11 +85,31 @@ class PostOrderTest extends \PHPUnit_Framework_TestCase {
         return $order;
     }
 
+    function buildOrderPayments() {
+        return $this->buildOrderSimple(array(
+            "payment" => array(
+                array(
+                    "type" => "credit",
+                    "status" => "approved",
+                    "bin" => "123456",
+                    "last4" => "0987",
+                    "expiration_date" => "122020"
+                ),
+                array(
+                    "type" => "boleto",
+                    "expiration_date" => "2016-05-23"
+                )
+            )
+        ));
+    }
+
     function assertOrderResponse(Order $order, $recommendation, $score) {
         $this->assertEquals($recommendation, $order->getRecommendation());
         $this->assertEquals($score, $order->getScore());
-        $this->assertInstanceOf('Konduto\Models\Device', $order->getDevice());
-        $this->assertInstanceOf('Konduto\Models\Geolocation', $order->getGeolocation());
+        if ($recommendation != 'NONE') {
+            $this->assertInstanceOf('Konduto\Models\Device', $order->getDevice());
+            $this->assertInstanceOf('Konduto\Models\Geolocation', $order->getGeolocation());
+        }
     }
 
     function assertOrder1Fields(Order $order) {
@@ -97,5 +134,22 @@ class PostOrderTest extends \PHPUnit_Framework_TestCase {
         $this->assertFalse($customer->getNew());
         $this->assertFalse($customer->getVip());
         $this->assertOrderResponse($order, "APPROVE", 0.01);
+    }
+
+    function assertOrderPayments(Order $order) {
+        $payment = $order->getPayment();
+        $this->assertNotNull($payment);
+        $this->assertEquals(2, count($payment));
+        $pay1 = $payment[0];
+        $pay2 = $payment[1];
+        $this->assertInstanceOf('Konduto\Models\CreditCard', $pay1);
+        $this->assertEquals("123456", $pay1->getBin());
+        $this->assertEquals("0987", $pay1->getLast4());
+        $this->assertEquals("122020", $pay1->getExpirationDate());
+        $this->assertEquals("approved", $pay1->getStatus());
+        $this->assertInstanceOf('Konduto\Models\Boleto', $pay2);
+         $this->assertEquals(new \DateTime("2016-05-23"), $pay2->getExpirationDate());
+        $this->assertEquals("pending", $pay2->getStatus());
+        $this->assertOrder1Fields($order);
     }
 }

@@ -45,7 +45,8 @@ class Order extends BaseModel {
             "geolocation" => new ModelParser('Konduto\Models\Geolocation'),
             "device" => new ModelParser('Konduto\Models\Device'),
             "created_at" => new DateTimeParser('Y-m-d\TH:i:s\Z'),
-            "updated_at" => new DateTimeParser('Y-m-d\TH:i:s\Z')
+            "updated_at" => new DateTimeParser('Y-m-d\TH:i:s\Z'),
+            "seller" => new ModelParser('Konduto\Models\Seller')
         );
     }
 
@@ -122,7 +123,7 @@ class Order extends BaseModel {
     }
 
     /**
-     * @return array
+     * @return \Konduto\Models\Payment[]
      */
     public function getPayment() {
         return $this->get("payment");
@@ -170,7 +171,7 @@ class Order extends BaseModel {
     }
 
     /**
-     * @return array
+     * @return \Konduto\Models\Item[]
      */
     public function getShoppingCart() {
         return $this->get("shopping_cart");

@@ -19,13 +19,6 @@ class CreditCard extends Payment {
         return array_merge(parent::fields(), array("bin", "last4", "expiration_date"));
     }
 
-    /**
-     * @inheritDoc
-     */
-    protected function initParsers() {
-        return array("expiration_date" => new DateTimeParser('mY'));
-    }
-
     public function getBin() {
         return $this->get("bin");
     }

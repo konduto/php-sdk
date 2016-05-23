@@ -96,6 +96,9 @@ class Customer extends BaseModel {
         return $this;
     }
 
+    /**
+     * @return \DateTime
+     */
     public function getCreatedAt() {
         return $this->get("created_at");
     }

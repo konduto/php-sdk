@@ -59,7 +59,8 @@ abstract class Konduto {
      */
     public static function getOrder($orderId) {
         $response = self::requestApi("get", null, $orderId);
-        $order = new Order($response->getBodyAsJson());
+        $body = $response->getBodyAsJson();
+        $order = new Order($body["order"]);
         return $order;
     }
 

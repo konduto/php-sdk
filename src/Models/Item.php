@@ -16,7 +16,7 @@ class Item extends BaseModel {
      * @inheritDoc
      */
     protected function initParsers() {
-        return array("created_at", new DateParser());
+        return array("created_at" => new DateParser());
     }
 
 
@@ -92,6 +92,9 @@ class Item extends BaseModel {
         return $this;
     }
 
+    /**
+     * @return \DateTime
+     */
     public function getCreatedAt() {
         return $this->get("created_at");
     }

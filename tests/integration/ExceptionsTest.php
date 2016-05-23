@@ -1,4 +1,4 @@
-<?php namespace Konduto\Tests;
+<?php namespace Konduto\Tests\Integration;
 
 use Konduto\Core\Konduto;
 use Konduto\Models\Order;
