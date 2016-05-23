@@ -9,7 +9,7 @@ class Customer extends BaseModel {
      */
     protected function fields() {
         return array("id", "name", "tax_id", "phone1", "phone2",
-            "email", "new", "vip", "dob", "created_at");
+            "email", "new", "vip", "dob", "created_at", "document_type");
     }
 
     /**
@@ -84,6 +84,9 @@ class Customer extends BaseModel {
         return $this->get("vip");
     }
 
+    /**
+     * @return \DateTime
+     */
     public function getDob() {
         return $this->get("dob");
     }
@@ -99,6 +102,15 @@ class Customer extends BaseModel {
 
     public function setCreatedAt($created_at) {
         $this->set("created_at", $created_at);
+        return $this;
+    }
+
+    public function getDocumentType() {
+        return $this->get("document_type");
+    }
+
+    public function setDocumentType($documentType) {
+        $this->set("document_type", $documentType);
         return $this;
     }
 }

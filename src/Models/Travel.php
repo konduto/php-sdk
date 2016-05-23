@@ -24,7 +24,7 @@ abstract class Travel extends BaseModel {
     /**
      * Given an array, instantiates a travel among the possible
      * types of travel. The decision of what Model to use is made
-     * by field 'type'
+     * by the field 'type'
      * @param array $args: array containing fields of the Travel
      * @return Travel BusTravel or Flight object
      */
@@ -35,7 +35,6 @@ abstract class Travel extends BaseModel {
                     return new BusTravel($args);
                 case Travel::TYPE_FLIGHT:
                     return new Flight($args);
-                default:  // Exception
             }
         }
         throw new \InvalidArgumentException("Array must contain a valid 'type' field");

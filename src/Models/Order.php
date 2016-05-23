@@ -17,6 +17,7 @@ class Order extends BaseModel {
     const RECOMMENDATION_APPROVE = "approve";
     const RECOMMENDATION_DECLINE = "decline";
     const RECOMMENDATION_REVIEW = "review";
+    const RECOMMENDATION_NONE = "none";
 
     /**
      * @inheritdoc
@@ -120,6 +121,9 @@ class Order extends BaseModel {
         return $this;
     }
 
+    /**
+     * @return array
+     */
     public function getPayment() {
         return $this->get("payment");
     }
@@ -129,6 +133,9 @@ class Order extends BaseModel {
         return $this;
     }
 
+    /**
+     * @return \Konduto\Models\Customer
+     */
     public function getCustomer() {
         return $this->get("customer");
     }
@@ -138,6 +145,9 @@ class Order extends BaseModel {
         return $this;
     }
 
+    /**
+     * @return \Konduto\Models\Address
+     */
     public function getBilling() {
         return $this->get("billing");
     }
@@ -147,6 +157,9 @@ class Order extends BaseModel {
         return $this;
     }
 
+    /**
+     * @return \Konduto\Models\Address
+     */
     public function getShipping() {
         return $this->get("shipping");
     }
@@ -156,6 +169,9 @@ class Order extends BaseModel {
         return $this;
     }
 
+    /**
+     * @return array
+     */
     public function getShoppingCart() {
         return $this->get("shopping_cart");
     }
@@ -165,6 +181,9 @@ class Order extends BaseModel {
         return $this;
     }
 
+    /**
+     * @return \Konduto\Models\Travel
+     */
     public function getTravel() {
         return $this->get("travel");
     }
@@ -174,6 +193,9 @@ class Order extends BaseModel {
         return $this;
     }
 
+    /**
+     * @return \DateTime
+     */
     public function getPurchasedAt() {
         return $this->get("purchased_at");
     }
@@ -183,6 +205,9 @@ class Order extends BaseModel {
         return $this;
     }
 
+    /**
+     * @return \DateTime
+     */
     public function getFirstMessage() {
         return $this->get("first_message");
     }
@@ -201,6 +226,9 @@ class Order extends BaseModel {
         return $this;
     }
 
+    /**
+     * @return \Konduto\Models\Seller
+     */
     public function getSeller() {
         return $this->get("seller");
     }
@@ -228,6 +256,9 @@ class Order extends BaseModel {
         return $this;
     }
 
+    /**
+     * @return \Konduto\Models\Device
+     */
     public function getDevice() {
         return $this->get("device");
     }
@@ -237,6 +268,9 @@ class Order extends BaseModel {
         return $this;
     }
 
+    /**
+     * @return \Konduto\Models\Geolocation
+     */
     public function getGeolocation() {
         return $this->get("geolocation");
     }
@@ -264,6 +298,9 @@ class Order extends BaseModel {
         return $this;
     }
 
+    /**
+     * @return \Konduto\Models\Navigation
+     */
     public function getNavigation() {
         return $this->get("navigation");
     }
@@ -273,6 +310,9 @@ class Order extends BaseModel {
         return $this;
     }
 
+    /**
+     * @return \DateTime
+     */
     public function getCreatedAt() {
         return $this->get("created_at");
     }
@@ -282,6 +322,9 @@ class Order extends BaseModel {
         return $this;
     }
 
+    /**
+     * @return \DateTime
+     */
     public function getUpdatedAt() {
         return $this->get("updated_at");
     }
