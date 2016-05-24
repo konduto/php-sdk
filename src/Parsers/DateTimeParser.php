@@ -9,7 +9,8 @@ class DateTimeParser implements IParser {
     }
 
     public function parse($value) {
-        return is_string($value) ? new \DateTime($value) : $value;
+        return is_string($value) ?
+            \DateTime::createFromFormat($this->outputFormat, $value, new \DateTimeZone('UTC')) : $value;
     }
 
     public function unparse($value) {

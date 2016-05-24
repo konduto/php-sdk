@@ -26,7 +26,7 @@ class PaymentTest extends \PHPUnit_Framework_TestCase {
     function test_boleto1() {
         $bol = Payment::build(array(
             "type" => "boleto",
-            "expiration_date" => new \DateTime('2018-12-23 02:30:00')
+            "expiration_date" => new \DateTime('2018-12-23 02:30:00', new \DateTimeZone('UTC'))
         ));
         $ccArr = $bol->toJsonArray();
         $this->assertInstanceOf('Konduto\Models\Boleto', $bol);
@@ -34,5 +34,9 @@ class PaymentTest extends \PHPUnit_Framework_TestCase {
             "type" => "boleto",
             "expiration_date" => "2018-12-23"
         )), $ccArr);
+    }
+
+    function assertDate($date1, $date2) {
+        $this->assertEquals($date1, date_format($date2, "Y-m-d"));
     }
 }

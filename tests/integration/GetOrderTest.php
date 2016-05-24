@@ -244,11 +244,11 @@ class GetOrderTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals("28372", $customer->getId());
         $this->assertEquals("Júlia da Silva", $customer->getName());
         $this->assertEquals("12345678909", $customer->getTaxId());
-        $this->assertEquals(new \DateTime("1970-12-25"), $customer->getDob());
+        $this->assertDate("1970-12-25", $customer->getDob());
         $this->assertEquals("1112345678", $customer->getPhone1());
         $this->assertEquals("2121436578", $customer->getPhone2());
         $this->assertEquals("jsilva@exemplo.com.br", $customer->getEmail());
-        $this->assertEquals(new \DateTime("2010-12-25"), $customer->getCreatedAt());
+        $this->assertDate("2010-12-25", $customer->getCreatedAt());
         $this->assertFalse($customer->getNew());
         $this->assertFalse($customer->getVip());
         $this->assertOrderPayments($order);
@@ -276,7 +276,7 @@ class GetOrderTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals("approved", $pay1->getStatus());
         $this->assertInstanceOf('Konduto\Models\Boleto', $pay2);
         // There is a bug in the API on retrieving Boleto expiration date
-        // $this->assertEquals(new \DateTime("2016-05-23"), $pay2->getExpirationDate());
+        // $this->assertEquals($this->dateUTC("2016-05-23"), $pay2->getExpirationDate());
         $this->assertEquals("pending", $pay2->getStatus());
         $this->assertInstanceOf('Konduto\Models\Payment', $pay0);
         $this->assertEquals(Payment::TYPE_VOUCHER, $pay0->getType());
@@ -297,14 +297,14 @@ class GetOrderTest extends \PHPUnit_Framework_TestCase {
     }
 
     function assertOrderWithSeller(Order $order) {
-        $this->assertEquals(new \DateTime("2018-12-25T12:00:25Z"), $order->getPurchasedAt());
-        $this->assertEquals(new \DateTime("2018-12-20T15:59:01Z"), $order->getFirstMessage());
+        $this->assertDateTime("2018-12-25T12:00:25Z", $order->getPurchasedAt());
+        $this->assertDateTime("2018-12-20T15:59:01Z", $order->getFirstMessage());
         $this->assertEquals(9, $order->getMessagesExchanged());
         $seller = $order->getSeller();
         $this->assertInstanceOf('Konduto\Models\Seller', $seller);
         $this->assertEquals("012", $seller->getId());
         $this->assertEquals("Vendedor", $seller->getName());
-        $this->assertEquals(new \DateTime("2015-03-31"), $seller->getCreatedAt());
+        $this->assertDate("2015-03-31", $seller->getCreatedAt());
     }
 
     function assertFlightOrder(Order $order) {
@@ -321,7 +321,7 @@ class GetOrderTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals("Carlos Siqueira", $pass1->getName());
         $this->assertEquals("XYZ1234", $pass1->getDocument());
         $this->assertEquals("passport", $pass1->getDocumentType());
-        $this->assertEquals(new \DateTime("1970-12-01"), $pass1->getDob());
+        $this->assertDate("1970-12-01", $pass1->getDob());
         $this->assertEquals("US", $pass1->getNationality());
         $this->assertInstanceOf('\Konduto\Models\Loyalty', $pass1->getLoyalty());
         $this->assertEquals("multiplus", $pass1->getLoyalty()->getProgram());
@@ -343,7 +343,7 @@ class GetOrderTest extends \PHPUnit_Framework_TestCase {
 
     function assertShoppingCartItem(Item $item, $createdAt, $sku, $productCode, $category,
                                     $name, $description, $unitCost, $quantity, $discount) {
-        $this->assertEquals(new \DateTime($createdAt), $item->getCreatedAt());
+        $this->assertDate($createdAt, $item->getCreatedAt());
         $this->assertEquals($sku, $item->getSku());
         $this->assertEquals($productCode, $item->getProductCode());
         $this->assertEquals($category, $item->getCategory());
@@ -364,4 +364,14 @@ class GetOrderTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($zip, $address->getZip());
         $this->assertEquals($country, $address->getCountry());
     }
+
+    function assertDate($date1, $date2) {
+        $this->assertEquals($date1, date_format($date2, "Y-m-d"));
+    }
+
+    function assertDateTime($date1, $date2) {
+        $this->assertEquals($date1, date_format($date2, 'Y-m-d\TH:i:s\Z'));
+    }
 }
+
+

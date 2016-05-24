@@ -8,12 +8,12 @@ class CustomerTest extends \PHPUnit_Framework_TestCase {
         $customer = new Customer();
         $customer->setId("customer001");
         $customer->setEmail("customer@email.com");
-        $customer->setCreatedAt(new \DateTime());
+        $customer->setCreatedAt('2018-12-23');
         $cusArr = $customer->toJsonArray();
         $this->assertEquals(array(
             "id" => "customer001",
             "email" => "customer@email.com",
-            "created_at" => date('Y-m-d')
+            "created_at" => '2018-12-23'
         ), $cusArr);
         $this->assertInstanceOf('DateTime', $customer->getCreatedAt());
     }

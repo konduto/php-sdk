@@ -126,11 +126,11 @@ class PostOrderTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals("28372", $customer->getId());
         $this->assertEquals("Júlia da Silva", $customer->getName());
         $this->assertEquals("12345678909", $customer->getTaxId());
-        $this->assertEquals(new \DateTime("1970-12-25"), $customer->getDob());
+        $this->assertDate("1970-12-25", $customer->getDob());
         $this->assertEquals("11-1234-5678", $customer->getPhone1());
         $this->assertEquals("21-2143-6578", $customer->getPhone2());
         $this->assertEquals("jsilva@exemplo.com.br", $customer->getEmail());
-        $this->assertEquals(new \DateTime("2010-12-25"), $customer->getCreatedAt());
+        $this->assertDate("2010-12-25", $customer->getCreatedAt());
         $this->assertFalse($customer->getNew());
         $this->assertFalse($customer->getVip());
         $this->assertOrderResponse($order, "APPROVE", 0.01);
@@ -148,7 +148,11 @@ class PostOrderTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals("122020", $pay1->getExpirationDate());
         $this->assertEquals("approved", $pay1->getStatus());
         $this->assertInstanceOf('Konduto\Models\Boleto', $pay2);
-        $this->assertEquals(new \DateTime("2016-05-23"), $pay2->getExpirationDate());
+        $this->assertDate("2016-05-23", $pay2->getExpirationDate());
         $this->assertOrder1Fields($order);
+    }
+
+    function assertDate($date1, $date2) {
+        $this->assertEquals($date1, date_format($date2, "Y-m-d"));
     }
 }
