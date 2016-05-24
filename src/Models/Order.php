@@ -1,230 +1,348 @@
 <?php namespace Konduto\Models;
 
-class Order extends Model {
+use Konduto\Parsers\ArrayModelParser;
+use Konduto\Parsers\DateTimeParser;
+use Konduto\Parsers\ModelParser;
+use Konduto\Parsers\PaymentArrayParser;
+use Konduto\Parsers\TravelParser;
+
+class Order extends BaseModel {
 
     const STATUS_PENDING = "pending";
     const STATUS_APPROVED = "approved";
     const STATUS_DECLINED = "declined";
     const STATUS_FRAUD = "fraud";
-    const STATUS_CANCELED = "canceled";
     const STATUS_NOT_AUTHORIZED = "not_authorized";
+    const STATUS_CANCELED = "canceled";
+
     const RECOMMENDATION_APPROVE = "approve";
     const RECOMMENDATION_DECLINE = "decline";
     const RECOMMENDATION_REVIEW = "review";
+    const RECOMMENDATION_NONE = "none";
 
-    protected $_schema_key = "order";
-
-    protected $_properties = array(
-        "id" => null,
-        "visitor" => null,
-        "total_amount" => null,
-        "shipping_amount" => null,
-        "tax_amount" => null,
-        "currency" => null,
-        "installments" => null,
-        "ip" => null,
-        "payment" => array(),
-        "customer" => null,
-        "billing" => null,
-        "shipping" => null,
-        "shopping_cart" => array(),
-        "travel" => null,
-        "purchased_at" => null,
-        "first_message" => null,
-        "messages_exchanged" => null,
-        "seller" => null
-    );
-
-    protected $_mandatory_fields = array("id", "total_amount", "customer");
-
-    protected $timestamp;
-    protected $status;
-    protected $device;
-    protected $geolocation;
-    protected $recommendation;
-    protected $score;
-    protected $navigation;
-    protected $created_at;
-
-    public static $AVAILABLE_STATUS = array(self::STATUS_PENDING, self::STATUS_APPROVED,
-            self::STATUS_DECLINED, self::STATUS_FRAUD, self::STATUS_NOT_AUTHORIZED,
-            self::STATUS_CANCELED);
-
-    public function customer($value = null) {
-        return $this->set_get_object("customer", $value, 'Konduto\Models\Customer');
-    }
-
-    public function billing($value = null) {
-        return $this->set_get_object("billing", $value, 'Konduto\Models\Address');
-    }
-
-    public function shipping($value = null) {
-        return $this->set_get_object("shipping", $value, 'Konduto\Models\Address');
-    }
-
-    public function travel($value = null) {
-        return $this->set_get_object("travel", $value, 'Konduto\Models\Travel');
-    }
-
-    public function seller($value = null) {
-        return $this->set_get_object("seller", $value, 'Konduto\Models\Seller');
-    }
-
-    public function payment($payment_array = null) {
-        return $this->set_get_array_object("payment", $payment_array, 'Konduto\Models\Payment');
-    }
-
-    public function shopping_cart($item_array = null) {
-        return $this->set_get_array_object("shopping_cart", $item_array, 'Konduto\Models\Item');
+    /**
+     * @inheritdoc
+     */
+    protected function fields() {
+        return array("id", "visitor", "total_amount", "shipping_amount", "tax_amount",
+            "currency", "installments", "ip", "payment", "customer", "billing",
+            "shipping", "shopping_cart", "travel", "purchased_at", "first_message",
+            "messages_exchanged", "seller", "analyze");
     }
 
     /**
-     * Adds an item that will be purchased in this order.
-     * @param an Item object
+     * @inheritdoc
      */
-    public function add_item(Item $item) {
-        $this->_properties["shopping_cart"][] = $item;
+    protected function initParsers() {
+        return array(
+            "customer" => new ModelParser('Konduto\Models\Customer'),
+            "billing" => new ModelParser('Konduto\Models\Address'),
+            "shipping" => new ModelParser('Konduto\Models\Address'),
+            "payment" => new PaymentArrayParser(),
+            "shopping_cart" => new ArrayModelParser('Konduto\Models\Item'),
+            "purchased_at" => new DateTimeParser('Y-m-d\TH:i:s\Z'),
+            "first_message" => new DateTimeParser('Y-m-d\TH:i:s\Z'),
+            "navigation" => new ModelParser('Konduto\Models\Navigation'),
+            "geolocation" => new ModelParser('Konduto\Models\Geolocation'),
+            "device" => new ModelParser('Konduto\Models\Device'),
+            "created_at" => new DateTimeParser('Y-m-d\TH:i:s\Z'),
+            "updated_at" => new DateTimeParser('Y-m-d\TH:i:s\Z'),
+            "seller" => new ModelParser('Konduto\Models\Seller'),
+            "travel" => new TravelParser()
+        );
+    }
+
+    public function getId() {
+        return $this->get("id");
+    }
+
+    public function setId($value) {
+        $this->set("id", $value);
+        return $this;
+    }
+
+    public function getVisitor() {
+        return $this->get("visitor");
+    }
+
+    public function setVisitor($value) {
+        $this->set("visitor", $value);
+        return $this;
+    }
+
+    public function getTotalAmount() {
+        return $this->get("total_amount");
+    }
+
+    public function setTotalAmount($value) {
+        $this->set("total_amount", $value);
+        return $this;
+    }
+
+    public function getShippingAmount() {
+        return $this->get("shipping_amount");
+    }
+
+    public function setShippingAmount($value) {
+        $this->set("shipping_amount", $value);
+        return $this;
+    }
+
+    public function getTaxAmount() {
+        return $this->get("tax_amount");
+    }
+
+    public function setTaxAmount($value) {
+        $this->set("tax_amount", $value);
+        return $this;
+    }
+
+    public function getCurrency() {
+        return $this->get("currency");
+    }
+
+    public function setCurrency($value) {
+        $this->set("currency", $value);
+        return $this;
+    }
+
+    public function getInstallments() {
+        return $this->get("installments");
+    }
+
+    public function setInstallments($value) {
+        $this->set("installments", $value);
+        return $this;
+    }
+
+    public function getIp() {
+        return $this->get("ip");
+    }
+
+    public function setIp($value) {
+        $this->set("ip", $value);
+        return $this;
     }
 
     /**
-     * Adds a credit card used to pay for this order.
-     * @param a Payment object
+     * @return \Konduto\Models\Payment[]
      */
-    public function add_payment(Payment $pmt) {
-        $this->_properties["payment"][] = $pmt;
+    public function getPayment() {
+        return $this->get("payment");
+    }
+
+    public function setPayment(array $value) {
+        $this->set("payment", $value);
+        return $this;
     }
 
     /**
-     * The current status of the order.
-     * @return one of 5 possible status:
-     * 'approved', 'declined', 'pending', 'fraud' or 'not_authorized'
+     * @return \Konduto\Models\Customer
      */
-    public function status($status = null) {
-        if (!isset($status)) {
-            return $this->get_status();
-        }
-        else if (in_array($status, self::$AVAILABLE_STATUS)) {
-            $this->status = $status;
-        }
+    public function getCustomer() {
+        return $this->get("customer");
     }
 
-    public function timestamp($timestamp = null) {
-        if (!isset($timestamp)) {
-            return $this->timestamp;
-        }
-        else {
-            $this->timestamp = $timestamp;
-        }
-    }
-
-    public function created_at($timestamp = null) {
-        if (!isset($timestamp)) {
-            return $this->created_at;
-        }
-        else {
-            $this->created_at = $timestamp;
-        }
+    public function setCustomer($value) {
+        $this->set("customer", $value);
+        return $this;
     }
 
     /**
-     * If this order was already subject to analysis by Konduto,
-     * returns information
-     * about the device used by the customer that submitted order.
-     * @return Device object
+     * @return \Konduto\Models\Address
      */
-    public function device($device = null) {
-        if (!isset($device)) {
-            return $this->device;
-        }
-        else if (is_array($device)) {
-            $this->device = new Device($device);
-        }
-        else {
-            $this->device = $device;
-        }
+    public function getBilling() {
+        return $this->get("billing");
+    }
+
+    public function setBilling($value) {
+        $this->set("billing", $value);
+        return $this;
     }
 
     /**
-     * If this order was already subject to analysis by Konduto,
-     * returns information
-     * about the geolocation of the order.
-     * @return Geolocation object
+     * @return \Konduto\Models\Address
      */
-    public function geolocation($geo = null) {
-        if (!isset($geo)) {
-            return $this->geolocation;
-        }
-        else if (is_array($geo)) {
-            $this->geolocation = new Geolocation($geo);
-        }
-        else {
-            $this->geolocation = $geo;
-        }
+    public function getShipping() {
+        return $this->get("shipping");
+    }
+
+    public function setShipping($value) {
+        $this->set("shipping", $value);
+        return $this;
     }
 
     /**
-     * If this order was already subject to analysis by Konduto,
-     * returns the recommendation
-     * @return string 'approve', 'decline' or 'review'
+     * @return \Konduto\Models\Item[]
      */
-    public function recommendation($reco = null) {
-        if (!isset($reco)) {
-            return $this->recommendation;
-        }
-        else {
-            $this->recommendation = strtolower($reco);
-        }
+    public function getShoppingCart() {
+        return $this->get("shopping_cart");
     }
 
-    public function score($score = null) {
-        if (!isset($score)) {
-            return $this->score;
-        }
-        else {
-            $this->score = $score;
-        }
+    public function setShoppingCart(array $value) {
+        $this->set("shopping_cart", $value);
+        return $this;
     }
 
     /**
-     * If this order was already subject to analysis by Konduto,
-     * returns navigation
-     * information regarding the customer who performer this order.
-     * @return Navigation object
+     * @return \Konduto\Models\Travel
      */
-    public function navigation($nav = null) {
-        if (!isset($nav)) {
-            return $this->navigation;
-        }
-        else if (is_array($nav)) {
-            $this->navigation = new Navigation($nav);
-        }
-        else {
-            $this->navigation = $nav;
-        }
+    public function getTravel() {
+        return $this->get("travel");
+    }
+
+    public function setTravel($value) {
+        $this->set("travel", $value);
+        return $this;
     }
 
     /**
-     * Returns the status of an order
-     *
-     * @param recommendation string
-     *
-     * @return status string
+     * @return \DateTime
      */
-    protected function get_status() {
-        return $this->status;
+    public function getPurchasedAt() {
+        return $this->get("purchased_at");
+    }
+
+    public function setPurchasedAt($value) {
+        $this->set("purchased_at", $value);
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getFirstMessage() {
+        return $this->get("first_message");
+    }
+
+    public function setFirstMessage($value) {
+        $this->set("first_message", $value);
+        return $this;
+    }
+
+    public function getMessagesExchanged() {
+        return $this->get("messages_exchanged");
+    }
+
+    public function setMessagesExchanged($value) {
+        $this->set("messages_exchanged", $value);
+        return $this;
+    }
+
+    /**
+     * @return \Konduto\Models\Seller
+     */
+    public function getSeller() {
+        return $this->get("seller");
+    }
+
+    public function setSeller($value) {
+        $this->set("seller", $value);
+        return $this;
+    }
+
+    public function getTimestamp() {
+        return $this->get("timestamp");
+    }
+
+    public function setTimestamp($value) {
+        $this->set("timestamp", $value);
+        return $this;
+    }
+
+    public function getStatus() {
+        return $this->get("status");
+    }
+
+    public function setStatus($value) {
+        $this->set("status", $value);
+        return $this;
+    }
+
+    /**
+     * @return \Konduto\Models\Device
+     */
+    public function getDevice() {
+        return $this->get("device");
+    }
+
+    public function setDevice($value) {
+        $this->set("device", $value);
+        return $this;
+    }
+
+    /**
+     * @return \Konduto\Models\Geolocation
+     */
+    public function getGeolocation() {
+        return $this->get("geolocation");
+    }
+
+    public function setGeolocation($value) {
+        $this->set("geolocation", $value);
+        return $this;
+    }
+
+    public function getRecommendation() {
+        return $this->get("recommendation");
+    }
+
+    public function setRecommendation($value) {
+        $this->set("recommendation", $value);
+        return $this;
+    }
+
+    public function getScore() {
+        return $this->get("score");
+    }
+
+    public function setScore($value) {
+        $this->set("score", $value);
+        return $this;
+    }
+
+    /**
+     * @return \Konduto\Models\Navigation
+     */
+    public function getNavigation() {
+        return $this->get("navigation");
+    }
+
+    public function setNavigation($value) {
+        $this->set("navigation", $value);
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreatedAt() {
+        return $this->get("created_at");
+    }
+
+    public function setCreatedAt($value) {
+        $this->set("created_at", $value);
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getUpdatedAt() {
+        return $this->get("updated_at");
+    }
+
+    public function setUpdatedAt($value) {
+        $this->set("updated_at", $value);
+        return $this;
+    }
+
+    public function getAnalyzeFlag() {
+        return $this->get("analyze");
+    }
+
+    public function setAnalyzeFlag($value) {
+        $this->set("analyze", $value);
+        return $this;
     }
 }
-
-/**
- * Namespace-level constants are here due to backward compatibility
- * @deprecated
- */
-const STATUS_PENDING = "pending";
-const STATUS_APPROVED = "approved";
-const STATUS_DECLINED  = "declined";
-const STATUS_FRAUD = "fraud";
-const STATUS_CANCELED = "canceled";
-const STATUS_NOT_AUTHORIZED = "not_authorized";
-const RECOMMENDATION_APPROVE = "approve";
-const RECOMMENDATION_DECLINE = "decline";
-const RECOMMENDATION_REVIEW = "review";

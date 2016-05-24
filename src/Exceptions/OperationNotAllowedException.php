@@ -1,8 +1,7 @@
 <?php namespace Konduto\Exceptions;
 
-class OperationNotAllowedException extends KondutoException {
+use Konduto\Core\HttpResponse;
 
-    public $message = "The operation being performed is not allowed for the current API key. Please, contact support@Konduto.com";
-
-    public function __construct() {}
+class OperationNotAllowedException extends HttpCodedException {
+    static protected $httpCode = HttpResponse::HTTP_STATUS_FORBIDDEN;
 }

@@ -1,14 +1,49 @@
 <?php namespace Konduto\Models;
 
-class Seller extends Model {
+use Konduto\Parsers\DateParser;
 
-    protected $_schema_key = "seller";
+class Seller extends BaseModel {
 
-    protected $_properties = array(
-        "id" => null,
-        "name" => null,
-        "created_at" => null
-    );
+    /**
+     * @inheritDoc
+     */
+    protected function fields() {
+        return array("id", "name", "created_at");
+    }
 
-    protected $_mandatory_fields = array("id");
+    /**
+     * @inheritDoc
+     */
+    protected function initParsers() {
+        return array("created_at" => new DateParser());
+    }
+
+    public function getId() {
+        return $this->get("id");
+    }
+
+    public function setId($value) {
+        $this->set("id", $value);
+        return $this;
+    }
+
+    public function getName() {
+        return $this->get("name");
+    }
+
+    public function setName($value) {
+        $this->set("name", $value);
+        return $this;
+    }
+
+    public function getCreatedAt() {
+        return $this->get("created_at");
+    }
+
+    public function setCreatedAt($value) {
+        $this->set("created_at", $value);
+        return $this;
+    }
+
+
 }
