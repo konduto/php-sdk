@@ -1,7 +1,7 @@
 <?php namespace Konduto\Core;
 
 use \Konduto\Exceptions as Exceptions;
-use \Konduto\Params as Parameters;
+use \Konduto\Params;
 
 /**
  * Class HttpRequest
@@ -34,7 +34,7 @@ class HttpRequest {
         $this->method = $method;
         $this->verifySSL = $verifySSL;
         $this->additionalCurlOptions = $additionalCurlOpts;
-        $this->setHeader("X-Requested-With", "Konduto php-sdk " . Parameters::SDK_VERSION);
+        $this->setHeader("X-Requested-With", "Konduto php-sdk " . Params::SDK_VERSION);
     }
 
     public function setBasicAuthorization($user, $password=null) {
@@ -66,7 +66,7 @@ class HttpRequest {
 
         $options = array_replace(array(
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_CONNECTTIMEOUT => Parameters::API_TIMEOUT,
+            CURLOPT_CONNECTTIMEOUT => Params::API_TIMEOUT,
             CURLOPT_FAILONERROR    => false,
             CURLOPT_HTTPHEADER     => $this->buildHeadersArray(),
             CURLOPT_SSL_VERIFYPEER => $this->verifySSL),
@@ -129,4 +129,3 @@ class HttpRequest {
         $this->curlSession = $curlSession;
     }
 }
-
