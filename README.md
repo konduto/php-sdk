@@ -17,15 +17,9 @@ Check it the available branches for older verions of this library.
 
 ```json
 {
-<<<<<<< HEAD
-  "require": {
-    "konduto/sdk": "v1.4.0"
-  }
-=======
     "require": {
         "konduto/sdk": "v2.0.0"
     }
->>>>>>> v2-beta
 }
 ```
 
@@ -156,12 +150,8 @@ Konduto::updateOrderStatus($orderId, $status, $comments);
 ```
 Parameter | Description
 --- | ---
-<<<<<<< HEAD
-status | _(required)_ New status for this transaction. Either `approved`, `declined`, `fraud`, `canceled` or `not_authorized`, when you have identified a fraud or chargeback.
-=======
 orderId | _(required)_ The id for the order
 status | _(required)_ String of one of the possible order status, check the [available status](http://docs.konduto.com/en/#update-order-status).
->>>>>>> v2-beta
 comments | _(required)_ Reason or comments about the status update.
 
 ## Query an order
