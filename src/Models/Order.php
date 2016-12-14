@@ -27,7 +27,7 @@ class Order extends BaseModel {
         return array("id", "visitor", "total_amount", "shipping_amount", "tax_amount",
             "currency", "installments", "ip", "payment", "customer", "billing",
             "shipping", "shopping_cart", "travel", "purchased_at", "first_message",
-            "messages_exchanged", "seller", "analyze");
+            "messages_exchanged", "seller", "analyze", "score", "recommendation", "device");
     }
 
     /**
