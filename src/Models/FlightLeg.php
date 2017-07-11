@@ -14,8 +14,7 @@ class FlightLeg extends TravelLeg {
     }
 
     public function setOriginAirport($value) {
-        $this->set("origin_airport", $value);
-        return $this;
+        return $this->set("origin_airport", $value);
     }
 
     public function getDestinationAirport() {
@@ -23,7 +22,6 @@ class FlightLeg extends TravelLeg {
     }
 
     public function setDestinationAirport($value) {
-        $this->set("destination_airport", $value);
-        return $this;
+        return $this->set("destination_airport", $value);
     }
 }

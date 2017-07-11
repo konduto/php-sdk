@@ -24,7 +24,7 @@ class CreditCard extends Payment {
     }
 
     public function setBin($value) {
-        $this->set("bin", $value);
+        return $this->set("bin", $value);
     }
 
     public function getLast4() {
@@ -32,7 +32,7 @@ class CreditCard extends Payment {
     }
 
     public function setLast4($value) {
-        $this->set("last4", $value);
+        return $this->set("last4", $value);
     }
 
     public function getExpirationDate() {
@@ -40,6 +40,6 @@ class CreditCard extends Payment {
     }
 
     public function setExpirationDate($value) {
-        $this->set("expiration_date", $value);
+        return $this->set("expiration_date", $value);
     }
 }

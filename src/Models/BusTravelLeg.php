@@ -14,8 +14,7 @@ class BusTravelLeg extends TravelLeg {
     }
 
     public function setOriginCity($value) {
-        $this->set("origin_city", $value);
-        return $this;
+        return $this->set("origin_city", $value);
     }
 
     public function getDestinationCity() {
@@ -23,7 +22,6 @@ class BusTravelLeg extends TravelLeg {
     }
 
     public function setDestinationCity($value) {
-        $this->set("destination_city", $value);
-        return $this;
+        return $this->set("destination_city", $value);
     }
 }

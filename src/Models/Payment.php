@@ -61,12 +61,10 @@ class Payment extends BaseModel {
     }
 
     public function setType($value) {
-        $this->set("type", $value);
-        return $this;
+        return $this->set("type", $value);
     }
 
     public function setStatus($value) {
-        $this->set("status", $value);
-        return $this;
+        return $this->set("status", $value);
     }
 }

@@ -25,8 +25,7 @@ class Item extends BaseModel {
     }
 
     public function setSku($sku) {
-        $this->set("sku", $sku);
-        return $this;
+        return $this->set("sku", $sku);
     }
 
     public function getProductCode() {
@@ -34,8 +33,7 @@ class Item extends BaseModel {
     }
 
     public function setProductCode($productCode) {
-        $this->set("product_code", $productCode);
-        return $this;
+        return $this->set("product_code", $productCode);
     }
 
     public function getCategory() {
@@ -43,8 +41,7 @@ class Item extends BaseModel {
     }
 
     public function setCategory($category) {
-        $this->set("category", $category);
-        return $this;
+        return $this->set("category", $category);
     }
 
     public function getName() {
@@ -52,8 +49,7 @@ class Item extends BaseModel {
     }
 
     public function setName($name) {
-        $this->set("name", $name);
-        return $this;
+        return $this->set("name", $name);
     }
 
     public function getDescription() {
@@ -61,8 +57,7 @@ class Item extends BaseModel {
     }
 
     public function setDescription($description) {
-        $this->set("description", $description);
-        return $this;
+        return $this->set("description", $description);
     }
 
     public function getUnitCost() {
@@ -70,8 +65,7 @@ class Item extends BaseModel {
     }
 
     public function setUnitCost($unitCost) {
-        $this->set("unit_cost", $unitCost);
-        return $this;
+        return $this->set("unit_cost", $unitCost);
     }
 
     public function getQuantity() {
@@ -79,8 +73,7 @@ class Item extends BaseModel {
     }
 
     public function setQuantity($quantity) {
-        $this->set("quantity", $quantity);
-        return $this;
+        return $this->set("quantity", $quantity);
     }
 
     public function getDiscount() {
@@ -88,8 +81,7 @@ class Item extends BaseModel {
     }
 
     public function setDiscount($discount) {
-        $this->set("discount", $discount);
-        return $this;
+        return $this->set("discount", $discount);
     }
 
     /**
@@ -100,7 +92,6 @@ class Item extends BaseModel {
     }
 
     public function setCreatedAt($createdAt) {
-        $this->set("created_at", $createdAt);
-        return $this;
+        return $this->set("created_at", $createdAt);
     }
 }

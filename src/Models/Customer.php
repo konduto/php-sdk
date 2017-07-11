@@ -27,8 +27,7 @@ class Customer extends BaseModel {
     }
 
     public function setId($id) {
-        $this->set("id", $id);
-        return $this;
+        return $this->set("id", $id);
     }
 
     public function getName() {
@@ -36,8 +35,7 @@ class Customer extends BaseModel {
     }
 
     public function setName($name) {
-        $this->set("name", $name);
-        return $this;
+        return $this->set("name", $name);
     }
 
     public function getTaxId() {
@@ -45,8 +43,7 @@ class Customer extends BaseModel {
     }
 
     public function setTaxId($tax_id) {
-        $this->set("tax_id", $tax_id);
-        return $this;
+        return $this->set("tax_id", $tax_id);
     }
 
     public function getPhone1() {
@@ -58,13 +55,11 @@ class Customer extends BaseModel {
     }
 
     public function setPhone1($phone1) {
-        $this->set("phone1", $phone1);
-        return $this;
+        return $this->set("phone1", $phone1);
     }
 
     public function setPhone2($phone2) {
-        $this->set("phone2", $phone2);
-        return $this;
+        return $this->set("phone2", $phone2);
     }
 
     public function getEmail() {
@@ -72,8 +67,7 @@ class Customer extends BaseModel {
     }
 
     public function setEmail($email) {
-        $this->set("email", $email);
-        return $this;
+        return $this->set("email", $email);
     }
 
     public function getNew() {
@@ -92,8 +86,7 @@ class Customer extends BaseModel {
     }
 
     public function setDob($dob) {
-        $this->set("dob", $dob);
-        return $this;
+        return $this->set("dob", $dob);
     }
 
     /**
@@ -104,8 +97,7 @@ class Customer extends BaseModel {
     }
 
     public function setCreatedAt($created_at) {
-        $this->set("created_at", $created_at);
-        return $this;
+        return $this->set("created_at", $created_at);
     }
 
     public function getDocumentType() {
@@ -113,7 +105,6 @@ class Customer extends BaseModel {
     }
 
     public function setDocumentType($documentType) {
-        $this->set("document_type", $documentType);
-        return $this;
+        return $this->set("document_type", $documentType);
     }
 }

@@ -26,22 +26,18 @@ class Address extends Geolocation {
     }
 
     public function setName($value) {
-        $this->set("name", $value);
-        return $this;
+        return $this->set("name", $value);
     }
 
     public function setAddress1($value) {
-        $this->set("address1", $value);
-        return $this;
+        return $this->set("address1", $value);
     }
 
     public function setAddress2($value) {
-        $this->set("address2", $value);
-        return $this;
+        return $this->set("address2", $value);
     }
 
     public function setZip($value) {
-        $this->set("zip", $value);
-        return $this;
+        return $this->set("zip", $value);
     }
 }

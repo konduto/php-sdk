@@ -45,8 +45,7 @@ abstract class Travel extends BaseModel {
     }
 
     public function setType($value) {
-        $this->set("type", $value);
-        return $this;
+        return $this->set("type", $value);
     }
 
     /**
@@ -57,8 +56,7 @@ abstract class Travel extends BaseModel {
     }
 
     public function setDeparture($value) {
-        $this->set("departure", $value);
-        return $this;
+        return $this->set("departure", $value);
     }
 
     /**
@@ -69,8 +67,7 @@ abstract class Travel extends BaseModel {
     }
 
     public function setReturn($value) {
-        $this->set("return", $value);
-        return $this;
+        return $this->set("return", $value);
     }
 
     /**
@@ -81,7 +78,6 @@ abstract class Travel extends BaseModel {
     }
 
     public function setPassengers(array $value) {
-        $this->set("passengers", $value);
-        return $this;
+        return $this->set("passengers", $value);
     }
 }

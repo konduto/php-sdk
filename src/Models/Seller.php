@@ -23,8 +23,7 @@ class Seller extends BaseModel {
     }
 
     public function setId($value) {
-        $this->set("id", $value);
-        return $this;
+        return $this->set("id", $value);
     }
 
     public function getName() {
@@ -32,8 +31,7 @@ class Seller extends BaseModel {
     }
 
     public function setName($value) {
-        $this->set("name", $value);
-        return $this;
+        return $this->set("name", $value);
     }
 
     public function getCreatedAt() {
@@ -41,8 +39,7 @@ class Seller extends BaseModel {
     }
 
     public function setCreatedAt($value) {
-        $this->set("created_at", $value);
-        return $this;
+        return $this->set("created_at", $value);
     }
 
 

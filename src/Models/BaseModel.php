@@ -41,6 +41,7 @@ abstract class BaseModel {
     public function set($field, $value) {
         $parser = $this->getParser($field);
         $this->_properties[$field] = $parser->parse($value);
+        return $this;
     }
 
     /**

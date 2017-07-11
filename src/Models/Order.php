@@ -57,8 +57,7 @@ class Order extends BaseModel {
     }
 
     public function setId($value) {
-        $this->set("id", $value);
-        return $this;
+        return $this->set("id", $value);
     }
 
     public function getVisitor() {
@@ -66,8 +65,7 @@ class Order extends BaseModel {
     }
 
     public function setVisitor($value) {
-        $this->set("visitor", $value);
-        return $this;
+        return $this->set("visitor", $value);
     }
 
     public function getTotalAmount() {
@@ -75,8 +73,7 @@ class Order extends BaseModel {
     }
 
     public function setTotalAmount($value) {
-        $this->set("total_amount", $value);
-        return $this;
+        return $this->set("total_amount", $value);
     }
 
     public function getShippingAmount() {
@@ -84,8 +81,7 @@ class Order extends BaseModel {
     }
 
     public function setShippingAmount($value) {
-        $this->set("shipping_amount", $value);
-        return $this;
+        return $this->set("shipping_amount", $value);
     }
 
     public function getTaxAmount() {
@@ -93,8 +89,7 @@ class Order extends BaseModel {
     }
 
     public function setTaxAmount($value) {
-        $this->set("tax_amount", $value);
-        return $this;
+        return $this->set("tax_amount", $value);
     }
 
     public function getCurrency() {
@@ -102,8 +97,7 @@ class Order extends BaseModel {
     }
 
     public function setCurrency($value) {
-        $this->set("currency", $value);
-        return $this;
+        return $this->set("currency", $value);
     }
 
     public function getInstallments() {
@@ -111,8 +105,7 @@ class Order extends BaseModel {
     }
 
     public function setInstallments($value) {
-        $this->set("installments", $value);
-        return $this;
+        return $this->set("installments", $value);
     }
 
     public function getIp() {
@@ -120,8 +113,7 @@ class Order extends BaseModel {
     }
 
     public function setIp($value) {
-        $this->set("ip", $value);
-        return $this;
+        return $this->set("ip", $value);
     }
 
     /**
@@ -132,8 +124,7 @@ class Order extends BaseModel {
     }
 
     public function setPayment(array $value) {
-        $this->set("payment", $value);
-        return $this;
+        return $this->set("payment", $value);
     }
 
     /**
@@ -144,8 +135,7 @@ class Order extends BaseModel {
     }
 
     public function setCustomer($value) {
-        $this->set("customer", $value);
-        return $this;
+        return $this->set("customer", $value);
     }
 
     /**
@@ -156,8 +146,7 @@ class Order extends BaseModel {
     }
 
     public function setBilling($value) {
-        $this->set("billing", $value);
-        return $this;
+        return $this->set("billing", $value);
     }
 
     /**
@@ -168,8 +157,7 @@ class Order extends BaseModel {
     }
 
     public function setShipping($value) {
-        $this->set("shipping", $value);
-        return $this;
+        return $this->set("shipping", $value);
     }
 
     /**
@@ -180,8 +168,7 @@ class Order extends BaseModel {
     }
 
     public function setShoppingCart(array $value) {
-        $this->set("shopping_cart", $value);
-        return $this;
+        return $this->set("shopping_cart", $value);
     }
 
     /**
@@ -192,8 +179,7 @@ class Order extends BaseModel {
     }
 
     public function setTravel($value) {
-        $this->set("travel", $value);
-        return $this;
+        return $this->set("travel", $value);
     }
 
     /**
@@ -204,8 +190,7 @@ class Order extends BaseModel {
     }
 
     public function setPurchasedAt($value) {
-        $this->set("purchased_at", $value);
-        return $this;
+        return $this->set("purchased_at", $value);
     }
 
     /**
@@ -216,8 +201,7 @@ class Order extends BaseModel {
     }
 
     public function setFirstMessage($value) {
-        $this->set("first_message", $value);
-        return $this;
+        return $this->set("first_message", $value);
     }
 
     public function getMessagesExchanged() {
@@ -225,8 +209,7 @@ class Order extends BaseModel {
     }
 
     public function setMessagesExchanged($value) {
-        $this->set("messages_exchanged", $value);
-        return $this;
+        return $this->set("messages_exchanged", $value);
     }
 
     /**
@@ -237,8 +220,7 @@ class Order extends BaseModel {
     }
 
     public function setSeller($value) {
-        $this->set("seller", $value);
-        return $this;
+        return $this->set("seller", $value);
     }
 
     public function getTimestamp() {
@@ -246,8 +228,7 @@ class Order extends BaseModel {
     }
 
     public function setTimestamp($value) {
-        $this->set("timestamp", $value);
-        return $this;
+        return $this->set("timestamp", $value);
     }
 
     public function getStatus() {
@@ -255,8 +236,7 @@ class Order extends BaseModel {
     }
 
     public function setStatus($value) {
-        $this->set("status", $value);
-        return $this;
+        return $this->set("status", $value);
     }
 
     /**
@@ -267,8 +247,7 @@ class Order extends BaseModel {
     }
 
     public function setDevice($value) {
-        $this->set("device", $value);
-        return $this;
+        return $this->set("device", $value);
     }
 
     /**
@@ -279,8 +258,7 @@ class Order extends BaseModel {
     }
 
     public function setGeolocation($value) {
-        $this->set("geolocation", $value);
-        return $this;
+        return $this->set("geolocation", $value);
     }
 
     public function getRecommendation() {
@@ -288,8 +266,7 @@ class Order extends BaseModel {
     }
 
     public function setRecommendation($value) {
-        $this->set("recommendation", $value);
-        return $this;
+        return $this->set("recommendation", $value);
     }
 
     public function getScore() {
@@ -297,8 +274,7 @@ class Order extends BaseModel {
     }
 
     public function setScore($value) {
-        $this->set("score", $value);
-        return $this;
+        return $this->set("score", $value);
     }
 
     /**
@@ -309,8 +285,7 @@ class Order extends BaseModel {
     }
 
     public function setNavigation($value) {
-        $this->set("navigation", $value);
-        return $this;
+        return $this->set("navigation", $value);
     }
 
     /**
@@ -321,8 +296,7 @@ class Order extends BaseModel {
     }
 
     public function setCreatedAt($value) {
-        $this->set("created_at", $value);
-        return $this;
+        return $this->set("created_at", $value);
     }
 
     /**
@@ -333,8 +307,7 @@ class Order extends BaseModel {
     }
 
     public function setUpdatedAt($value) {
-        $this->set("updated_at", $value);
-        return $this;
+        return $this->set("updated_at", $value);
     }
 
     public function getAnalyzeFlag() {
@@ -342,7 +315,6 @@ class Order extends BaseModel {
     }
 
     public function setAnalyzeFlag($value) {
-        $this->set("analyze", $value);
-        return $this;
+        return $this->set("analyze", $value);
     }
 }

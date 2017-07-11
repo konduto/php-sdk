@@ -29,6 +29,6 @@ class Boleto extends Payment {
     }
 
     public function setExpirationDate($value) {
-        $this->set("expiration_date", $value);
+        return $this->set("expiration_date", $value);
     }
 }

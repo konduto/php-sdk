@@ -23,8 +23,7 @@ class TravelLeg extends BaseModel {
     }
 
     public function setDate($value) {
-        $this->set("date", $value);
-        return $this;
+        return $this->set("date", $value);
     }
 
     public function getNumberOfConnections() {
@@ -32,8 +31,7 @@ class TravelLeg extends BaseModel {
     }
 
     public function setNumberOfConnections($value) {
-        $this->set("number_of_connections", $value);
-        return $this;
+        return $this->set("number_of_connections", $value);
     }
 
     public function getClass() {
@@ -41,8 +39,7 @@ class TravelLeg extends BaseModel {
     }
 
     public function setClass($value) {
-        $this->set("class", $value);
-        return $this;
+        return $this->set("class", $value);
     }
 
     public function getFareBasis() {
@@ -50,7 +47,6 @@ class TravelLeg extends BaseModel {
     }
 
     public function setFareBasis($value) {
-        $this->set("fare_basis", $value);
-        return $this;
+        return $this->set("fare_basis", $value);
     }
 }

@@ -15,8 +15,7 @@ class Device extends BaseModel {
     }
 
     public function setUserId($user_id) {
-        $this->set("user_id", $user_id);
-        return $this;
+        return $this->set("user_id", $user_id);
     }
 
     public function getFingerprint() {
@@ -24,8 +23,7 @@ class Device extends BaseModel {
     }
 
     public function setFingerprint($fingerprint) {
-        $this->set("fingerprint", $fingerprint);
-        return $this;
+        return $this->set("fingerprint", $fingerprint);
     }
 
     public function getPlatform() {
@@ -33,8 +31,7 @@ class Device extends BaseModel {
     }
 
     public function setPlatform($platform) {
-        $this->set("platform", $platform);
-        return $this;
+        return $this->set("platform", $platform);
     }
 
     public function getBrowser() {
@@ -42,8 +39,7 @@ class Device extends BaseModel {
     }
 
     public function setBrowser($browser) {
-        $this->set("browser", $browser);
-        return $this;
+        return $this->set("browser", $browser);
     }
 
     public function getLanguage() {
@@ -51,8 +47,7 @@ class Device extends BaseModel {
     }
 
     public function setLanguage($language) {
-        $this->set("language", $language);
-        return $this;
+        return $this->set("language", $language);
     }
 
     public function getTimezone() {
@@ -60,8 +55,7 @@ class Device extends BaseModel {
     }
 
     public function setTimezone($timezone) {
-        $this->set("timezone", $timezone);
-        return $this;
+        return $this->set("timezone", $timezone);
     }
 
     public function getCookie() {
@@ -69,8 +63,7 @@ class Device extends BaseModel {
     }
 
     public function setCookie($cookie) {
-        $this->set("cookie", $cookie);
-        return $this;
+        return $this->set("cookie", $cookie);
     }
 
     public function getJavascript() {
@@ -78,8 +71,7 @@ class Device extends BaseModel {
     }
 
     public function setJavascript($javascript) {
-        $this->set("javascript", $javascript);
-        return $this;
+        return $this->set("javascript", $javascript);
     }
 
     public function getFlash() {
@@ -87,7 +79,6 @@ class Device extends BaseModel {
     }
 
     public function setFlash($flash) {
-        $this->set("flash", $flash);
-        return $this;
+        return $this->set("flash", $flash);
     }
 }

@@ -17,8 +17,7 @@ class Navigation extends BaseModel {
     }
 
     public function setSessionTime($session_time) {
-        $this->set("session_time", $session_time);
-        return $this;
+        return $this->set("session_time", $session_time);
     }
 
     public function getReferrer() {
@@ -26,8 +25,7 @@ class Navigation extends BaseModel {
     }
 
     public function setReferrer($referrer) {
-        $this->set("referrer", $referrer);
-        return $this;
+        return $this->set("referrer", $referrer);
     }
 
     public function getTimeSite1d() {
@@ -35,8 +33,7 @@ class Navigation extends BaseModel {
     }
 
     public function setTimeSite1d($time_site_1d) {
-        $this->set("time_site_1d", $time_site_1d);
-        return $this;
+        return $this->set("time_site_1d", $time_site_1d);
     }
 
     public function getNewAccounts1d() {
@@ -44,8 +41,7 @@ class Navigation extends BaseModel {
     }
 
     public function setNewAccounts1d($new_accounts_1d) {
-        $this->set("new_accounts_1d", $new_accounts_1d);
-        return $this;
+        return $this->set("new_accounts_1d", $new_accounts_1d);
     }
 
     public function getPasswordResets1d() {
@@ -53,8 +49,7 @@ class Navigation extends BaseModel {
     }
 
     public function setPasswordResets1d($password_resets_1d) {
-        $this->set("password_resets_1d", $password_resets_1d);
-        return $this;
+        return $this->set("password_resets_1d", $password_resets_1d);
     }
 
     public function getSalesDeclined1d() {
@@ -62,8 +57,7 @@ class Navigation extends BaseModel {
     }
 
     public function setSalesDeclined1d($sales_declined_1d) {
-        $this->set("sales_declined_1d", $sales_declined_1d);
-        return $this;
+        return $this->set("sales_declined_1d", $sales_declined_1d);
     }
 
     public function getSessions1d() {
@@ -71,8 +65,7 @@ class Navigation extends BaseModel {
     }
 
     public function setSessions1d($sessions_1d) {
-        $this->set("sessions_1d", $sessions_1d);
-        return $this;
+        return $this->set("sessions_1d", $sessions_1d);
     }
 
     public function getTimeSite7d() {
@@ -80,8 +73,7 @@ class Navigation extends BaseModel {
     }
 
     public function setTimeSite7d($time_site_7d) {
-        $this->set("time_site_7d", $time_site_7d);
-        return $this;
+        return $this->set("time_site_7d", $time_site_7d);
     }
 
     public function getTimePerPage7d() {
@@ -89,8 +81,7 @@ class Navigation extends BaseModel {
     }
 
     public function setTimePerPage7d($time_per_page_7d) {
-        $this->set("time_per_page_7d", $time_per_page_7d);
-        return $this;
+        return $this->set("time_per_page_7d", $time_per_page_7d);
     }
 
     public function getNewAccounts7d() {
@@ -98,8 +89,7 @@ class Navigation extends BaseModel {
     }
 
     public function setNewAccounts7d($new_accounts_7d) {
-        $this->set("new_accounts_7d", $new_accounts_7d);
-        return $this;
+        return $this->set("new_accounts_7d", $new_accounts_7d);
     }
 
     public function getPasswordResets7d() {
@@ -107,8 +97,7 @@ class Navigation extends BaseModel {
     }
 
     public function setPasswordResets7d($password_resets_7d) {
-        $this->set("password_resets_7d", $password_resets_7d);
-        return $this;
+        return $this->set("password_resets_7d", $password_resets_7d);
     }
 
     public function getCheckoutCount7d() {
@@ -116,8 +105,7 @@ class Navigation extends BaseModel {
     }
 
     public function setCheckoutCount7d($checkout_count_7d) {
-        $this->set("checkout_count_7d", $checkout_count_7d);
-        return $this;
+        return $this->set("checkout_count_7d", $checkout_count_7d);
     }
 
     public function getSalesDeclined7d() {
@@ -125,8 +113,7 @@ class Navigation extends BaseModel {
     }
 
     public function setSalesDeclined7d($sales_declined_7d) {
-        $this->set("sales_declined_7d", $sales_declined_7d);
-        return $this;
+        return $this->set("sales_declined_7d", $sales_declined_7d);
     }
 
     public function getSessions7d() {
@@ -134,8 +121,7 @@ class Navigation extends BaseModel {
     }
 
     public function setSessions7d($sessions_7d) {
-        $this->set("sessions_7d", $sessions_7d);
-        return $this;
+        return $this->set("sessions_7d", $sessions_7d);
     }
 
     public function getTimeSinceLastSale() {
@@ -143,7 +129,6 @@ class Navigation extends BaseModel {
     }
 
     public function setTimeSinceLastSale($time_since_last_sale) {
-        $this->set("time_since_last_sale", $time_since_last_sale);
-        return $this;
+        return $this->set("time_since_last_sale", $time_since_last_sale);
     }
 }

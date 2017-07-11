@@ -28,8 +28,7 @@ class Passenger extends BaseModel {
     }
 
     public function setName($value) {
-        $this->set("name", $value);
-        return $this;
+        return $this->set("name", $value);
     }
 
     public function getDocument() {
@@ -37,8 +36,7 @@ class Passenger extends BaseModel {
     }
 
     public function setDocument($value) {
-        $this->set("document", $value);
-        return $this;
+        return $this->set("document", $value);
     }
 
     public function getDocumentType() {
@@ -46,8 +44,7 @@ class Passenger extends BaseModel {
     }
 
     public function setDocumentType($value) {
-        $this->set("document_type", $value);
-        return $this;
+        return $this->set("document_type", $value);
     }
 
     public function getDob() {
@@ -55,8 +52,7 @@ class Passenger extends BaseModel {
     }
 
     public function setDob($value) {
-        $this->set("dob", $value);
-        return $this;
+        return $this->set("dob", $value);
     }
 
     public function getNationality() {
@@ -64,8 +60,7 @@ class Passenger extends BaseModel {
     }
 
     public function setNationality($value) {
-        $this->set("nationality", $value);
-        return $this;
+        return $this->set("nationality", $value);
     }
 
     public function getLoyalty() {
@@ -73,8 +68,7 @@ class Passenger extends BaseModel {
     }
 
     public function setLoyalty($value) {
-        $this->set("loyalty", $value);
-        return $this;
+        return $this->set("loyalty", $value);
     }
 
     public function getFrequentTraveler() {
@@ -82,8 +76,7 @@ class Passenger extends BaseModel {
     }
 
     public function setFrequentTraveler($value) {
-        $this->set("frequent_traveler", $value);
-        return $this;
+        return $this->set("frequent_traveler", $value);
     }
 
     public function getSpecialNeeds() {
@@ -91,7 +84,6 @@ class Passenger extends BaseModel {
     }
 
     public function setSpecialNeeds($value) {
-        $this->set("special_needs", $value);
-        return $this;
+        return $this->set("special_needs", $value);
     }
 }

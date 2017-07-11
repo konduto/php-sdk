@@ -19,17 +19,14 @@ class Geolocation extends BaseModel {
     }
 
     public function setCity($value) {
-        $this->set("city", $value);
-        return $this;
+        return $this->set("city", $value);
     }
 
     public function setState($value) {
-        $this->set("state", $value);
-        return $this;
+        return $this->set("state", $value);
     }
 
     public function setCountry($value) {
-        $this->set("country", $value);
-        return $this;
+        return $this->set("country", $value);
     }
 }

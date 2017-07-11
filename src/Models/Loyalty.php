@@ -14,8 +14,7 @@ class Loyalty extends BaseModel {
     }
 
     public function setProgram($value) {
-        $this->set("program", $value);
-        return $this;
+        return $this->set("program", $value);
     }
 
     public function getCategory() {
@@ -23,7 +22,6 @@ class Loyalty extends BaseModel {
     }
 
     public function setCategory($value) {
-        $this->set("category", $value);
-        return $this;
+        return $this->set("category", $value);
     }
 }
