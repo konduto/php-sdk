@@ -78,6 +78,14 @@ class Customer extends BaseModel {
         return $this->get("vip");
     }
 
+    public function setNew($new) {
+        return $this->set("new", $new);
+    }
+
+    public function setVip($vip) {
+        return $this->set("vip", $vip);
+    }
+
     /**
      * @return \DateTime
      */
