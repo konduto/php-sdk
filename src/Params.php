@@ -4,7 +4,7 @@ abstract class Params {
     /*
      * Current version of this library
      */
-    const SDK_VERSION = "v2.0.0";
+    const SDK_VERSION = "v2.0.1";
 
     /*
      * Defines what URL to communicate with.
