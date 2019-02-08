@@ -153,6 +153,7 @@ class GetOrderTest extends \PHPUnit_Framework_TestCase {
         return $this->buildOrder(array(
             "travel" => array(
                 "type" => "flight",
+                "expiration_date" => "2019-02-08T15:41:53Z",
                 "departure" => array(
                     "origin_airport" => "GRU",
                     "destination_airport" => "SFO",
@@ -230,7 +231,7 @@ class GetOrderTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($this->uniqueId, $order->getId());
         $this->assertEquals("da39a3ee5e6b4b0d3255bfef95601890afd80709", $order->getVisitor());
         $this->assertEquals(Order::RECOMMENDATION_APPROVE, $order->getRecommendation(), "", 0, 0, false, true);
-        $this->assertEquals(0.01, $order->getScore());
+        $this->assertGreaterThan(0, $order->getScore());
         $this->assertEquals(Order::STATUS_APPROVED, $order->getStatus(), "", 0, 0, false, true);
         $this->assertEquals(100.01, $order->getTotalAmount());
         $this->assertEquals(20.0, $order->getShippingAmount());
@@ -312,6 +313,7 @@ class GetOrderTest extends \PHPUnit_Framework_TestCase {
         $this->assertInstanceOf('Konduto\Models\Flight', $travel);
         $this->assertInstanceOf('Konduto\Models\FlightLeg', $travel->getDeparture());
         $this->assertInstanceOf('Konduto\Models\FlightLeg', $travel->getReturn());
+        $this->assertInstanceOf('\DateTime', $travel->getExpirationDate());
         $passengers = $travel->getPassengers();
         $this->assertEquals(2, count($passengers));
         $pass0 = $passengers[0];

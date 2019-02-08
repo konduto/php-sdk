@@ -8,7 +8,7 @@ class TravelLeg extends BaseModel {
      * @inheritdoc
      */
     protected function fields() {
-        return array("date", "number_of_connections", "class", "fare_basis");
+        return array("date", "number_of_connections", "class", "fare_basis", "company");
     }
 
     /**
@@ -48,5 +48,13 @@ class TravelLeg extends BaseModel {
 
     public function setFareBasis($value) {
         return $this->set("fare_basis", $value);
+    }
+
+    public function getCompany() {
+        return $this->get("company");
+    }
+
+    public function setCompany($value) {
+        return $this->set("company", $value);
     }
 }

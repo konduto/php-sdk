@@ -1,6 +1,7 @@
 <?php namespace Konduto\Models;
 
 use Konduto\Parsers\ArrayModelParser;
+use Konduto\Parsers\DateTimeParser;
 
 abstract class Travel extends BaseModel {
 
@@ -11,14 +12,17 @@ abstract class Travel extends BaseModel {
      * @inheritDoc
      */
     protected function fields() {
-        return array("type", "departure", "return", "passengers");
+        return array("type", "departure", "return", "passengers", "expiration_date");
     }
 
     /**
      * @inheritDoc
      */
     protected function initParsers() {
-        return array("passengers" => new ArrayModelParser('Konduto\Models\Passenger'));
+        return array(
+            "passengers" => new ArrayModelParser('Konduto\Models\Passenger'),
+            "expiration_date" => new DateTimeParser('Y-m-d\TH:i:s\Z')
+        );
     }
 
     /**
@@ -79,5 +83,13 @@ abstract class Travel extends BaseModel {
 
     public function setPassengers(array $value) {
         return $this->set("passengers", $value);
+    }
+
+    public function getExpirationDate() {
+        return $this->get("expiration_date");
+    }
+
+    public function setExpirationDate($value) {
+        return $this->set("expiration_date", $value);
     }
 }
