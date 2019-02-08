@@ -7,6 +7,7 @@ class TravelTest extends \PHPUnit_Framework_TestCase {
     function test_cc1() {
         $travelArr = array(
             "type" => "flight",
+            "expiration_date" => "2019-02-08T15:41:53Z",
             "departure" => array(
                 "origin_airport" => "GRU",
                 "destination_airport" => "SFO",
@@ -59,6 +60,7 @@ class TravelTest extends \PHPUnit_Framework_TestCase {
         $this->assertInstanceOf('Konduto\Models\Passenger', $passengers[0]);
         $this->assertInstanceOf('Konduto\Models\Passenger', $passengers[1]);
         $this->assertInstanceOf('Konduto\Models\Loyalty', $passengers[1]->get("loyalty"));
+        $this->assertInstanceOf('\DateTime', $travel->getExpirationDate());
         $travelJsonArray = $travel->toJsonArray();
         $this->assertEquals($travelArr, $travelJsonArray);
     }
