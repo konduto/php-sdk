@@ -230,7 +230,7 @@ class GetOrderTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($this->uniqueId, $order->getId());
         $this->assertEquals("da39a3ee5e6b4b0d3255bfef95601890afd80709", $order->getVisitor());
         $this->assertEquals(Order::RECOMMENDATION_APPROVE, $order->getRecommendation(), "", 0, 0, false, true);
-        $this->assertEquals(0.01, $order->getScore());
+        $this->assertGreaterThan(0, $order->getScore());
         $this->assertEquals(Order::STATUS_APPROVED, $order->getStatus(), "", 0, 0, false, true);
         $this->assertEquals(100.01, $order->getTotalAmount());
         $this->assertEquals(20.0, $order->getShippingAmount());
