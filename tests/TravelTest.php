@@ -14,14 +14,16 @@ class TravelTest extends \PHPUnit_Framework_TestCase {
                 "date" => "2018-12-25T18:00Z",
                 "number_of_connections" => 1,
                 "class" => "economy",
-                "fare_basis" => "Y"
+                "fare_basis" => "Y",
+                "company" => "LOT"
             ),
             "return" => array(
                 "origin_airport" => "SFO",
                 "destination_airport" => "GRU",
                 "date" => "2018-12-30T18:00Z",
                 "number_of_connections" => 1,
-                "class" => "business"
+                "class" => "business",
+                "company" => "LOT"
             ),
             "passengers" => array(
                 array(
