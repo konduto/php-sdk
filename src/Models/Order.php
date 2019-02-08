@@ -4,7 +4,9 @@ use Konduto\Parsers\ArrayModelParser;
 use Konduto\Parsers\DateTimeParser;
 use Konduto\Parsers\ModelParser;
 use Konduto\Parsers\PaymentArrayParser;
+use Konduto\Parsers\HotelRoomArrayParser;
 use Konduto\Parsers\TravelParser;
+use Konduto\Parsers\HotelParser;
 
 class Order extends BaseModel {
 
@@ -25,7 +27,7 @@ class Order extends BaseModel {
      */
     protected function fields() {
         return array("id", "visitor", "total_amount", "shipping_amount", "tax_amount",
-            "currency", "installments", "ip", "payment", "customer", "billing",
+            "currency", "installments", "ip", "payment", "customer", "billing", "hotel",
             "shipping", "shopping_cart", "travel", "purchased_at", "first_message",
             "messages_exchanged", "seller", "analyze");
     }
@@ -48,7 +50,8 @@ class Order extends BaseModel {
             "created_at" => new DateTimeParser('Y-m-d\TH:i:s\Z'),
             "updated_at" => new DateTimeParser('Y-m-d\TH:i:s\Z'),
             "seller" => new ModelParser('Konduto\Models\Seller'),
-            "travel" => new TravelParser()
+            "travel" => new TravelParser(),
+            "hotel"  => new ModelParser('Konduto\Models\Hotel'),
         );
     }
 
@@ -125,6 +128,17 @@ class Order extends BaseModel {
 
     public function setPayment(array $value) {
         return $this->set("payment", $value);
+    }
+
+    /**
+     * @return \Konduto\Models\Hotel[]
+     */
+    public function getHotel() {
+        return $this->get("hotel");
+    }
+
+    public function setHotel(array $value) {
+        return $this->set("hotel", $value);
     }
 
     /**
