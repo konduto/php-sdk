@@ -153,6 +153,7 @@ class GetOrderTest extends \PHPUnit_Framework_TestCase {
         return $this->buildOrder(array(
             "travel" => array(
                 "type" => "flight",
+                "expiration_date" => "2019-02-08T15:41:53Z",
                 "departure" => array(
                     "origin_airport" => "GRU",
                     "destination_airport" => "SFO",
@@ -312,6 +313,7 @@ class GetOrderTest extends \PHPUnit_Framework_TestCase {
         $this->assertInstanceOf('Konduto\Models\Flight', $travel);
         $this->assertInstanceOf('Konduto\Models\FlightLeg', $travel->getDeparture());
         $this->assertInstanceOf('Konduto\Models\FlightLeg', $travel->getReturn());
+        $this->assertInstanceOf('\DateTime', $travel->getExpirationDate());
         $passengers = $travel->getPassengers();
         $this->assertEquals(2, count($passengers));
         $pass0 = $passengers[0];
