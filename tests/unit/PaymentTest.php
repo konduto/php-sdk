@@ -35,8 +35,19 @@ class PaymentTest extends \PHPUnit_Framework_TestCase {
             "expiration_date" => "2018-12-23"
         )), $ccArr);
     }
-
-    function assertDate($date1, $date2) {
-        $this->assertEquals($date1, date_format($date2, "Y-m-d"));
+    
+    function test_voucher() {
+        $voucher = Payment::build(array(
+            "type" => "voucher",
+            "description" => "10% discount",
+            "amount" => 13.90
+        ));
+        $arr = $voucher->toJsonArray();
+        $this->assertInstanceOf('Konduto\Models\Payment', $voucher);
+        $this->assertEquals(array(
+            "type" => $voucher->getType(),
+            "description" => $voucher->getDescription(),
+            "amount" => $voucher->getAmount()
+        ), $arr);
     }
 }

@@ -19,7 +19,7 @@ class Payment extends BaseModel {
      * @inheritdoc
      */
     protected function fields() {
-        return array("type", "status");
+        return array("type", "status", "amount", "description");
     }
 
     /**
@@ -66,5 +66,21 @@ class Payment extends BaseModel {
 
     public function setStatus($value) {
         return $this->set("status", $value);
+    }
+
+    public function setAmount($value) {
+        return $this->set("amount", $value);
+    }
+
+    public function getAmount() {
+        return $this->get("amount");
+    }
+
+    public function setDescription($value) {
+        return $this->set("description", $value);
+    }
+
+    public function getDescription() {
+        return $this->get("description");
     }
 }
