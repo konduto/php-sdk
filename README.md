@@ -18,7 +18,7 @@ Check it the available branches for older verions of this library.
 ```json
 {
     "require": {
-        "konduto/sdk": "v2.1.0"
+        "konduto/sdk": "v2.2.0"
     }
 }
 ```
