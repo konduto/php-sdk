@@ -8,7 +8,7 @@ class ExceptionsTest extends \PHPUnit_Framework_TestCase {
     public $uniqueId = '';
 
     public function setUp() {
-        Konduto::setApiKey('T738D516F09CAB3A2C1EE');
+        Konduto::setApiKey(getenv("KONDUTO_SANDBOX_API_KEY"));
     }
 
     function test_nonexistentKey() {
@@ -23,11 +23,6 @@ class ExceptionsTest extends \PHPUnit_Framework_TestCase {
         $this->setExpectedException('Konduto\Exceptions\DuplicateOrderException');
         Konduto::analyze($order);
         Konduto::analyze($order);
-    }
-
-    function test_invalidAPIKey() {
-        $this->setExpectedException('Konduto\Exceptions\InvalidAPIKeyException');
-        Konduto::setApiKey("xxx");
     }
 
     function test_orderNotFound() {

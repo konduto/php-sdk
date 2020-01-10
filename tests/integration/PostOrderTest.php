@@ -8,7 +8,7 @@ class PostOrderTest extends \PHPUnit_Framework_TestCase {
     public $uniqueId;
 
     public static function setUpBeforeClass() {
-        Konduto::setApiKey("T738D516F09CAB3A2C1EE");
+        Konduto::setApiKey(getenv("KONDUTO_SANDBOX_API_KEY"));
     }
 
     function test_expectRecommendationApprove() {

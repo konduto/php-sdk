@@ -1,11 +1,15 @@
 <?php
 
+/**
+ * This file shows a minimal example on how to integrate with orders API
+ */
+
 require_once "vendor/autoload.php";
 
 use \Konduto\Core\Konduto;
 use \Konduto\Models;
 
-Konduto::setApiKey("T738D516F09CAB3A2C1EE");
+Konduto::setApiKey(getenv("KONDUTO_SANDBOX_API_KEY"));
 
 $orderId = uniqid();
 

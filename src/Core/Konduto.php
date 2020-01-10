@@ -41,12 +41,9 @@ abstract class Konduto {
      * @param string
      */
     public static function setApiKey($key) {
-        if (self::isValidKey($key)) {
-            self::$key = $key;
-            self::$useSSL = $key[0] == 'P';
-            return true;
-        }
-        throw new Exceptions\InvalidAPIKeyException("Invalid API key: $key");
+        self::$key = $key;
+        self::$useSSL = $key[0] == 'P';
+        return true;
     }
 
     /**
@@ -156,13 +153,5 @@ abstract class Konduto {
      */
     private static function isBodyStatusOk(array $jsonBody) {
         return key_exists("status", $jsonBody) && $jsonBody["status"] == "ok";
-    }
-
-    /**
-     * Check whether a string is a valid Konduto API key
-     * @param string $key
-     */
-    private static function isValidKey($key) {
-        return is_string($key) && strlen($key) == 21 && ($key[0] == 'T' or $key[0] == 'P');
     }
 }
