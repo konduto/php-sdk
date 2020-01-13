@@ -29,7 +29,7 @@ class Order extends BaseModel {
         return array("id", "visitor", "total_amount", "shipping_amount", "tax_amount",
             "currency", "installments", "ip", "payment", "customer", "billing", "hotel",
             "shipping", "shopping_cart", "travel", "purchased_at", "first_message",
-            "messages_exchanged", "seller", "analyze");
+            "messages_exchanged", "seller", "analyze", "bureaux_queries");
     }
 
     /**
@@ -52,6 +52,7 @@ class Order extends BaseModel {
             "seller" => new ModelParser('Konduto\Models\Seller'),
             "travel" => new TravelParser(),
             "hotel"  => new ModelParser('Konduto\Models\Hotel'),
+            "bureaux_queries" => new ArrayModelParser('Konduto\Models\BureauxQuery')
         );
     }
 
@@ -330,5 +331,9 @@ class Order extends BaseModel {
 
     public function setAnalyzeFlag($value) {
         return $this->set("analyze", $value);
+    }
+
+    public function getBureauxQueries() {
+        return $this->get("bureaux_queries");
     }
 }

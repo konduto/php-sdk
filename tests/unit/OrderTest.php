@@ -4,7 +4,7 @@ use Konduto\Models\Order;
 
 class OrderTest extends \PHPUnit_Framework_TestCase {
 
-    function test_orderPayments() {
+    function test_orderParse() {
         $order = new Order(array(
             "id" => uniqid(),
             "total_amount" => 100.01,
@@ -25,13 +25,47 @@ class OrderTest extends \PHPUnit_Framework_TestCase {
                     "description" => "Coupon A",
                     "amount" => 1.01
                 )
+            ),
+            "bureaux_queries" => array(
+                array(
+                    "service" => "emailage",
+                    "response" => array(
+                        "advice" => "Lower Fraud Risk",
+                        "email" => "adriano.0123456abc@gmail.com",
+                        "email_country" => "US",
+                        "email_domain" => "gmail.com",
+                        "email_domain_age" => "1995-08-13T04:00:00Z",
+                        "email_domain_category" => "Webmail",
+                        "email_domain_company" => "Google",
+                        "email_domain_country" => "United States",
+                        "email_domain_exists" => true,
+                        "email_domain_is_corporate" => false,
+                        "email_domain_other_info" => "Valid Webmail Domain from United States"
+                    )
+                ),
+                array(
+                    "service" => "whitepages",
+                    "response" => array(
+                        "email" => "adriano.0123456abc@gmail.com",
+                        "email_domain" => "gmail.com"
+                    )
+                )
             )
         ));
         $payment = $order->getPayment();
+        $bureauxQueries = $order->getBureauxQueries();
         $this->assertInstanceOf('Konduto\Models\CreditCard', $payment[0]);
         $this->assertInstanceOf('Konduto\Models\Payment', $payment[1]);
+        $this->assertInstanceOf('Konduto\Models\BureauxQuert', $bureauxQueries[0]);
         $this->assertEquals(1.01, $payment[1]->getAmount());
         $this->assertEquals("Coupon A", $payment[1]->getDescription());
         $this->assertEquals(99.0, $payment[0]->getAmount());
+        $this->assertEquals(2, count($bureauxQueries));
+        $this->assertEquals("emailage", $bureauxQueries[0]->getService());
+        $this->assertEquals(11, count($bureauxQueries[0]->getResponse()));
+        $this->assertEquals("Lower Fraud Risk", $bureauxQueries[0]->getResponse()["advice"]);
+        $this->assertEquals("whitepages", $bureauxQueries[1]->getService());
+        $this->assertEquals(2, count($bureauxQueries[1]->getResponse()));
+        $this->assertEquals("gmail.com", $bureauxQueries[1]->getResponse()["email_domain"]);
     }
 }
