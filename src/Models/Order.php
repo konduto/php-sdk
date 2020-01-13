@@ -52,7 +52,9 @@ class Order extends BaseModel {
             "seller" => new ModelParser('Konduto\Models\Seller'),
             "travel" => new TravelParser(),
             "hotel"  => new ModelParser('Konduto\Models\Hotel'),
-            "bureaux_queries" => new ArrayModelParser('Konduto\Models\BureauxQuery')
+            "bureaux_queries" => new ArrayModelParser('Konduto\Models\BureauxQuery'),
+            "triggered_rules" => new ArrayModelParser('Konduto\Models\TriggeredRule'),
+            "triggered_decision_list" => new ArrayModelParser('Konduto\Models\TriggeredDecisionList')
         );
     }
 
@@ -335,5 +337,13 @@ class Order extends BaseModel {
 
     public function getBureauxQueries() {
         return $this->get("bureaux_queries");
+    }
+
+    public function getTriggeredRules() {
+        return $this->get("triggered_rules");
+    }
+
+    public function getTriggeredDecisionList() {
+        return $this->get("triggered_decision_list");
     }
 }

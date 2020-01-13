@@ -50,13 +50,33 @@ class OrderTest extends \PHPUnit_Framework_TestCase {
                         "email_domain" => "gmail.com"
                     )
                 )
+            ),
+            "triggered_rules" => array(
+                array(
+                    "name" => "Cartão com BIN do Canadá", 
+                    "decision" => "decline"
+                )
+            ),
+            "triggered_decision_list" => array(
+                array(
+                    "type" => "zip", 
+                    "trigger" => "shipping_zip", 
+                    "decision" => "review"
+                ),
+                array(
+                    "type" => "email", 
+                    "trigger" => "email", 
+                    "decision" => "decline"
+                )
             )
         ));
         $payment = $order->getPayment();
         $bureauxQueries = $order->getBureauxQueries();
+        $triggeredRules = $order->getTriggeredRules();
+        $triggeredDecList = $order->getTriggeredDecisionList();
         $this->assertInstanceOf('Konduto\Models\CreditCard', $payment[0]);
         $this->assertInstanceOf('Konduto\Models\Payment', $payment[1]);
-        $this->assertInstanceOf('Konduto\Models\BureauxQuert', $bureauxQueries[0]);
+        $this->assertInstanceOf('Konduto\Models\BureauxQuery', $bureauxQueries[0]);
         $this->assertEquals(1.01, $payment[1]->getAmount());
         $this->assertEquals("Coupon A", $payment[1]->getDescription());
         $this->assertEquals(99.0, $payment[0]->getAmount());
@@ -67,5 +87,10 @@ class OrderTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals("whitepages", $bureauxQueries[1]->getService());
         $this->assertEquals(2, count($bureauxQueries[1]->getResponse()));
         $this->assertEquals("gmail.com", $bureauxQueries[1]->getResponse()["email_domain"]);
+        $this->assertEquals("Cartão com BIN do Canadá", $triggeredRules[0]->getName());
+        $this->assertEquals("decline", $triggeredRules[0]->getDecision());
+        $this->assertEquals(2, count($triggeredDecList));
+        $this->assertEquals("shipping_zip", $triggeredDecList[0]->getTrigger());
+        $this->assertEquals("decline", $triggeredDecList[1]->getDecision());
     }
 }
