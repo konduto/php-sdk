@@ -8,7 +8,7 @@ class PostOrderTest extends \PHPUnit_Framework_TestCase {
     public $uniqueId;
 
     public static function setUpBeforeClass() {
-        Konduto::setApiKey("T738D516F09CAB3A2C1EE");
+        Konduto::setApiKey(getenv("KONDUTO_SANDBOX_API_KEY"));
     }
 
     function test_expectRecommendationApprove() {
@@ -93,11 +93,14 @@ class PostOrderTest extends \PHPUnit_Framework_TestCase {
                     "status" => "approved",
                     "bin" => "123456",
                     "last4" => "0987",
-                    "expiration_date" => "122020"
+                    "expiration_date" => "122020",
+                    "description" => "Fast credit",
+                    "amount" => 1.0
                 ),
                 array(
                     "type" => "boleto",
-                    "expiration_date" => "2016-05-23"
+                    "expiration_date" => "2016-05-23",
+                    "amount" => 2.0
                 )
             )
         ));
