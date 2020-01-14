@@ -205,7 +205,7 @@ composer install
 
 There are two types of test:
 
-- Unit tests: Just test logic of the code. They are located at `tests/unit/`.
+- Unit tests: Just test the logic of the code. They are located at `tests/unit/`.
 
 You can run the unit tests with the command:
 
@@ -215,13 +215,13 @@ vendor/bin/phpunit tests/unit
 
 - Integration tests: Make actual calls to Konduto's sandbox API to check the integration. They are located at `tests/integration/`. 
 
-In order to run integration tests first it is needed to provide a sandbox API key as an environment variable `KONDUTO_SANDBOX_API_KEY`:
+Before running the integration tests you will need to provide a working sandbox API key as an environment variable `KONDUTO_SANDBOX_API_KEY`. If you don't do this **all integration tests will fail**.
 
 ```
 export KONDUTO_SANDBOX_API_KEY=your_api_key
 ```
 
-Run the integration tests:
+Now you can run the integration tests:
 
 ```
 vendor/bin/phpunit tests/integration
