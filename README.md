@@ -6,7 +6,7 @@ This document covers Konduto PHP SDK integration library that facilitates the in
 
 ## Minimum requirements
 
-* PHP 5.3.10+ or later
+* PHP 5.4 or later
 * cURL extension
 
 ## Installation with Composer
