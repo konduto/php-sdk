@@ -1,16 +1,12 @@
 ## Intro
 
-Welcome! This document will explain how to integrate with Konduto's anti-fraud service so you can begin to spot fraud on your e-commerce website.
+Welcome! This document will explain how to integrate with Konduto's anti-fraud service so you can begin to spot fraud on your e-commerce website. 
 
-Our service uses the visitor's behavior to analyze browsing patterns and detect fraud. You will need to add a **JavaScript** snippet to your website and tag your pages, so we can see your visitors, and call our **REST API** to send purchases, so we can analyze them.
+This document covers Konduto PHP SDK integration library that facilitates the integration with the Orders API in your PHP application. For more information about the service, other APIs and other integration details check out [Konduto documentation](https://docs.konduto.com/).
 
-This document refers to the **PHP SDK** used for our API.
+## Minimum requirements
 
-Check it the available branches for older verions of this library.
-
-## Requirements
-
-* PHP 5.3.10+
+* PHP 5.3.10+ or later
 * cURL extension
 
 ## Installation with Composer
@@ -23,13 +19,15 @@ Check it the available branches for older verions of this library.
 }
 ```
 
+For older versions of this library check the releases section. We strongly recommend using the latest version possible. 
+
 ## Getting started
 
-When a customer makes a purchase on your e-commerce you must send to Konduto the order information so it can be analyzed. We perform a real-time analysis and return you a **recommendation** of what to do next and a **score**, a numeric confidence level about that order.
+When a customer makes a purchase on your e-commerce you should input the order information into Konduto's Orders API so it can be analyzed for fraud risk. The analysis happens in real-time and will return you a **recommendation** of what to do next and a **score**, a numeric confidence level about that order's risk.
 
-While most of the parameters that can be sent are optional we recommend you send all you can, because every data point matters for the analysis. The **billing address** and **credit card information** are specially important, though we understand there are cases where you don't have that information.
+While most of the parameters are optional we recommend you send most you can, because every data point matters for the analysis. The **billing address** and **credit card information** are specially important, though we understand there are cases where you don't have that information.
 
-### Use the Namespaces
+### Import Namespaces
 
 Import the following Namespaces:
 
@@ -38,18 +36,18 @@ use Konduto\Core\Konduto;
 use Konduto\Models;
 ```
 
-`Konduto` provides methods for using Konduto services, such analyzing an order, querying or updating an existent order:
+`Konduto` provides methods for using Konduto services, such as sending an order for analysis (POST), querying (GET) or updating an existent order (PUT):
 
 ```
-// Sends an order for analysis
+// Send order for analysis
 $analyzedOrder = Konduto::analyze($order);
 ```
 ```
-// Queries a previously analyzed order
+// Query a previously analyzed order
 $order = Konduto::getOrder($orderId);
 ```
 ```
-// Updates the status of a previously analyzed order
+// Update the status of a previously analyzed order
 Konduto::updateOrderStatus($orderId, $status, $comments);
 ```
 
@@ -58,7 +56,7 @@ Konduto::updateOrderStatus($orderId, $status, $comments);
 Before using `Konduto` methods you need first to set your Konduto API key using the `setApiKey()` method. Check the official [Konduto docs](https://docs.konduto.com/) for how to obtain your API key:
 
 ```php
-Konduto::setApiKey("T738D516F09CAB3A2C1EE");
+Konduto::setApiKey("...YOUR_KONDUTO_PRIVATE_API_KEY...");
 ```
 
 ## Send an order for analysis
@@ -74,16 +72,30 @@ catch (Exception $e) {
     echo "\nKonduto wasn't able to return a recommendation: {$e->getMessage()}";
 }
 ```
-Every call performed with `Konduto` can throw an exception in case something goes wrong. Check the exception's message to see what went wrong. An example of what can go wrong is that a mandatory field wasn't provided, or a field was provided in the wrong format:
+
+Every call performed with `Konduto` can throw an exception in case something goes wrong. Check the exception's message to see what went wrong. An example of what can go wrong is that a mandatory field wasn't provided, or a field was provided in the wrong format. Example:
+
+```json
+{
+    "status": "error",
+    "message": {
+        "where": "\/",
+        "why": {
+            "expected": "Authorized credentials",
+            "found": "Missing or unauthorized credentials"
+        }
+    }
+}
+```
 
 
 ### Building an Order
 
 You can create an `Order` object (or any other model from Konduto SDK) in two ways: by providing an associative array with the allowed fields to the model's constructor or using the methods such as setters and getters.
 
-Check the official [Konduto documentation](https://docs.konduto.com/) for reference to all fields accepted in the Konduto Orders API. Some fields are mandatory, like the order id and total amount for example.
+Check the official [Konduto documentation](https://docs.konduto.com/) for reference to all fields accepted in the Konduto Orders API. Some fields are mandatory, like the order id and total amount, but most are optional.
 
-#### Using associative array
+You can provide order informatino using an associative array, like this:
 
 ```php
 $order = new Models\Order(array(
@@ -111,7 +123,7 @@ $order = new Models\Order(array(
 )));
 ```
 
-#### Using models methods
+Or using the methods provided by each model, like this:
 
 ```php
 $order = new Models\Order();
@@ -129,6 +141,8 @@ $customer->setEmail("jsilva@exemplo.com.br");
 $order->setCustomer($customer);
 ```
 
+You can check all the possible models in `src/Models/` folder.
+
 #### Using dates and DateTime
 
 This library automatically converts dates to the required API format. If it is convenient for you, you can directly provide a `DateTime` object to the fields that require dates.
@@ -138,13 +152,14 @@ $now = new \DateTime();
 $customer->setCreatedAt($now);
 ```
 
-## Update an order status
+## Updating order status
 
 After you decide what to do with the order you asked for analysis (e.g. approve, decline, fraud, cancel, not authorized) it is very important that you inform Konduto service about it. So the machine learning algorithm can learn better about your orders and improve itself. For this, you have to use the `Konduto::updateOrderStatus()` method.
 
 ```php
 Konduto::updateOrderStatus("ORD1237163", "approved", "Comments about this order");
 ```
+
 ```
 Konduto::updateOrderStatus($orderId, $status, $comments);
 ```
@@ -154,7 +169,7 @@ orderId | _(required)_ The id for the order
 status | _(required)_ String of one of the possible order status, check the [available status](http://docs.konduto.com/en/#update-order-status).
 comments | _(required)_ Reason or comments about the status update.
 
-## Query an order
+## Querying orders
 
 ```php
 $orderId = "ORD1237163";
@@ -168,3 +183,46 @@ Please [click here](http://docs.konduto.com/#n-tables) for the Currency and Cate
 ## Support
 
 Feel free to contact our [support team](mailto:support@konduto.com) if you have any questions or suggestions!
+
+
+## Contributing
+
+Found a bug or missing feature? This is an open-source project, so a Pull Request will be more than welcome. Just make sure following the guidelines:
+
+- Respect the established naming conventions.
+- Don't introduce external dependencies.
+- Always add tests for covering new pieces of code.
+- Respect the minimum requirements. I.e. avoid using PHP libs and features that might require changing them. We want to provide this library to the broadest audience possible.
+
+### Testing
+
+This project uses [PHPUnit](https://phpunit.de/) as its testing framework. Before running any test, make sure you install it. To install all project's dependencies using [Composer](https://getcomposer.org/) run a composer install first:
+
+```
+// This command might change depending on your Composer installation.
+composer install
+```
+
+There are two types of test:
+
+- Unit tests: Just test logic of the code. They are located at `tests/unit/`.
+
+You can run the unit tests with the command:
+
+```
+vendor/bin/phpunit tests/unit
+```
+
+- Integration tests: Make actual calls to Konduto's sandbox API to check the integration. They are located at `tests/integration/`. 
+
+In order to run integration tests first it is needed to provide a sandbox API key as an environment variable `KONDUTO_SANDBOX_API_KEY`:
+
+```
+export KONDUTO_SANDBOX_API_KEY=your_api_key
+```
+
+Run the integration tests:
+
+```
+vendor/bin/phpunit tests/integration
+```
