@@ -50,4 +50,19 @@ class PaymentTest extends \PHPUnit_Framework_TestCase {
             "amount" => $voucher->getAmount()
         ), $arr);
     }
+
+    function test_pix() {
+        $pix = Payment::build(array(
+            "type" => "pix",
+            "description" => "12% discount",
+            "amount" => 13.90
+        ));
+        $arr = $pix->toJsonArray();
+        $this->assertInstanceOf('Konduto\Models\Payment', $pix);
+        $this->assertEquals(array(
+            "type" => $pix->getType(),
+            "description" => $pix->getDescription(),
+            "amount" => $pix->getAmount()
+        ), $arr);
+    }
 }
