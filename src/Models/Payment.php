@@ -7,13 +7,14 @@ class Payment extends BaseModel {
     const TYPE_DEBIT = "debit";
     const TYPE_TRANSFER = "transfer";
     const TYPE_VOUCHER = "voucher";
+    const TYPE_PIX = "pix";
 
     const STATUS_APPROVED = "approved";
     const STATUS_DECLINED = "declined";
     const STATUS_PENDING  = "pending";
 
     public static $availableTypes = array(self::TYPE_CREDIT, self::TYPE_BOLETO,
-        self::TYPE_DEBIT, self::TYPE_TRANSFER, self::TYPE_VOUCHER);
+        self::TYPE_DEBIT, self::TYPE_TRANSFER, self::TYPE_VOUCHER, self::TYPE_PIX);
 
     /**
      * @inheritdoc
@@ -43,6 +44,7 @@ class Payment extends BaseModel {
                 case Payment::TYPE_DEBIT:
                 case Payment::TYPE_TRANSFER:
                 case Payment::TYPE_VOUCHER:
+                case Payment::TYPE_PIX:
                     return new Payment($array);
                     break;
 
