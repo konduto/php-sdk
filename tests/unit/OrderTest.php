@@ -68,15 +68,46 @@ class OrderTest extends \PHPUnit_Framework_TestCase {
                     "trigger" => "email", 
                     "decision" => "decline"
                 )
-            )
+            ),
+            "events" => array(array(
+                "name" => "Cirque de La Lune",
+                "date" => "2020-02-10T20:00:00Z",
+                "type" => "show",
+                "subtype" => "circus",
+                "venue" => array(
+                   "name" => "United Hall",
+                   "address" => "Av. das Nações",
+                   "city" => "São Paulo",
+                   "state" => "SP",
+                   "country" => "Brazil",
+                   "capacity" => 7000
+                ),
+                "tickets" => array(
+                    array(
+                        "id" => "t1012390",
+                        "category" => "student",
+                        "section" => "pista premium",
+                        "premium" => true,
+                        "attendee" => array(
+                            "name" => "Alfredo Borges",
+                            "document" => "12345678900",
+                            "document_type" => "cpf",
+                            "dob" => "2000-02-20"
+                        )
+                    )
+                )
+            ))
+
         ));
         $payment = $order->getPayment();
         $bureauxQueries = $order->getBureauxQueries();
         $triggeredRules = $order->getTriggeredRules();
         $triggeredDecList = $order->getTriggeredDecisionList();
+        $events = $order->getEvents();
         $this->assertInstanceOf('Konduto\Models\CreditCard', $payment[0]);
         $this->assertInstanceOf('Konduto\Models\Payment', $payment[1]);
         $this->assertInstanceOf('Konduto\Models\BureauxQuery', $bureauxQueries[0]);
+        $this->assertInstanceOf('Konduto\Models\Event', $events[0]);
         $this->assertEquals(1.01, $payment[1]->getAmount());
         $this->assertEquals("Coupon A", $payment[1]->getDescription());
         $this->assertEquals(99.0, $payment[0]->getAmount());
@@ -92,5 +123,33 @@ class OrderTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals(2, count($triggeredDecList));
         $this->assertEquals("shipping_zip", $triggeredDecList[0]->getTrigger());
         $this->assertEquals("decline", $triggeredDecList[1]->getDecision());
+
+        $event = $events[0];
+        $this->assertEquals("Cirque de La Lune", $event->getName());
+        $this->assertInstanceOf('\DateTime', $event->getDate());
+        $this->assertEquals("show", $event->getType());
+        $this->assertEquals("circus", $event->getSubtype());
+        $this->assertEquals(1, count($event->getTickets()));
+
+
+        $venue = $event->getVenue();
+        $this->assertEquals("United Hall", $venue->getName());
+        $this->assertEquals("Av. das Nações", $venue->getAddress());
+        $this->assertEquals("São Paulo", $venue->getCity());
+        $this->assertEquals("SP", $venue->getState());
+        $this->assertEquals("Brazil", $venue->getCountry());
+        $this->assertEquals(7000, $venue->getCapacity());
+
+        $ticket = $event->getTickets()[0];
+        $this->assertEquals("t1012390", $ticket->getId());
+        $this->assertEquals("student", $ticket->getCategory());
+        $this->assertEquals("pista premium", $ticket->getSection());
+        $this->assertEquals(true, $ticket->getPremium());
+        
+        $attendee = $ticket->getAttendee();
+        $this->assertEquals("Alfredo Borges", $attendee->getName());
+        $this->assertEquals("12345678900", $attendee->getDocument());
+        $this->assertEquals("cpf", $attendee->getDocumentType());
+        $this->assertInstanceOf('\DateTime', $attendee->getDob());
     }
 }

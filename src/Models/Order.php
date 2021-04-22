@@ -29,7 +29,7 @@ class Order extends BaseModel {
         return array("id", "visitor", "total_amount", "shipping_amount", "tax_amount",
             "currency", "installments", "ip", "payment", "customer", "billing", "hotel",
             "shipping", "shopping_cart", "travel", "purchased_at", "first_message",
-            "messages_exchanged", "seller", "analyze", "bureaux_queries");
+            "messages_exchanged", "seller", "analyze", "bureaux_queries", "events");
     }
 
     /**
@@ -53,6 +53,7 @@ class Order extends BaseModel {
             "travel" => new TravelParser(),
             "hotel"  => new ModelParser('Konduto\Models\Hotel'),
             "bureaux_queries" => new ArrayModelParser('Konduto\Models\BureauxQuery'),
+            "events" => new ArrayModelParser('Konduto\Models\Event'),
             "triggered_rules" => new ArrayModelParser('Konduto\Models\TriggeredRule'),
             "triggered_decision_list" => new ArrayModelParser('Konduto\Models\TriggeredDecisionList')
         );
@@ -142,6 +143,17 @@ class Order extends BaseModel {
 
     public function setHotel(array $value) {
         return $this->set("hotel", $value);
+    }
+
+    /**
+     * @return \Konduto\Models\Event[]
+     */
+    public function getEvents() {
+        return $this->get("events");
+    }
+
+    public function setEvents(array $value) {
+        return $this->set("events", $value);
     }
 
     /**
