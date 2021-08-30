@@ -14,7 +14,7 @@ This document covers Konduto PHP SDK integration library that facilitates the in
 ```json
 {
     "require": {
-        "konduto/sdk": "v2.2.0"
+        "konduto/sdk": "v2.4.0"
     }
 }
 ```
