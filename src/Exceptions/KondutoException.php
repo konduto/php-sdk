@@ -35,7 +35,7 @@ class KondutoException extends \Exception {
 
     static private function isDuplicateOrder($code, $body) {
         if ($code == HttpResponse::HTTP_STATUS_BAD_REQUEST
-                && array_has_path(array("message", "why", "found"), $body)) {
+                && array_has_path($body, array("message", "why", "found"))) {
             return $body["message"]["why"]["found"] == self::RECORD_EXISTS;
         }
         return false;
@@ -45,7 +45,7 @@ class KondutoException extends \Exception {
 /*
  * Utils
  */
-function array_has_path($key_path = array(), $array) {
+function array_has_path($array, $key_path = array()) {
     $currArray = $array;
     foreach ($key_path as $key) {
         if (is_array($currArray) && key_exists($key, $currArray))
