@@ -1,6 +1,7 @@
 <?php namespace Konduto\Models;
 
 use Konduto\Parsers\ArrayModelParser;
+use Konduto\Parsers\BankArrayParser;
 use Konduto\Parsers\DateTimeParser;
 use Konduto\Parsers\ModelParser;
 use Konduto\Parsers\PaymentArrayParser;
@@ -58,7 +59,9 @@ class Order extends BaseModel {
             "triggered_decision_list" => new ArrayModelParser('Konduto\Models\TriggeredDecisionList'),
             "agentSeller" => new ModelParser('Konduto\Models\AgentSeller'),
             "pointOfSale" => new ModelParser('Konduto\Models\PointOfSale'),
-            "delivery" => new ModelParser('Konduto\Models\Delivery')
+            "delivery" => new ModelParser('Konduto\Models\Delivery'),
+            "BankOriginAccount" => new BankArrayParser(),
+            "BankDestinationAccount" => new BankArrayParser()
         );
     }
 
@@ -393,6 +396,28 @@ class Order extends BaseModel {
 
     public function setDelivery($value) {
         return $this->set("delivery", $value);
+    }
+
+   /**
+     * @return \Konduto\Models\BankOriginAccount
+     */
+    public function getBankOriginAccount() {
+        return $this->get("bankOriginAccount");
+    }
+
+    public function setBankOriginAccount($value) {
+        return $this->set("bankOriginAccount", $value);
+    }
+
+    /**
+     * @return \Konduto\Models\BankDestinationAccount[]
+     */
+    public function getBankDestinationAccount() {
+        return $this->get("bankDestinationAccount");
+    }
+
+    public function setBankDestinationAccount(array $value) {
+        return $this->set("bankDestinationAccount", $value);
     }
 
 }

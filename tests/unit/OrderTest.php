@@ -1,8 +1,9 @@
 <?php namespace Konduto\Tests;
 
 use Konduto\Models\Order;
+use PHPUnit\Framework\TestCase;
 
-class OrderTest extends \PHPUnit_Framework_TestCase {
+class OrderTest extends TestCase  {
 
     function test_orderParse() {
         $order = new Order(array(
