@@ -1,12 +1,13 @@
 <?php namespace Konduto\Tests\Integration;
 
+use PHPUnit\Framework\TestCase;
 use Konduto\Core\Konduto;
 use Konduto\Models\Address;
 use Konduto\Models\Item;
 use Konduto\Models\Order;
 use Konduto\Models\Payment;
 
-class GetOrderTest extends \PHPUnit_Framework_TestCase {
+class GetOrderTest extends TestCase{
 
     public $uniqueId;
 

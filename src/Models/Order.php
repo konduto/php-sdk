@@ -1,6 +1,7 @@
 <?php namespace Konduto\Models;
 
 use Konduto\Parsers\ArrayModelParser;
+use Konduto\Parsers\BankArrayParser;
 use Konduto\Parsers\DateTimeParser;
 use Konduto\Parsers\ModelParser;
 use Konduto\Parsers\PaymentArrayParser;
@@ -29,7 +30,7 @@ class Order extends BaseModel {
         return array("id", "visitor", "total_amount", "shipping_amount", "tax_amount",
             "currency", "installments", "ip", "payment", "customer", "billing", "hotel",
             "shipping", "shopping_cart", "travel", "purchased_at", "first_message",
-            "messages_exchanged", "seller", "analyze", "bureaux_queries", "events");
+            "messages_exchanged", "seller", "analyze", "bureaux_queries", "events", "agentSeller", "pointOfSale", "delivery");
     }
 
     /**
@@ -55,7 +56,12 @@ class Order extends BaseModel {
             "bureaux_queries" => new ArrayModelParser('Konduto\Models\BureauxQuery'),
             "events" => new ArrayModelParser('Konduto\Models\Event'),
             "triggered_rules" => new ArrayModelParser('Konduto\Models\TriggeredRule'),
-            "triggered_decision_list" => new ArrayModelParser('Konduto\Models\TriggeredDecisionList')
+            "triggered_decision_list" => new ArrayModelParser('Konduto\Models\TriggeredDecisionList'),
+            "agentSeller" => new ModelParser('Konduto\Models\AgentSeller'),
+            "pointOfSale" => new ModelParser('Konduto\Models\PointOfSale'),
+            "delivery" => new ModelParser('Konduto\Models\Delivery'),
+            "BankOriginAccount" => new BankArrayParser(),
+            "BankDestinationAccount" => new BankArrayParser()
         );
     }
 
@@ -358,4 +364,60 @@ class Order extends BaseModel {
     public function getTriggeredDecisionList() {
         return $this->get("triggered_decision_list");
     }
+
+    /**
+     * @return \Konduto\Models\AgentSeller
+     */
+    public function getAgentSeller() {
+        return $this->get("agentSeller");
+    }
+
+    public function setAgentSeller($value) {
+        return $this->set("agentSeller", $value);
+    }
+    
+    /**
+     * @return \Konduto\Models\PointOfSale
+     */
+    public function getPointOfSale() {
+        return $this->get("pointOfSale");
+    }
+
+    public function setPointOfSale($value) {
+        return $this->set("pointOfSale", $value);
+    }
+
+    /**
+     * @return \Konduto\Models\Delivery
+     */
+    public function getDelivery() {
+        return $this->get("delivery");
+    }
+
+    public function setDelivery($value) {
+        return $this->set("delivery", $value);
+    }
+
+   /**
+     * @return \Konduto\Models\BankOriginAccount
+     */
+    public function getBankOriginAccount() {
+        return $this->get("bankOriginAccount");
+    }
+
+    public function setBankOriginAccount($value) {
+        return $this->set("bankOriginAccount", $value);
+    }
+
+    /**
+     * @return \Konduto\Models\BankDestinationAccount[]
+     */
+    public function getBankDestinationAccount() {
+        return $this->get("bankDestinationAccount");
+    }
+
+    public function setBankDestinationAccount(array $value) {
+        return $this->set("bankDestinationAccount", $value);
+    }
+
 }
