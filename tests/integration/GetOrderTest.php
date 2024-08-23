@@ -1,12 +1,13 @@
 <?php namespace Konduto\Tests\Integration;
 
+use PHPUnit\Framework\TestCase;
 use Konduto\Core\Konduto;
 use Konduto\Models\Address;
 use Konduto\Models\Item;
 use Konduto\Models\Order;
 use Konduto\Models\Payment;
 
-class GetOrderTest extends \PHPUnit_Framework_TestCase {
+class GetOrderTest extends TestCase{
 
     public $uniqueId;
 
@@ -89,21 +90,21 @@ class GetOrderTest extends \PHPUnit_Framework_TestCase {
                 array("type" => "voucher")
             ),
             "billing" => array(
-              "name" => "Mary Jane",
-              "address1" => "123 Main St.",
-              "address2" => "Apartment 4",
-              "city" => "New York City",
-              "state" => "NY",
-              "zip" => "10460",
-              "country" => "US"
+                "name" => "Mary Jane",
+                "address1" => "123 Main St.",
+                "address2" => "Apartment 4",
+                "city" => "New York City",
+                "state" => "NY",
+                "zip" => "10460",
+                "country" => "US"
             ),
             "shipping" => array(
-              "name" => "Mary Jane",
-              "address1" => "89 Holly St.",
-              "city" => "Springfield",
-              "state" => "CO",
-              "zip" => "02955",
-              "country" => "US"
+                "name" => "Mary Jane",
+                "address1" => "89 Holly St.",
+                "city" => "Springfield",
+                "state" => "CO",
+                "zip" => "02955",
+                "country" => "US"
             ),
         ), $info));
         return $order;
@@ -113,24 +114,24 @@ class GetOrderTest extends \PHPUnit_Framework_TestCase {
         return $this->buildOrder(array(
             "shopping_cart" => array(
                 array(
-                  "sku" => "9919023",
-                  "product_code" => "123456789999",
-                  "category" => 201,
-                  "name" => "Green T-Shirt",
-                  "description" => "Male Green T-Shirt V Neck",
-                  "unit_cost" => 29.99,
-                  "quantity" => 1,
-                  "created_at" => "2015-12-10"
+                    "sku" => "9919023",
+                    "product_code" => "123456789999",
+                    "category" => 201,
+                    "name" => "Green T-Shirt",
+                    "description" => "Male Green T-Shirt V Neck",
+                    "unit_cost" => 29.99,
+                    "quantity" => 1,
+                    "created_at" => "2015-12-10"
                 ),
                 array(
-                  "sku" => "0017273",
-                  "category" => 202,
-                  "name" => "Yellow Socks",
-                  "description" => "Pair of Yellow Socks",
-                  "unit_cost" => 7.50,
-                  "quantity" => 2,
-                  "discount" => 1.00,
-                  "created_at" => "2015-03-10"
+                    "sku" => "0017273",
+                    "category" => 202,
+                    "name" => "Yellow Socks",
+                    "description" => "Pair of Yellow Socks",
+                    "unit_cost" => 7.50,
+                    "quantity" => 2,
+                    "discount" => 1.00,
+                    "created_at" => "2015-03-10"
                 )
             )
         ));
@@ -258,9 +259,9 @@ class GetOrderTest extends \PHPUnit_Framework_TestCase {
         $this->assertInstanceOf('Konduto\Models\Address', $billing);
         $this->assertInstanceOf('Konduto\Models\Address', $shipping);
         $this->assertAddress($billing, "Mary Jane", "123 Main St.", "Apartment 4",
-                             "New York City", "NY", "10460", "US");
+            "New York City", "NY", "10460", "US");
         $this->assertAddress($shipping, "Mary Jane", "89 Holly St.", null, "Springfield",
-                             "CO", "02955", "US");
+            "CO", "02955", "US");
     }
 
     function assertOrderPayments(Order $order) {
@@ -292,9 +293,9 @@ class GetOrderTest extends \PHPUnit_Framework_TestCase {
         $this->assertInstanceOf('Konduto\Models\Item', $item0);
         $this->assertInstanceOf('Konduto\Models\Item', $item1);
         $this->assertShoppingCartItem($item0, "2015-12-10", "9919023", "123456789999", 201,
-                                      "Green T-Shirt", "Male Green T-Shirt V Neck", 29.99, 1, null);
+            "Green T-Shirt", "Male Green T-Shirt V Neck", 29.99, 1, null);
         $this->assertShoppingCartItem($item1, "2015-03-10", "0017273", null, 202, "Yellow Socks",
-                                      "Pair of Yellow Socks", 7.50, 2, 1.00);
+            "Pair of Yellow Socks", 7.50, 2, 1.00);
     }
 
     function assertOrderWithSeller(Order $order) {
@@ -344,7 +345,7 @@ class GetOrderTest extends \PHPUnit_Framework_TestCase {
     }
 
     function assertShoppingCartItem(Item $item, $createdAt, $sku, $productCode, $category,
-                                    $name, $description, $unitCost, $quantity, $discount) {
+                                         $name, $description, $unitCost, $quantity, $discount) {
         $this->assertDate($createdAt, $item->getCreatedAt());
         $this->assertEquals($sku, $item->getSku());
         $this->assertEquals($productCode, $item->getProductCode());
@@ -357,7 +358,7 @@ class GetOrderTest extends \PHPUnit_Framework_TestCase {
     }
 
     function assertAddress(Address $address, $name, $address1, $address2, $city,
-                           $state, $zip, $country) {
+                                   $state, $zip, $country) {
         $this->assertEquals($name, $address->getName());
         $this->assertEquals($address1, $address->getAddress1());
         $this->assertEquals($address2, $address->getAddress2());
@@ -375,5 +376,4 @@ class GetOrderTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($date1, date_format($date2, 'Y-m-d\TH:i:s\Z'));
     }
 }
-
 
