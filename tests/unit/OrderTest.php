@@ -1,8 +1,9 @@
 <?php namespace Konduto\Tests;
 
 use Konduto\Models\Order;
+use PHPUnit\Framework\TestCase;
 
-class OrderTest extends \PHPUnit_Framework_TestCase {
+class OrderTest extends TestCase  {
 
     function test_orderParse() {
         $order = new Order(array(
@@ -53,19 +54,19 @@ class OrderTest extends \PHPUnit_Framework_TestCase {
             ),
             "triggered_rules" => array(
                 array(
-                    "name" => "Cartão com BIN do Canadá", 
+                    "name" => "Cartão com BIN do Canadá",
                     "decision" => "decline"
                 )
             ),
             "triggered_decision_list" => array(
                 array(
-                    "type" => "zip", 
-                    "trigger" => "shipping_zip", 
+                    "type" => "zip",
+                    "trigger" => "shipping_zip",
                     "decision" => "review"
                 ),
                 array(
-                    "type" => "email", 
-                    "trigger" => "email", 
+                    "type" => "email",
+                    "trigger" => "email",
                     "decision" => "decline"
                 )
             ),
@@ -75,12 +76,12 @@ class OrderTest extends \PHPUnit_Framework_TestCase {
                 "type" => "show",
                 "subtype" => "circus",
                 "venue" => array(
-                   "name" => "United Hall",
-                   "address" => "Av. das Nações",
-                   "city" => "São Paulo",
-                   "state" => "SP",
-                   "country" => "Brazil",
-                   "capacity" => 7000
+                    "name" => "United Hall",
+                    "address" => "Av. das Nações",
+                    "city" => "São Paulo",
+                    "state" => "SP",
+                    "country" => "Brazil",
+                    "capacity" => 7000
                 ),
                 "tickets" => array(
                     array(
@@ -145,7 +146,7 @@ class OrderTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals("student", $ticket->getCategory());
         $this->assertEquals("pista premium", $ticket->getSection());
         $this->assertEquals(true, $ticket->getPremium());
-        
+
         $attendee = $ticket->getAttendee();
         $this->assertEquals("Alfredo Borges", $attendee->getName());
         $this->assertEquals("12345678900", $attendee->getDocument());
