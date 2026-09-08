@@ -30,7 +30,9 @@ class Order extends BaseModel {
         return array("id", "visitor", "total_amount", "shipping_amount", "tax_amount",
             "currency", "installments", "ip", "payment", "customer", "billing", "hotel",
             "shipping", "shopping_cart", "travel", "purchased_at", "first_message",
-            "messages_exchanged", "seller", "analyze", "bureaux_queries", "events", "agentSeller", "pointOfSale", "delivery");
+            "messages_exchanged", "recurring", "risk_level", "sales_channel", "scheduled",
+            "seller", "analyze", "bureaux_queries", "events", "agent", "point_of_sale",
+            "delivery", "origin_account", "destination_accounts", "tenant");
     }
 
     /**
@@ -57,11 +59,12 @@ class Order extends BaseModel {
             "events" => new ArrayModelParser('Konduto\Models\Event'),
             "triggered_rules" => new ArrayModelParser('Konduto\Models\TriggeredRule'),
             "triggered_decision_list" => new ArrayModelParser('Konduto\Models\TriggeredDecisionList'),
-            "agentSeller" => new ModelParser('Konduto\Models\AgentSeller'),
-            "pointOfSale" => new ModelParser('Konduto\Models\PointOfSale'),
+            "agent" => new ModelParser('Konduto\Models\AgentSeller'),
+            "point_of_sale" => new ModelParser('Konduto\Models\PointOfSale'),
             "delivery" => new ModelParser('Konduto\Models\Delivery'),
-            "BankOriginAccount" => new BankArrayParser(),
-            "BankDestinationAccount" => new BankArrayParser()
+            "origin_account" => new BankArrayParser(),
+            "destination_accounts" => new BankArrayParser(),
+            "tenant" => new ModelParser('Konduto\Models\Tenant')
         );
     }
 
@@ -247,6 +250,38 @@ class Order extends BaseModel {
         return $this->set("messages_exchanged", $value);
     }
 
+    public function getRecurring() {
+        return $this->get("recurring");
+    }
+
+    public function setRecurring($value) {
+        return $this->set("recurring", $value);
+    }
+
+    public function getRiskLevel() {
+        return $this->get("risk_level");
+    }
+
+    public function setRiskLevel($value) {
+        return $this->set("risk_level", $value);
+    }
+
+    public function getSalesChannel() {
+        return $this->get("sales_channel");
+    }
+
+    public function setSalesChannel($value) {
+        return $this->set("sales_channel", $value);
+    }
+
+    public function getScheduled() {
+        return $this->get("scheduled");
+    }
+
+    public function setScheduled($value) {
+        return $this->set("scheduled", $value);
+    }
+
     /**
      * @return \Konduto\Models\Seller
      */
@@ -368,23 +403,23 @@ class Order extends BaseModel {
     /**
      * @return \Konduto\Models\AgentSeller
      */
-    public function getAgentSeller() {
-        return $this->get("agentSeller");
+    public function getAgent() {
+        return $this->get("agent");
     }
 
-    public function setAgentSeller($value) {
-        return $this->set("agentSeller", $value);
+    public function setAgent($value) {
+        return $this->set("agent", $value);
     }
 
     /**
      * @return \Konduto\Models\PointOfSale
      */
     public function getPointOfSale() {
-        return $this->get("pointOfSale");
+        return $this->get("point_of_sale");
     }
 
     public function setPointOfSale($value) {
-        return $this->set("pointOfSale", $value);
+        return $this->set("point_of_sale", $value);
     }
 
     /**
@@ -401,23 +436,34 @@ class Order extends BaseModel {
     /**
      * @return \Konduto\Models\BankOriginAccount
      */
-    public function getBankOriginAccount() {
-        return $this->get("bankOriginAccount");
+    public function getOriginAccount() {
+        return $this->get("origin_account");
     }
 
-    public function setBankOriginAccount($value) {
-        return $this->set("bankOriginAccount", $value);
+    public function setOriginAccount($value) {
+        return $this->set("origin_account", $value);
     }
 
     /**
      * @return \Konduto\Models\BankDestinationAccount[]
      */
-    public function getBankDestinationAccount() {
-        return $this->get("bankDestinationAccount");
+    public function getDestinationAccounts() {
+        return $this->get("destination_accounts");
     }
 
-    public function setBankDestinationAccount(array $value) {
-        return $this->set("bankDestinationAccount", $value);
+    public function setDestinationAccounts(array $value) {
+        return $this->set("destination_accounts", $value);
+    }
+
+    /**
+     * @return \Konduto\Models\Tenant
+     */
+    public function getTenant() {
+        return $this->get("tenant");
+    }
+
+    public function setTenant($value) {
+        return $this->set("tenant", $value);
     }
 
 }

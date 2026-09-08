@@ -57,7 +57,7 @@ class Bank extends BaseModel {
     }
 
     public function setKeyType($value) {
-        return $this->set("Key_type", $value);
+        return $this->set("key_type", $value);
     }
 
     public function getKeyValue() {
@@ -65,7 +65,7 @@ class Bank extends BaseModel {
     }
 
     public function setKeyValue($value) {
-        return $this->set("Key_value", $value);
+        return $this->set("key_value", $value);
     }
 
     public function getHolderName() {

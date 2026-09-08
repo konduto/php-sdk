@@ -7,6 +7,7 @@ class Payment extends BaseModel {
     const TYPE_DEBIT = "debit";
     const TYPE_TRANSFER = "transfer";
     const TYPE_VOUCHER = "voucher";
+    const TYPE_BALANCE = "balance";
     const TYPE_PIX = "pix";
 
     const STATUS_APPROVED = "approved";
@@ -14,13 +15,15 @@ class Payment extends BaseModel {
     const STATUS_PENDING  = "pending";
 
     public static $availableTypes = array(self::TYPE_CREDIT, self::TYPE_BOLETO,
-        self::TYPE_DEBIT, self::TYPE_TRANSFER, self::TYPE_VOUCHER, self::TYPE_PIX);
+        self::TYPE_DEBIT, self::TYPE_TRANSFER, self::TYPE_VOUCHER, self::TYPE_BALANCE, self::TYPE_PIX);
 
     /**
      * @inheritdoc
      */
     protected function fields() {
-        return array("type", "status", "amount", "description");
+        return array("type", "status", "amount", "description", "tax_id", "cvv_result",
+            "avs_result", "sha1", "name", "holder", "mcc", "mid", "3ds_id",
+            "merchant_tax_id", "voucher_type");
     }
 
     /**
@@ -35,18 +38,16 @@ class Payment extends BaseModel {
             switch ($array["type"]) {
                 case Payment::TYPE_CREDIT:
                     return new CreditCard($array);
-                    break;
 
                 case Payment::TYPE_BOLETO:
                     return new Boleto($array);
-                    break;
 
                 case Payment::TYPE_DEBIT:
                 case Payment::TYPE_TRANSFER:
                 case Payment::TYPE_VOUCHER:
+                case Payment::TYPE_BALANCE:
                 case Payment::TYPE_PIX:
                     return new Payment($array);
-                    break;
 
                 default:  // Exception
             }
@@ -84,5 +85,93 @@ class Payment extends BaseModel {
 
     public function getDescription() {
         return $this->get("description");
+    }
+
+    public function getTaxId() {
+        return $this->get("tax_id");
+    }
+
+    public function setTaxId($value) {
+        return $this->set("tax_id", $value);
+    }
+
+    public function getCvvResult() {
+        return $this->get("cvv_result");
+    }
+
+    public function setCvvResult($value) {
+        return $this->set("cvv_result", $value);
+    }
+
+    public function getAvsResult() {
+        return $this->get("avs_result");
+    }
+
+    public function setAvsResult($value) {
+        return $this->set("avs_result", $value);
+    }
+
+    public function getSha1() {
+        return $this->get("sha1");
+    }
+
+    public function setSha1($value) {
+        return $this->set("sha1", $value);
+    }
+
+    public function getName() {
+        return $this->get("name");
+    }
+
+    public function setName($value) {
+        return $this->set("name", $value);
+    }
+
+    public function getHolder() {
+        return $this->get("holder");
+    }
+
+    public function setHolder($value) {
+        return $this->set("holder", $value);
+    }
+
+    public function getMcc() {
+        return $this->get("mcc");
+    }
+
+    public function setMcc($value) {
+        return $this->set("mcc", $value);
+    }
+
+    public function getMid() {
+        return $this->get("mid");
+    }
+
+    public function setMid($value) {
+        return $this->set("mid", $value);
+    }
+
+    public function get3dsId() {
+        return $this->get("3ds_id");
+    }
+
+    public function set3dsId($value) {
+        return $this->set("3ds_id", $value);
+    }
+
+    public function getMerchantTaxId() {
+        return $this->get("merchant_tax_id");
+    }
+
+    public function setMerchantTaxId($value) {
+        return $this->set("merchant_tax_id", $value);
+    }
+
+    public function getVoucherType() {
+        return $this->get("voucher_type");
+    }
+
+    public function setVoucherType($value) {
+        return $this->set("voucher_type", $value);
     }
 }
