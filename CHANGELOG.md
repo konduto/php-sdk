@@ -2,7 +2,7 @@
 
 All notable changes to this project are documented in this file.
 
-## [Unreleased]
+## [v3.0.0] - 2026-09-08
 
 ### Added
 - `Tenant` model in `src/Models/Tenant.php`.
