@@ -9,6 +9,20 @@ This document covers Konduto PHP SDK integration library that facilitates the in
 * PHP 5.4 or later
 * cURL extension
 
+## Local development without host PHP
+
+If your machine does not have `php` installed, you can run everything with Docker.
+
+```bash
+docker run --rm -v "$PWD:/app" -w /app composer:2 install --ignore-platform-reqs --no-security-blocking
+docker run --rm -v "$PWD:/app" -w /app php:7.4-cli php vendor/bin/phpunit tests/unit
+```
+
+Notes:
+
+- This SDK still depends on `phpunit/phpunit:4.8.*`.
+- Packagist no longer supports Composer 1, so use Composer 2 with `--no-security-blocking` for this legacy dependency set.
+
 ## Installation with Composer
 
 ```json
@@ -180,6 +194,28 @@ $order = Konduto::getOrder($orderId);
 
 Please [click here](http://docs.konduto.com/#n-tables) for the Currency and Category reference tables.
 
+## Payload field alignment (docs compatibility)
+
+Recent updates aligned model fields with the documentation at `https://docs.konduto.com/reference/enviar-um-pedido` and its child pages.
+
+### Breaking naming changes
+
+The SDK now serializes only documented names for these objects:
+
+| Object | Legacy field(s) | Official field(s) |
+| --- | --- | --- |
+| Order | `agentSeller` | `agent` |
+| Order | `pointOfSale` | `point_of_sale` |
+| Order | `bankOriginAccount` | `origin_account` |
+| Order | `bankDestinationAccount` | `destination_accounts` |
+| Delivery | `deliveryCompany` | `delivery_company` |
+| Delivery | `deliveryMethod` | `delivery_method` |
+| Delivery | `estimatedShippingDate` | `estimated_shipping_date` |
+| Delivery | `estimatedDeliveryDate` | `estimated_delivery_date` |
+| Agent | `taxId` | `tax_id` |
+
+If your integration still sends legacy names, update your payload builder to the official fields above.
+
 ## Support
 
 Feel free to contact our [support team](mailto:support@konduto.com) if you have any questions or suggestions!
@@ -203,6 +239,12 @@ This project uses [PHPUnit](https://phpunit.de/) as its testing framework. Befor
 composer install
 ```
 
+With Docker (no host PHP required):
+
+```bash
+docker run --rm -v "$PWD:/app" -w /app composer:2 install --ignore-platform-reqs --no-security-blocking
+```
+
 There are two types of test:
 
 - Unit tests: Just test the logic of the code. They are located at `tests/unit/`.
@@ -211,6 +253,12 @@ You can run the unit tests with the command:
 
 ```
 vendor/bin/phpunit tests/unit
+```
+
+Docker equivalent:
+
+```bash
+docker run --rm -v "$PWD:/app" -w /app php:7.4-cli php vendor/bin/phpunit tests/unit
 ```
 
 - Integration tests: Make actual calls to Konduto's sandbox API to check the integration. They are located at `tests/integration/`. 
@@ -226,3 +274,10 @@ Now you can run the integration tests:
 ```
 vendor/bin/phpunit tests/integration
 ```
+
+Docker equivalent:
+
+```bash
+docker run --rm -e KONDUTO_SANDBOX_API_KEY="$KONDUTO_SANDBOX_API_KEY" -v "$PWD:/app" -w /app php:7.4-cli php vendor/bin/phpunit tests/integration
+```
+
