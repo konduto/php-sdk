@@ -1,12 +1,17 @@
 <?php namespace Konduto\Models;
 
+/**
+ * Address model.
+ * @see http://docs.konduto.com Konduto API Spec
+ */
 class Address extends Geolocation {
 
     /**
      * @inheritdoc
      */
     protected function fields() {
-        return array_merge(parent::fields(), array("name", "address1", "address2", "zip"));
+        return array_merge(parent::fields(), array("name", "address1", "address2", "zip",
+            "estimatedDate", "value", "lat", "lon"));
     }
 
     public function getName() {
@@ -39,5 +44,37 @@ class Address extends Geolocation {
 
     public function setZip($value) {
         return $this->set("zip", $value);
+    }
+
+    public function getEstimatedDate() {
+        return $this->get("estimatedDate");
+    }
+
+    public function setEstimatedDate($value) {
+        return $this->set("estimatedDate", $value);
+    }
+
+    public function getValue() {
+        return $this->get("value");
+    }
+
+    public function setValue($value) {
+        return $this->set("value", $value);
+    }
+
+    public function getLat() {
+        return $this->get("lat");
+    }
+
+    public function setLat($value) {
+        return $this->set("lat", $value);
+    }
+
+    public function getLon() {
+        return $this->get("lon");
+    }
+
+    public function setLon($value) {
+        return $this->set("lon", $value);
     }
 }

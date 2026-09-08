@@ -6,39 +6,47 @@ class Delivery extends BaseModel {
      * @inheritdoc
      */
     protected function fields() {
-        return array("estimatedDeliveryDate", "estimatedShippingDate", "deliveryCompany", "deliveryMethod");
+        return array("estimated_delivery_date", "estimated_shipping_date", "delivery_company", "delivery_method");
     }
 
+    /**
+     * YYYY-MM-DDTHH:mm:ssZ
+     * @return \DateTime
+     */
     public function getEstimatedDeliveryDate() {
-        return $this->get("estimatedDeliveryDate");
+        return $this->get("estimated_delivery_date");
     }
 
     public function setEstimatedDeliveryDate($value) {
-        return $this->set("estimatedDeliveryDate", $value);
+        return $this->set("estimated_delivery_date", $value);
     }
 
+    /**
+     * YYYY-MM-DDTHH:mm:ssZ
+     * @return \DateTime
+     */
     public function getEstimatedShippingDate() {
-        return $this->get("estimatedShippingDate");
+        return $this->get("estimated_shipping_date");
     }
 
     public function setEstimatedShippingDate($value) {
-        return $this->set("estimatedShippingDate", $value);
+        return $this->set("estimated_shipping_date", $value);
     }
 
     public function getDeliveryCompany() {
-        return $this->get("deliveryCompany");
+        return $this->get("delivery_company");
     }
 
     public function setDeliveryCompany($value) {
-        return $this->set("deliveryCompany", $value);
+        return $this->set("delivery_company", $value);
     }
 
     public function getDeliveryMethod() {
-        return $this->get("deliveryMethod");
+        return $this->get("delivery_method");
     }
 
     public function setDeliveryMethod($value) {
-        return $this->set("deliveryMethod", $value);
+        return $this->set("delivery_method", $value);
     }
 
 }

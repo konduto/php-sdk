@@ -24,6 +24,10 @@ class Boleto extends Payment {
     }
 
 
+    /**
+     * Expiration date. YYYY-MM-DD
+     * @return \DateTime
+     */
     public function getExpirationDate() {
         return $this->get("expiration_date");
     }

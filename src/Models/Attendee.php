@@ -45,6 +45,7 @@ class Attendee extends BaseModel {
     }
 
     /**
+     * YYYY-MM-DD
      * @return \DateTime
      */
     public function getDob() {

@@ -9,7 +9,8 @@ class Customer extends BaseModel {
      */
     protected function fields() {
         return array("id", "name", "tax_id", "phone1", "phone2",
-            "email", "new", "vip", "dob", "created_at", "document_type");
+            "email", "new", "vip", "dob", "created_at", "document_type",
+            "type", "risk_level", "risk_score", "mother_name");
     }
 
     /**
@@ -87,6 +88,7 @@ class Customer extends BaseModel {
     }
 
     /**
+     * YYYY-MM-DD
      * @return \DateTime
      */
     public function getDob() {
@@ -98,6 +100,7 @@ class Customer extends BaseModel {
     }
 
     /**
+     * YYYY-MM-DD
      * @return \DateTime
      */
     public function getCreatedAt() {
@@ -114,5 +117,37 @@ class Customer extends BaseModel {
 
     public function setDocumentType($documentType) {
         return $this->set("document_type", $documentType);
+    }
+
+    public function getType() {
+        return $this->get("type");
+    }
+
+    public function setType($value) {
+        return $this->set("type", $value);
+    }
+
+    public function getRiskLevel() {
+        return $this->get("risk_level");
+    }
+
+    public function setRiskLevel($value) {
+        return $this->set("risk_level", $value);
+    }
+
+    public function getRiskScore() {
+        return $this->get("risk_score");
+    }
+
+    public function setRiskScore($value) {
+        return $this->set("risk_score", $value);
+    }
+
+    public function getMotherName() {
+        return $this->get("mother_name");
+    }
+
+    public function setMotherName($value) {
+        return $this->set("mother_name", $value);
     }
 }

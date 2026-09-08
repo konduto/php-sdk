@@ -2,20 +2,22 @@
 
 use Konduto\Parsers\DateParser;
 
-class Seller extends BaseModel {
+class Tenant extends BaseModel {
 
     /**
-     * @inheritDoc
+     * @inheritdoc
      */
     protected function fields() {
         return array("id", "name", "created_at");
     }
 
     /**
-     * @inheritDoc
+     * @inheritdoc
      */
     protected function initParsers() {
-        return array("created_at" => new DateParser());
+        return array(
+            "created_at" => new DateParser()
+        );
     }
 
     public function getId() {
@@ -35,7 +37,7 @@ class Seller extends BaseModel {
     }
 
     /**
-     * YYYY-MM-DD
+     * YYYY-MM-DDTHH:mm:ssZ
      * @return \DateTime
      */
     public function getCreatedAt() {
@@ -45,6 +47,5 @@ class Seller extends BaseModel {
     public function setCreatedAt($value) {
         return $this->set("created_at", $value);
     }
-
-
 }
+

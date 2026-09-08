@@ -9,7 +9,8 @@ class Item extends BaseModel {
      */
     protected function fields() {
         return array("sku", "product_code", "category", "description",
-            "name", "unit_cost", "quantity", "discount", "created_at");
+            "name", "unit_cost", "quantity", "discount", "created_at",
+            "deliveryType", "deliverySlaInMinutes", "sellerId", "image");
     }
 
     /**
@@ -85,6 +86,7 @@ class Item extends BaseModel {
     }
 
     /**
+     * YYYY-MM-DD
      * @return \DateTime
      */
     public function getCreatedAt() {
@@ -93,5 +95,37 @@ class Item extends BaseModel {
 
     public function setCreatedAt($createdAt) {
         return $this->set("created_at", $createdAt);
+    }
+
+    public function getDeliveryType() {
+        return $this->get("deliveryType");
+    }
+
+    public function setDeliveryType($value) {
+        return $this->set("deliveryType", $value);
+    }
+
+    public function getDeliverySlaInMinutes() {
+        return $this->get("deliverySlaInMinutes");
+    }
+
+    public function setDeliverySlaInMinutes($value) {
+        return $this->set("deliverySlaInMinutes", $value);
+    }
+
+    public function getSellerId() {
+        return $this->get("sellerId");
+    }
+
+    public function setSellerId($value) {
+        return $this->set("sellerId", $value);
+    }
+
+    public function getImage() {
+        return $this->get("image");
+    }
+
+    public function setImage($value) {
+        return $this->set("image", $value);
     }
 }

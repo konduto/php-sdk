@@ -5,6 +5,72 @@ use PHPUnit\Framework\TestCase;
 
 class OrderTest extends TestCase  {
 
+    function test_orderDocumentedFieldNames() {
+        $order = new Order(array(
+            "id" => uniqid(),
+            "visitor" => "visitor-id",
+            "total_amount" => 100.0,
+            "installments" => 1,
+            "recurring" => true,
+            "scheduled" => true,
+            "risk_level" => "low",
+            "sales_channel" => "e-commerce",
+            "agent" => array(
+                "id" => "ag-1",
+                "name" => "Agent Name",
+                "tax_id" => "12345678900",
+                "created_at" => "2024-01-01"
+            ),
+            "point_of_sale" => array(
+                "id" => "pos-1",
+                "name" => "Store A",
+                "city" => "Sao Paulo",
+                "state" => "SP",
+                "country" => "BR"
+            ),
+            "origin_account" => array(
+                "id" => "origin-1",
+                "key_type" => "pix_email",
+                "key_value" => "mail@example.com",
+                "balance" => 90.0
+            ),
+            "destination_accounts" => array(
+                array(
+                    "id" => "dest-1",
+                    "key_type" => "pix_cpf",
+                    "key_value" => "12345678900",
+                    "amount" => 90.0
+                )
+            ),
+            "tenant" => array(
+                "id" => "tenant-1",
+                "name" => "Tenant A",
+                "created_at" => "2024-01-01"
+            )
+        ));
+
+        $json = $order->toJsonArray();
+
+        $this->assertArrayHasKey("agent", $json);
+        $this->assertArrayHasKey("point_of_sale", $json);
+        $this->assertArrayHasKey("origin_account", $json);
+        $this->assertArrayHasKey("destination_accounts", $json);
+        $this->assertArrayHasKey("tenant", $json);
+        $this->assertArrayHasKey("recurring", $json);
+        $this->assertArrayHasKey("risk_level", $json);
+        $this->assertArrayHasKey("sales_channel", $json);
+        $this->assertArrayHasKey("scheduled", $json);
+        $this->assertArrayNotHasKey("agentSeller", $json);
+        $this->assertArrayNotHasKey("pointOfSale", $json);
+        $this->assertArrayNotHasKey("bankOriginAccount", $json);
+        $this->assertArrayNotHasKey("bankDestinationAccount", $json);
+
+        $this->assertInstanceOf('Konduto\\Models\\AgentSeller', $order->getAgent());
+        $this->assertInstanceOf('Konduto\\Models\\PointOfSale', $order->getPointOfSale());
+        $this->assertInstanceOf('Konduto\\Models\\Tenant', $order->getTenant());
+        $this->assertArrayHasKey("tax_id", $json["agent"]);
+    }
+
     function test_orderParse() {
         $order = new Order(array(
             "id" => uniqid(),

@@ -3,11 +3,11 @@
 use Konduto\Core\Konduto;
 use Konduto\Models\Order;
 
-class PutOrderTest extends \PHPUnit_Framework_TestCase {
+class PutOrderTest extends \PHPUnit\Framework\TestCase {
 
     public $uniqueId;
 
-    public static function setUpBeforeClass() {
+    public static function setUpBeforeClass(): void {
         Konduto::setApiKey(getenv("KONDUTO_SANDBOX_API_KEY"));
     }
 

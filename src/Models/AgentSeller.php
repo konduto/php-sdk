@@ -8,14 +8,17 @@ class AgentSeller extends BaseModel {
      * @inheritDoc
      */
     protected function fields() {
-        return array("id", "login", "name", "taxId", "dob", "category", "created_at");
+        return array("id", "login", "name", "tax_id", "dob", "category", "created_at");
     }
 
     /**
      * @inheritDoc
      */
     protected function initParsers() {
-        return array("created_at", "dob" => new DateParser());
+        return array(
+            "created_at" => new DateParser(),
+            "dob" => new DateParser()
+        );
     }
 
     public function getId() {
@@ -44,13 +47,17 @@ class AgentSeller extends BaseModel {
     }
 
     public function getTaxId() {
-        return $this->get("taxId");
+        return $this->get("tax_id");
     }
 
     public function setTaxId($value) {
-        return $this->set("taxId", $value);
+        return $this->set("tax_id", $value);
     }
 
+    /**
+     * YYYY-MM-DD
+     * @return \DateTime
+     */
     public function getDob() {
         return $this->get("dob");
     }
@@ -67,6 +74,10 @@ class AgentSeller extends BaseModel {
         return $this->set("category", $value);
     }
 
+    /**
+     * YYYY-MM-DD
+     * @return \DateTime
+     */
     public function getCreatedAt() {
         return $this->get("created_at");
     }

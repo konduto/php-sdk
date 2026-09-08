@@ -11,7 +11,7 @@ class GetOrderTest extends TestCase{
 
     public $uniqueId;
 
-    public static function setUpBeforeClass() {
+    public static function setUpBeforeClass(): void {
         Konduto::setApiKey(getenv("KONDUTO_SANDBOX_API_KEY"));
     }
 

@@ -2,12 +2,12 @@
     "name": "konduto/sdk",
     "description": "Konduto Fraud Detection Service PHP SDK",
     "license": "MIT",
-    "version": "v2.4.1",
+    "version": "v3.0.0",
     "require": {
         "php": ">=5.3.10"
     },
     "require-dev": {
-        "phpunit/phpunit": "4.8.*"
+        "phpunit/phpunit": "^9.6.33"
     },
     "autoload": {
         "psr-4": {

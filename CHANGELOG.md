@@ -1,0 +1,64 @@
+# Changelog
+
+All notable changes to this project are documented in this file.
+
+## [v3.0.0] - 2026-09-08
+
+### Added
+- `Tenant` model in `src/Models/Tenant.php`.
+- Support for documented Order root fields: `recurring`, `risk_level`, `sales_channel`, `scheduled`, `tenant`.
+- Support for documented payment type `balance`.
+- New documented fields in models:
+  - `Customer`: `type`, `risk_level`, `risk_score`, `mother_name`.
+  - `Payment`: `tax_id`, `cvv_result`, `avs_result`, `sha1`, `name`, `holder`, `mcc`, `mid`, `3ds_id`, `merchant_tax_id`, `voucher_type`.
+  - `Device`: `provider`, `category`, `model`, `manufacturer`, `os`.
+  - `Item`: `deliveryType`, `deliverySlaInMinutes`, `sellerId`, `image`.
+  - `Address`: `estimatedDate`, `value`, `lat`, `lon`.
+- New/expanded tests:
+  - `tests/unit/PayloadFieldAlignmentTest.php`
+  - updates in `tests/unit/OrderTest.php`, `tests/unit/PaymentTest.php`, `tests/unit/CustomerTest.php`, `tests/unit/AddressTest.php`.
+
+### Changed
+- `Order` now uses documented names for these objects:
+  - `agent`
+  - `point_of_sale`
+  - `origin_account`
+  - `destination_accounts`
+- `Delivery` now uses documented snake_case fields:
+  - `delivery_company`, `delivery_method`, `estimated_shipping_date`, `estimated_delivery_date`.
+- `AgentSeller` now uses `tax_id` as the canonical serialized field.
+
+### Fixed
+- `Bank::setKeyType()` now writes `key_type` correctly.
+- `Bank::setKeyValue()` now writes `key_value` correctly.
+
+### Security
+- Upgraded `phpunit/phpunit` from `4.8.*` to `^9.6.33`, fixing CVE-2026-24765
+  (HIGH), an unsafe deserialization of code coverage data in the PHPT test
+  runner. The upgrade also drops `symfony/yaml` 3.4.47, a transitive dependency
+  that carried CVE-2026-45133, CVE-2026-45304 and CVE-2026-45305.
+  `composer audit` now reports no advisories.
+- The test suite requires PHP 7.3+ because of PHPUnit. The library itself is
+  unchanged and keeps supporting PHP 5.4+ at runtime.
+
+### Documentation
+- `README.md` now documents every order payload field grouped by object,
+  following the official docs format, where each description states whether the
+  field is required, recommended or optional and its expected type, enum values
+  or date pattern.
+- Model getters now document the exact date/datetime format they return,
+  matching the parsers in `src/Parsers`.
+
+### Breaking Changes
+- Removed legacy Order aliases from serialization and model methods:
+  - `agentSeller` -> `agent`
+  - `pointOfSale` -> `point_of_sale`
+  - `bankOriginAccount` -> `origin_account`
+  - `bankDestinationAccount` -> `destination_accounts`
+- Removed legacy Delivery camelCase aliases from serialization:
+  - `deliveryCompany` -> `delivery_company`
+  - `deliveryMethod` -> `delivery_method`
+  - `estimatedShippingDate` -> `estimated_shipping_date`
+  - `estimatedDeliveryDate` -> `estimated_delivery_date`
+- Removed `taxId` legacy alias from `AgentSeller` serialization.
+

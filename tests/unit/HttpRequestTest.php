@@ -3,7 +3,7 @@
 use Konduto\Core\HttpRequest as HttpRequest;
 use Konduto\Params as Parameters;
 
-class HttpRequestTest extends \PHPUnit_Framework_TestCase {
+class HttpRequestTest extends \PHPUnit\Framework\TestCase {
 
     function test_constructOk() {
         $req = new HttpRequest("post", "/uri");
@@ -12,9 +12,8 @@ class HttpRequestTest extends \PHPUnit_Framework_TestCase {
     }
 
     function test_constructFail() {
-        $this->setExpectedException("InvalidArgumentException");
-        $req = new HttpRequest("nana", "/uri");
-        $this->getExpectedException();
+        $this->expectException(\InvalidArgumentException::class);
+        new HttpRequest("nana", "/uri");
     }
 
     function test_authorization() {
@@ -82,7 +81,7 @@ class HttpRequestTest extends \PHPUnit_Framework_TestCase {
 
     function buildMockCurlSession($uri, $headers, $additionalOpts=array()) {
         $curlSess = $this->getMockBuilder('Konduto\Core\CurlSession')
-            ->setMethods(array('setOptionsArray', 'execute', 'close'))
+            ->onlyMethods(array('setOptionsArray', 'execute', 'close'))
             ->setConstructorArgs(array($uri))
             ->getMock();
 

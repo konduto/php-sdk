@@ -6,8 +6,9 @@ class Device extends BaseModel {
      * @inheritdoc
      */
     protected function fields() {
-        return array("user_id", "fingerprint", "platform", "browser",
-            "language", "timezone", "cookie", "javascript", "flash");
+        return array("user_id", "fingerprint", "provider", "category", "model", "platform",
+            "manufacturer", "os", "browser", "language", "timezone", "cookie",
+            "javascript", "flash");
     }
 
     public function getUserId() {
@@ -26,12 +27,52 @@ class Device extends BaseModel {
         return $this->set("fingerprint", $fingerprint);
     }
 
+    public function getProvider() {
+        return $this->get("provider");
+    }
+
+    public function setProvider($value) {
+        return $this->set("provider", $value);
+    }
+
+    public function getCategory() {
+        return $this->get("category");
+    }
+
+    public function setCategory($value) {
+        return $this->set("category", $value);
+    }
+
+    public function getModel() {
+        return $this->get("model");
+    }
+
+    public function setModel($value) {
+        return $this->set("model", $value);
+    }
+
     public function getPlatform() {
         return $this->get("platform");
     }
 
     public function setPlatform($platform) {
         return $this->set("platform", $platform);
+    }
+
+    public function getManufacturer() {
+        return $this->get("manufacturer");
+    }
+
+    public function setManufacturer($value) {
+        return $this->set("manufacturer", $value);
+    }
+
+    public function getOs() {
+        return $this->get("os");
+    }
+
+    public function setOs($value) {
+        return $this->set("os", $value);
     }
 
     public function getBrowser() {

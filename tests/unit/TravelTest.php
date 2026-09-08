@@ -2,7 +2,7 @@
 
 use Konduto\Models\Travel;
 
-class TravelTest extends \PHPUnit_Framework_TestCase {
+class TravelTest extends \PHPUnit\Framework\TestCase {
 
     function test_cc1() {
         $travelArr = array(

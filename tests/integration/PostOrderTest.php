@@ -3,11 +3,11 @@
 use Konduto\Core\Konduto;
 use Konduto\Models\Order;
 
-class PostOrderTest extends \PHPUnit_Framework_TestCase {
+class PostOrderTest extends \PHPUnit\Framework\TestCase {
 
     public $uniqueId;
 
-    public static function setUpBeforeClass() {
+    public static function setUpBeforeClass(): void {
         Konduto::setApiKey(getenv("KONDUTO_SANDBOX_API_KEY"));
     }
 
@@ -43,7 +43,7 @@ class PostOrderTest extends \PHPUnit_Framework_TestCase {
 
     function test_simplePostBadRequest() {
         $order = $this->buildOrderSimple(array("total_amount" => "bad_value"));
-        $this->setExpectedException('Konduto\Exceptions\BadRequestError');
+        $this->expectException('Konduto\Exceptions\BadRequestError');
         Konduto::analyze($order);
     }
 

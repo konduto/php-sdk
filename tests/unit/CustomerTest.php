@@ -2,7 +2,7 @@
 
 use Konduto\Models\Customer as Customer;
 
-class CustomerTest extends \PHPUnit_Framework_TestCase {
+class CustomerTest extends \PHPUnit\Framework\TestCase {
 
     function test_construct1() {
         $customer = new Customer();
@@ -36,5 +36,21 @@ class CustomerTest extends \PHPUnit_Framework_TestCase {
             "tax_id" => "tax002",
             "new" => true
         ), $cusArr);
+    }
+
+    function test_construct3_documentedExtraFields() {
+        $customer = new Customer(array(
+            "id" => "customer003",
+            "type" => "individual",
+            "risk_level" => "low",
+            "risk_score" => 25,
+            "mother_name" => "Maria da Silva"
+        ));
+
+        $cusArr = $customer->toJsonArray();
+        $this->assertEquals("individual", $cusArr["type"]);
+        $this->assertEquals("low", $cusArr["risk_level"]);
+        $this->assertEquals(25, $cusArr["risk_score"]);
+        $this->assertEquals("Maria da Silva", $cusArr["mother_name"]);
     }
 }
