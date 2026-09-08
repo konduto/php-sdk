@@ -32,6 +32,23 @@ All notable changes to this project are documented in this file.
 - `Bank::setKeyType()` now writes `key_type` correctly.
 - `Bank::setKeyValue()` now writes `key_value` correctly.
 
+### Security
+- Upgraded `phpunit/phpunit` from `4.8.*` to `^9.6.33`, fixing CVE-2026-24765
+  (HIGH), an unsafe deserialization of code coverage data in the PHPT test
+  runner. The upgrade also drops `symfony/yaml` 3.4.47, a transitive dependency
+  that carried CVE-2026-45133, CVE-2026-45304 and CVE-2026-45305.
+  `composer audit` now reports no advisories.
+- The test suite requires PHP 7.3+ because of PHPUnit. The library itself is
+  unchanged and keeps supporting PHP 5.4+ at runtime.
+
+### Documentation
+- `README.md` now documents every order payload field grouped by object,
+  following the official docs format, where each description states whether the
+  field is required, recommended or optional and its expected type, enum values
+  or date pattern.
+- Model getters now document the exact date/datetime format they return,
+  matching the parsers in `src/Parsers`.
+
 ### Breaking Changes
 - Removed legacy Order aliases from serialization and model methods:
   - `agentSeller` -> `agent`
