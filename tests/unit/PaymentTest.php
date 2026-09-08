@@ -65,4 +65,42 @@ class PaymentTest extends \PHPUnit_Framework_TestCase {
             "amount" => $pix->getAmount()
         ), $arr);
     }
+
+    function test_balance() {
+        $balance = Payment::build(array(
+            "type" => "balance",
+            "amount" => 30.00
+        ));
+
+        $this->assertInstanceOf('Konduto\Models\Payment', $balance);
+        $this->assertEquals('balance', $balance->getType());
+    }
+
+    function test_creditCardExtraFields() {
+        $cc = Payment::build(array(
+            "type" => "credit",
+            "bin" => "490172",
+            "last4" => "0012",
+            "expiration_date" => "072015",
+            "status" => "approved",
+            "tax_id" => "11111111111",
+            "cvv_result" => "Y",
+            "avs_result" => "X",
+            "sha1" => "3da541559918a808c2402bba5012f6c60b27661c",
+            "name" => "Comprador",
+            "holder" => "Titular",
+            "mcc" => 1234,
+            "mid" => "mid-1",
+            "3ds_id" => "3ds-abc",
+            "merchant_tax_id" => "12345678000190",
+            "voucher_type" => "gift"
+        ));
+
+        $arr = $cc->toJsonArray();
+        $this->assertEquals("11111111111", $arr["tax_id"]);
+        $this->assertEquals("Y", $arr["cvv_result"]);
+        $this->assertEquals("X", $arr["avs_result"]);
+        $this->assertEquals("3ds-abc", $arr["3ds_id"]);
+        $this->assertEquals("12345678000190", $arr["merchant_tax_id"]);
+    }
 }
