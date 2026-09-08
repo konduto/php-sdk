@@ -5,7 +5,7 @@ use Konduto\Models\Device;
 use Konduto\Models\Item;
 use Konduto\Models\Tenant;
 
-class PayloadFieldAlignmentTest extends \PHPUnit_Framework_TestCase {
+class PayloadFieldAlignmentTest extends \PHPUnit\Framework\TestCase {
 
     function test_deliverySnakeCaseFields() {
         $delivery = new Delivery();

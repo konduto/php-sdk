@@ -5,7 +5,7 @@ use Konduto\Models\Ticket as Ticket;
 use Konduto\Models\Venue as Venue;
 use Konduto\Models\Attendee as Attendee;
 
-class EventTest extends \PHPUnit_Framework_TestCase {
+class EventTest extends \PHPUnit\Framework\TestCase {
 
     function test_build_and_getters() {
         $eventArr = array(

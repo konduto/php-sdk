@@ -4,7 +4,7 @@ use Konduto\Models\Payment;
 use Konduto\Models\CreditCard;
 use Konduto\Models\Boleto;
 
-class PaymentTest extends \PHPUnit_Framework_TestCase {
+class PaymentTest extends \PHPUnit\Framework\TestCase {
 
     function test_cc1() {
         $cc = Payment::build(array(

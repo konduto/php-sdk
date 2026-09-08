@@ -4,7 +4,7 @@ COMPOSER_DOCKER=composer:2
 .PHONY: deps test-unit test-integration php-version
 
 deps:
-	docker run --rm -v "$(PWD):/app" -w /app $(COMPOSER_DOCKER) install --ignore-platform-reqs --no-security-blocking
+	docker run --rm -v "$(PWD):/app" -w /app $(COMPOSER_DOCKER) install --ignore-platform-reqs
 
 php-version:
 	docker run --rm -v "$(PWD):/app" -w /app $(PHP_DOCKER) php -v

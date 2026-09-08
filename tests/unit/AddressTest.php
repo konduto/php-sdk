@@ -2,7 +2,7 @@
 
 use Konduto\Models\Address as Address;
 
-class AddressTest extends \PHPUnit_Framework_TestCase {
+class AddressTest extends \PHPUnit\Framework\TestCase {
 
     function test_setters_getters() {
         $address = new Address();

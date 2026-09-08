@@ -3,30 +3,30 @@
 use Konduto\Core\Konduto;
 use Konduto\Models\Order;
 
-class ExceptionsTest extends \PHPUnit_Framework_TestCase {
+class ExceptionsTest extends \PHPUnit\Framework\TestCase {
 
     public $uniqueId = '';
 
-    public function setUp() {
+    protected function setUp(): void {
         Konduto::setApiKey(getenv("KONDUTO_SANDBOX_API_KEY"));
     }
 
     function test_nonexistentKey() {
         $nonexistentKey = "T0000000AAAAAAEEEFEEE";
-        $this->setExpectedException('Konduto\Exceptions\InvalidAPIKeyException');
+        $this->expectException('Konduto\Exceptions\InvalidAPIKeyException');
         Konduto::setApiKey($nonexistentKey);
         Konduto::analyze($this->buildOrder());
     }
 
     function test_duplicateOrder() {
         $order = $this->buildOrder();
-        $this->setExpectedException('Konduto\Exceptions\DuplicateOrderException');
+        $this->expectException('Konduto\Exceptions\DuplicateOrderException');
         Konduto::analyze($order);
         Konduto::analyze($order);
     }
 
     function test_orderNotFound() {
-        $this->setExpectedException('Konduto\Exceptions\OrderNotFoundException');
+        $this->expectException('Konduto\Exceptions\OrderNotFoundException');
         Konduto::getOrder("nonexistent-order-123123");
     }
 

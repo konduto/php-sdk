@@ -2,7 +2,7 @@
 
 use Konduto\Models\Customer as Customer;
 
-class CustomerTest extends \PHPUnit_Framework_TestCase {
+class CustomerTest extends \PHPUnit\Framework\TestCase {
 
     function test_construct1() {
         $customer = new Customer();

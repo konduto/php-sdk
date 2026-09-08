@@ -14,14 +14,15 @@ This document covers Konduto PHP SDK integration library that facilitates the in
 If your machine does not have `php` installed, you can run everything with Docker.
 
 ```bash
-docker run --rm -v "$PWD:/app" -w /app composer:2 install --ignore-platform-reqs --no-security-blocking
+docker run --rm -v "$PWD:/app" -w /app composer:2 install --ignore-platform-reqs
 docker run --rm -v "$PWD:/app" -w /app php:7.4-cli php vendor/bin/phpunit tests/unit
 ```
 
 Notes:
 
-- This SDK still depends on `phpunit/phpunit:4.8.*`.
-- Packagist no longer supports Composer 1, so use Composer 2 with `--no-security-blocking` for this legacy dependency set.
+- The library itself has no runtime dependencies and keeps supporting PHP 5.4+.
+- Tests run on `phpunit/phpunit:^9.6`, which requires PHP 7.3 or later. That
+  requirement applies to the test suite only, not to applications using this SDK.
 
 ## Installation with Composer
 
@@ -593,7 +594,7 @@ composer install
 With Docker (no host PHP required):
 
 ```bash
-docker run --rm -v "$PWD:/app" -w /app composer:2 install --ignore-platform-reqs --no-security-blocking
+docker run --rm -v "$PWD:/app" -w /app composer:2 install --ignore-platform-reqs
 ```
 
 There are two types of test:
