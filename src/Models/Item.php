@@ -86,6 +86,7 @@ class Item extends BaseModel {
     }
 
     /**
+     * YYYY-MM-DD
      * @return \DateTime
      */
     public function getCreatedAt() {

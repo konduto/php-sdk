@@ -1,5 +1,9 @@
 <?php namespace Konduto\Models;
 
+/**
+ * Geolocation model.
+ * @see http://docs.konduto.com Konduto API Spec
+ */
 class Geolocation extends BaseModel {
 
     protected function fields() {

@@ -221,6 +221,7 @@ class Order extends BaseModel {
     }
 
     /**
+     * YYYY-MM-DDTHH:mm:ssZ
      * @return \DateTime
      */
     public function getPurchasedAt() {
@@ -232,6 +233,7 @@ class Order extends BaseModel {
     }
 
     /**
+     * YYYY-MM-DDThh:mmZ
      * @return \DateTime
      */
     public function getFirstMessage() {

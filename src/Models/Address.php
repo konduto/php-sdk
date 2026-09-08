@@ -1,5 +1,9 @@
 <?php namespace Konduto\Models;
 
+/**
+ * Address model.
+ * @see http://docs.konduto.com Konduto API Spec
+ */
 class Address extends Geolocation {
 
     /**

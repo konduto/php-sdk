@@ -34,6 +34,7 @@ class Event extends BaseModel {
     }
 
     /**
+     * YYYY-MM-DDTHH:mm:ssZ
      * @return \DateTime
      */
     public function getDate() {

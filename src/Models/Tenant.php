@@ -36,6 +36,10 @@ class Tenant extends BaseModel {
         return $this->set("name", $value);
     }
 
+    /**
+     * YYYY-MM-DDTHH:mm:ssZ
+     * @return \DateTime
+     */
     public function getCreatedAt() {
         return $this->get("created_at");
     }

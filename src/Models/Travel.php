@@ -3,6 +3,10 @@
 use Konduto\Parsers\ArrayModelParser;
 use Konduto\Parsers\DateTimeParser;
 
+/**
+ * Travel model.
+ * @see http://docs.konduto.com Konduto API Spec
+ */
 abstract class Travel extends BaseModel {
 
     const TYPE_BUS = "bus";
@@ -85,6 +89,10 @@ abstract class Travel extends BaseModel {
         return $this->set("passengers", $value);
     }
 
+    /**
+     * YYYY-MM-DD
+     * @return \DateTime
+     */
     public function getExpirationDate() {
         return $this->get("expiration_date");
     }

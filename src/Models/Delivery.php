@@ -9,6 +9,10 @@ class Delivery extends BaseModel {
         return array("estimated_delivery_date", "estimated_shipping_date", "delivery_company", "delivery_method");
     }
 
+    /**
+     * YYYY-MM-DDTHH:mm:ssZ
+     * @return \DateTime
+     */
     public function getEstimatedDeliveryDate() {
         return $this->get("estimated_delivery_date");
     }
@@ -17,6 +21,10 @@ class Delivery extends BaseModel {
         return $this->set("estimated_delivery_date", $value);
     }
 
+    /**
+     * YYYY-MM-DDTHH:mm:ssZ
+     * @return \DateTime
+     */
     public function getEstimatedShippingDate() {
         return $this->get("estimated_shipping_date");
     }

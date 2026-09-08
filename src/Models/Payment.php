@@ -1,5 +1,9 @@
 <?php namespace Konduto\Models;
 
+/**
+ * Payment model.
+ * @see http://docs.konduto.com Konduto API Spec
+ */
 class Payment extends BaseModel {
 
     const TYPE_CREDIT = "credit";

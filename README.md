@@ -216,6 +216,357 @@ The SDK now serializes only documented names for these objects:
 
 If your integration still sends legacy names, update your payload builder to the official fields above.
 
+## Order payload fields by object
+
+Reference source: `https://docs.konduto.com/reference/enviar-um-pedido` and child pages. Tables follow the same format as the official docs: each row's Description starts with an italic tag — _(required)_, _(recommended)_ or _(optional)_ — followed by the field's format/pattern (data type, enum values or date format) and its purpose.
+
+> Obligation for `Order parameters` was confirmed against the official docs page. Obligation for nested objects (Customer, Payment, Address, Travel, Hotel, etc.) was not shown on the page yet, so it was estimated conservatively as _(optional)_ except where the SDK enforces a field to work at all (e.g. `payment.type`, `travel.type`, used to pick the right subclass). Please confirm with Konduto's docs/support for any nested field before relying on this SDK for validation.
+
+### Order parameters
+
+Parameter | Description
+--- | ---
+id | _(required)_ string. Unique identifier for each order.
+visitor | _(optional)_ string. Visitor identifier obtained from our JavaScript snippet.
+total_amount | _(required)_ decimal (e.g. `100.10`). Total order amount.
+shipping_amount | _(optional)_ decimal. Shipping and handling amount.
+tax_amount | _(optional)_ decimal. Taxes amount.
+currency | _(optional)_ string, 3 letters (ISO-4217, e.g. `USD`, `BRL`). Currency code.
+installments | _(required)_ integer (min: 1, max: 999). Number of installments in the payment plan.
+ip | _(recommended)_ string, IPv4 or IPv6. Customer's IP address.
+customer | _(required)_ `Customer` object. Object containing the customer details.
+payment | _(optional)_ array of `Payment` objects. Array containing the payment methods.
+billing | _(optional)_ `Address` object. Object containing the billing information.
+shipping | _(optional)_ `Address` object. Object containing the shipping information.
+shopping_cart | _(optional)_ array of `Item` objects. Shopping cart items.
+first_message | _(optional)_ `YYYY-MM-DDThh:mmZ`. Marketplace first message datetime.
+messages_exchanged | _(optional)_ integer. Marketplace messages count.
+purchased_at | _(optional)_ `YYYY-MM-DDTHH:mm:ssZ`. Order purchase datetime.
+recurring | _(optional)_ boolean. Recurring transaction flag.
+risk_level | _(optional)_ string. Order risk level.
+analyze | _(optional)_ boolean. Analyze flag.
+sales_channel | _(optional)_ string. Sales channel.
+hotel | _(optional)_ `Hotel` object. Hotel object.
+travel | _(optional)_ `Travel` object. Travel object.
+seller | _(optional)_ `Seller` object. Seller object.
+events | _(optional)_ array of `Event` objects. Event list.
+scheduled | _(optional)_ boolean. Scheduled transaction flag.
+origin_account | _(optional)_ `BankOriginAccount` object. Origin account object.
+destination_accounts | _(optional)_ array of `BankDestinationAccount` objects. Destination account list.
+tenant | _(optional)_ `Tenant` object. Tenant object.
+point_of_sale | _(optional)_ `PointOfSale` object. Point-of-sale object.
+agent | _(optional)_ `AgentSeller` object. Agent object.
+
+### Customer information
+
+Parameter | Description
+--- | ---
+id | _(optional)_ string. Customer unique identifier.
+name | _(optional)_ string. Customer full name.
+email | _(optional)_ string, email format. Customer email.
+dob | _(optional)_ `YYYY-MM-DD`. Date of birth.
+tax_id | _(optional)_ string (CPF/CNPJ/SSN, etc.). Customer tax document.
+phone1 | _(optional)_ string. Primary phone number.
+phone2 | _(optional)_ string. Secondary phone number.
+created_at | _(optional)_ `YYYY-MM-DD`. Customer creation date.
+new | _(optional)_ boolean. New customer flag.
+vip | _(optional)_ boolean. VIP customer flag.
+type | _(optional)_ string. Customer type.
+risk_level | _(optional)_ string. Customer risk level.
+risk_score | _(optional)_ numeric. Customer risk score.
+mother_name | _(optional)_ string. Customer mother name.
+
+### Payment information
+
+Parameter | Description
+--- | ---
+type | _(required)_ enum: `credit`, `boleto`, `debit`, `transfer`, `voucher`, `balance`, `pix`. Payment method type (defines the SDK subclass: `CreditCard`/`Boleto`/`Payment`).
+status | _(optional)_ enum: `approved`, `declined`, `pending`. Payment status.
+bin | _(optional)_ string, 6 digits (`credit` only). Card BIN.
+last4 | _(optional)_ string, 4 digits (`credit` only). Last 4 card digits.
+amount | _(optional)_ decimal. Amount paid in this method.
+expiration_date | _(optional)_ `MMYYYY` for credit card or `YYYY-MM-DD` for boleto. Card expiration or boleto expiration date.
+description | _(optional)_ string. Payment description.
+tax_id | _(optional)_ string. Cardholder tax document.
+cvv_result | _(optional)_ string. CVV verification result.
+avs_result | _(optional)_ string. AVS verification result.
+sha1 | _(optional)_ string, SHA1 hash. Encrypted card hash.
+name | _(optional)_ string. Buyer name.
+holder | _(optional)_ string. Card holder name.
+mcc | _(optional)_ string. Merchant category code.
+mid | _(optional)_ string. Merchant identifier.
+3ds_id | _(optional)_ string. 3DS transaction identifier.
+merchant_tax_id | _(optional)_ string. Merchant tax document.
+voucher_type | _(optional)_ string (`voucher` only). Voucher type.
+
+### Billing address
+
+Parameter | Description
+--- | ---
+name | _(optional)_ string. Billing recipient name.
+address1 | _(optional)_ string. Billing address line 1.
+address2 | _(optional)_ string. Billing address line 2.
+city | _(optional)_ string. Billing city.
+state | _(optional)_ string. Billing state.
+zip | _(optional)_ string. Billing ZIP code.
+country | _(optional)_ string, ISO-3166 alpha-2 (e.g. `BR`, `US`). Billing country code.
+
+### Shipping address
+
+Parameter | Description
+--- | ---
+name | _(optional)_ string. Shipping recipient name.
+address1 | _(optional)_ string. Shipping address line 1.
+address2 | _(optional)_ string. Shipping address line 2.
+city | _(optional)_ string. Shipping city.
+state | _(optional)_ string. Shipping state.
+zip | _(optional)_ string. Shipping ZIP code.
+country | _(optional)_ string, ISO-3166 alpha-2. Shipping country code.
+estimatedDate | _(optional)_ date. Estimated delivery date.
+value | _(optional)_ decimal. Shipping value.
+lat | _(optional)_ float. Destination latitude.
+lon | _(optional)_ float. Destination longitude.
+
+### Delivery and logistics
+
+Parameter | Description
+--- | ---
+delivery_company | _(optional)_ string. Delivery company.
+delivery_method | _(optional)_ string. Delivery method.
+estimated_shipping_date | _(optional)_ date/string. Estimated shipping date.
+estimated_delivery_date | _(optional)_ date/string. Estimated delivery date.
+
+### Device information
+
+Parameter | Description
+--- | ---
+fingerprint | _(optional)_ string. Device fingerprint.
+provider | _(optional)_ string. Device provider.
+category | _(optional)_ string. Device category.
+model | _(optional)_ string. Device model.
+platform | _(optional)_ string. Device platform.
+manufacturer | _(optional)_ string. Device manufacturer.
+os | _(optional)_ string. Device operating system.
+browser | _(optional)_ string. Device browser.
+language | _(optional)_ string. Device language.
+flash | _(optional)_ boolean. Flash enabled flag.
+cookie | _(optional)_ boolean. Cookie enabled flag.
+javascript | _(optional)_ boolean. JavaScript enabled flag.
+timezone | _(optional)_ string/integer. Device timezone.
+user_id | _(optional)_ string. Device user identifier.
+
+### Shopping cart
+
+Parameter | Description
+--- | ---
+sku | _(optional)_ string. Product SKU.
+product_code | _(optional)_ string. Product code.
+category | _(optional)_ string. Product category.
+name | _(optional)_ string. Product name.
+description | _(optional)_ string. Product description.
+unit_cost | _(optional)_ decimal. Item unit cost.
+quantity | _(optional)_ integer. Item quantity.
+discount | _(optional)_ decimal. Item discount.
+created_at | _(optional)_ `YYYY-MM-DD`. Item creation date.
+deliveryType | _(optional)_ string. Item delivery type.
+deliverySlaInMinutes | _(optional)_ integer. Delivery SLA in minutes.
+sellerId | _(optional)_ string. Marketplace seller identifier.
+image | _(optional)_ string, URL. Product image URL.
+
+### Travel
+
+Parameter | Description
+--- | ---
+type | _(required)_ enum: `flight`, `bus`. Travel type. Decides whether `departure`/`return` are parsed as `FlightLeg` or `BusTravelLeg`.
+expiration_date | _(optional)_ `YYYY-MM-DDTHH:mm:ssZ`. Travel expiration date.
+departure | _(optional)_ `TravelLeg` object (`FlightLeg`/`BusTravelLeg`). Outbound segment object.
+return | _(optional)_ `TravelLeg` object (`FlightLeg`/`BusTravelLeg`). Return segment object.
+passengers | _(optional)_ array of `Passenger` objects. Passenger list.
+
+### Travel leg (`departure` and `return`)
+
+Parameter | Description
+--- | ---
+origin_city | _(optional)_ string (only when `travel.type = bus`). Origin city.
+destination_city | _(optional)_ string (only when `travel.type = bus`). Destination city.
+origin_airport | _(optional)_ string, 3-letter IATA code (only when `travel.type = flight`). Origin airport code.
+destination_airport | _(optional)_ string, 3-letter IATA code (only when `travel.type = flight`). Destination airport code.
+date | _(optional)_ `YYYY-MM-DDTHH:mmZ` (no seconds). Departure datetime.
+number_of_connections | _(optional)_ integer. Number of connections.
+class | _(optional)_ string. Travel class.
+fare_basis | _(optional)_ string. Fare basis code.
+company | _(optional)_ string. Travel company.
+
+### Passenger
+
+Parameter | Description
+--- | ---
+name | _(optional)_ string. Passenger name.
+document | _(optional)_ string. Passenger document.
+document_type | _(optional)_ string. Passenger document type.
+dob | _(optional)_ `YYYY-MM-DD`. Passenger date of birth.
+nationality | _(optional)_ string, ISO-3166 alpha-2. Passenger nationality.
+frequent_traveler | _(optional)_ boolean. Frequent traveler flag.
+special_needs | _(optional)_ boolean. Special needs flag.
+loyalty | _(optional)_ `Loyalty` object. Loyalty object.
+
+### Loyalty
+
+Parameter | Description
+--- | ---
+program | _(optional)_ string. Loyalty program.
+category | _(optional)_ string. Loyalty category.
+
+### Hotel
+
+Parameter | Description
+--- | ---
+name | _(optional)_ string. Hotel name.
+address1 | _(optional)_ string. Hotel address line 1.
+address2 | _(optional)_ string. Hotel address line 2.
+city | _(optional)_ string. Hotel city.
+state | _(optional)_ string. Hotel state.
+zip | _(optional)_ string. Hotel ZIP code.
+country | _(optional)_ string, ISO-3166 alpha-2. Hotel country code.
+category | _(optional)_ string. Hotel category.
+rooms | _(optional)_ array of `HotelRoom` objects. Room list.
+
+### Hotel room
+
+Parameter | Description
+--- | ---
+number | _(optional)_ string. Room number.
+code | _(optional)_ string. Room code.
+type | _(optional)_ string. Room type.
+check_in_date | _(optional)_ `YYYY-MM-DD`. Check-in date.
+check_out_date | _(optional)_ `YYYY-MM-DD`. Check-out date.
+number_of_guests | _(optional)_ integer. Number of guests.
+board_basis | _(optional)_ string. Board basis.
+guests | _(optional)_ array of `HotelRoomGuest` objects. Guest list.
+
+### Hotel room guest
+
+Parameter | Description
+--- | ---
+name | _(optional)_ string. Guest name.
+document | _(optional)_ string. Guest document.
+document_type | _(optional)_ string. Guest document type.
+dob | _(optional)_ `YYYY-MM-DD`. Guest date of birth.
+nationality | _(optional)_ string, ISO-3166 alpha-2. Guest nationality.
+
+### Event
+
+Parameter | Description
+--- | ---
+name | _(optional)_ string. Event name.
+date | _(optional)_ `YYYY-MM-DDTHH:mm:ssZ`. Event datetime.
+type | _(optional)_ string. Event type.
+subtype | _(optional)_ string. Event subtype.
+venue | _(optional)_ `Venue` object. Venue object.
+tickets | _(optional)_ array of `Ticket` objects. Ticket list.
+
+### Venue
+
+Parameter | Description
+--- | ---
+name | _(optional)_ string. Venue name.
+address | _(optional)_ string. Venue address.
+city | _(optional)_ string. Venue city.
+state | _(optional)_ string. Venue state.
+country | _(optional)_ string, ISO-3166 alpha-2. Venue country.
+capacity | _(optional)_ integer. Venue capacity.
+
+### Ticket
+
+Parameter | Description
+--- | ---
+id | _(optional)_ string. Ticket identifier.
+category | _(optional)_ string. Ticket category.
+section | _(optional)_ string. Ticket section.
+premium | _(optional)_ boolean. Premium ticket flag.
+attendee | _(optional)_ `Attendee` object. Attendee object.
+
+### Attendee
+
+Parameter | Description
+--- | ---
+name | _(optional)_ string. Attendee name.
+document | _(optional)_ string. Attendee document.
+document_type | _(optional)_ string. Attendee document type.
+dob | _(optional)_ `YYYY-MM-DD`. Attendee date of birth.
+
+### Seller
+
+Parameter | Description
+--- | ---
+id | _(optional)_ string. Seller identifier.
+name | _(optional)_ string. Seller name.
+created_at | _(optional)_ `YYYY-MM-DD`. Seller creation date.
+
+### Agent
+
+Parameter | Description
+--- | ---
+id | _(optional)_ string. Agent identifier.
+login | _(optional)_ string. Agent login.
+name | _(optional)_ string. Agent name.
+tax_id | _(optional)_ string. Agent tax document.
+dob | _(optional)_ `YYYY-MM-DD`. Agent date of birth.
+category | _(optional)_ string. Agent category.
+created_at | _(optional)_ `YYYY-MM-DD`. Agent creation date.
+
+### Point of sale
+
+Parameter | Description
+--- | ---
+id | _(optional)_ string. Point-of-sale identifier.
+name | _(optional)_ string. Point-of-sale name.
+lat | _(optional)_ float. Latitude.
+lon | _(optional)_ float. Longitude.
+address | _(optional)_ string. Address.
+city | _(optional)_ string. City.
+state | _(optional)_ string. State.
+zip | _(optional)_ string. ZIP code.
+country | _(optional)_ string, ISO-3166 alpha-2. Country code.
+
+### Tenant
+
+Parameter | Description
+--- | ---
+id | _(optional)_ string. Tenant identifier.
+name | _(optional)_ string. Tenant name.
+created_at | _(optional)_ `YYYY-MM-DD`. Tenant creation date.
+
+### Origin account
+
+Parameter | Description
+--- | ---
+id | _(optional)_ string. Origin account identifier.
+key_type | _(optional)_ string. Origin account key type.
+key_value | _(optional)_ string. Origin account key value.
+holder_name | _(optional)_ string. Origin account holder name.
+holder_tax_id | _(optional)_ string. Origin account holder tax document.
+bank_code | _(optional)_ string. Origin account bank code.
+bank_name | _(optional)_ string. Origin account bank name.
+bank_branch | _(optional)_ string. Origin account bank branch.
+bank_account | _(optional)_ string. Origin account number.
+balance | _(optional)_ decimal. Origin account balance.
+
+### Destination account
+
+Parameter | Description
+--- | ---
+id | _(optional)_ string. Destination account identifier.
+key_type | _(optional)_ string. Destination account key type.
+key_value | _(optional)_ string. Destination account key value.
+holder_name | _(optional)_ string. Destination account holder name.
+holder_tax_id | _(optional)_ string. Destination account holder tax document.
+bank_code | _(optional)_ string. Destination account bank code.
+bank_name | _(optional)_ string. Destination account bank name.
+bank_branch | _(optional)_ string. Destination account bank branch.
+bank_account | _(optional)_ string. Destination account number.
+amount | _(optional)_ decimal. Destination transfer amount.
+
 ## Support
 
 Feel free to contact our [support team](mailto:support@konduto.com) if you have any questions or suggestions!

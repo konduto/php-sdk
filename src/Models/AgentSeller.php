@@ -54,6 +54,10 @@ class AgentSeller extends BaseModel {
         return $this->set("tax_id", $value);
     }
 
+    /**
+     * YYYY-MM-DD
+     * @return \DateTime
+     */
     public function getDob() {
         return $this->get("dob");
     }
@@ -70,6 +74,10 @@ class AgentSeller extends BaseModel {
         return $this->set("category", $value);
     }
 
+    /**
+     * YYYY-MM-DD
+     * @return \DateTime
+     */
     public function getCreatedAt() {
         return $this->get("created_at");
     }

@@ -88,6 +88,7 @@ class Customer extends BaseModel {
     }
 
     /**
+     * YYYY-MM-DD
      * @return \DateTime
      */
     public function getDob() {
@@ -99,6 +100,7 @@ class Customer extends BaseModel {
     }
 
     /**
+     * YYYY-MM-DD
      * @return \DateTime
      */
     public function getCreatedAt() {
