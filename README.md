@@ -266,7 +266,7 @@ id | _(optional)_ string. Customer unique identifier.
 name | _(optional)_ string. Customer full name.
 email | _(optional)_ string, email format. Customer email.
 dob | _(optional)_ `YYYY-MM-DD`. Date of birth.
-tax_id | _(optional)_ string (CPF/CNPJ/SSN, etc.). Customer tax document.
+tax_id | _(required)_ string (CPF/CNPJ/SSN, etc.). Customer tax document.
 phone1 | _(optional)_ string. Primary phone number.
 phone2 | _(optional)_ string. Secondary phone number.
 created_at | _(optional)_ `YYYY-MM-DD`. Customer creation date.
